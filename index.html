@@ -8,7 +8,6 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
-            /* Neue Farbpalette basierend auf dem Screenshot */
             --bg-dark: #1a2a3a;        /* Dunkelblau / Navy */
             --accent-red: #8b2626;     /* Ziegelrot / Bordeaux */
             --text-light: #e0e6ed;     /* Helles Blaugrau */
@@ -48,11 +47,9 @@
         .highlight { color: var(--accent-red); }
         .hero-p { max-width: 500px; color: var(--text-dim); font-size: 1.1rem; }
 
-        /* Über mich - Rot abgesetzt */
+        /* Über mich */
         #about { background-color: var(--accent-red); color: var(--white); }
         .about-grid { display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 3rem; align-items: center; }
-        
-        /* Kleinere Tech-Box */
         .tech-box { 
             border: 1px solid rgba(255,255,255,0.3); 
             padding: 1.2rem; 
@@ -65,11 +62,8 @@
         #roadmap { background-color: var(--bg-dark); }
         .roadmap-header { color: var(--white); margin-bottom: 2.5rem; font-size: 2rem; }
         .timeline { position: relative; max-width: 700px; border-left: 1px solid var(--accent-red); padding-left: 25px; }
-        
-        /* Kleinere Roadmap-Container */
         .container { position: relative; margin-bottom: 2rem; }
         .container::before { content: ''; position: absolute; width: 10px; height: 10px; background: var(--accent-red); left: -31px; top: 6px; border-radius: 50%; }
-        
         .content { 
             background: var(--card-bg); 
             padding: 1rem 1.5rem; 
@@ -78,21 +72,40 @@
             transition: transform 0.3s;
         }
         .content:hover { transform: translateX(5px); background: rgba(255,255,255,0.08); }
-        .content h3 { font-size: 1.1rem; margin-bottom: 0.3rem; color: var(--white); }
-        .content p { font-size: 0.9rem; color: var(--text-dim); }
         .date { color: var(--accent-red); font-family: 'Fira Code', monospace; font-size: 0.75rem; font-weight: bold; }
 
-        /* Kontakt */
-        #contact { text-align: center; background: #14212e; }
-        .social-links { display: flex; justify-content: center; gap: 2rem; margin-top: 2rem; }
-        .social-links a { color: var(--text-dim); font-size: 2rem; transition: 0.3s; }
-        .social-links a:hover { color: var(--white); }
+        /* Kontaktformular Styling */
+        #contact { background-color: #14212e; text-align: center; }
+        .contact-container { max-width: 500px; margin: 0 auto; }
+        .contact-form { display: flex; flex-direction: column; gap: 1rem; margin-top: 2rem; text-align: left; }
         
-        .email-btn { 
-            display: inline-block; margin-top: 2rem; padding: 0.8rem 2rem; 
-            background-color: var(--accent-red); color: white; 
-            text-decoration: none; border-radius: 2px; font-weight: 600; font-size: 0.9rem;
+        .contact-form input, 
+        .contact-form textarea {
+            background: var(--card-bg);
+            border: 1px solid rgba(255,255,255,0.1);
+            padding: 1rem;
+            color: var(--white);
+            border-radius: 4px;
+            font-family: 'Inter', sans-serif;
+            outline: none;
+            transition: border-color 0.3s;
         }
+
+        .contact-form input:focus, 
+        .contact-form textarea:focus { border-color: var(--accent-red); }
+
+        .email-btn { 
+            display: inline-block; padding: 1rem 2rem; 
+            background-color: var(--accent-red); color: white; 
+            text-decoration: none; border-radius: 2px; font-weight: 600; 
+            font-size: 0.9rem; border: none; cursor: pointer;
+            transition: opacity 0.3s;
+        }
+        .email-btn:hover { opacity: 0.9; }
+
+        .social-links { display: flex; justify-content: center; gap: 2rem; margin-top: 3rem; }
+        .social-links a { color: var(--text-dim); font-size: 1.8rem; transition: 0.3s; }
+        .social-links a:hover { color: var(--white); }
 
         footer { padding: 2rem; text-align: center; font-size: 0.7rem; color: var(--text-dim); border-top: 1px solid rgba(255,255,255,0.05); }
 
@@ -163,18 +176,25 @@
 
     <section id="contact">
         <div class="contact-container">
-            <h2 style="font-size: 2rem; color: var(--white);">Kontakt</h2>
+            <h2 style="font-size: 2rem; color: var(--white); margin-bottom: 1rem;">Kontakt</h2>
+            <p style="color: var(--text-dim); font-size: 0.9rem;">Hinterlasse mir eine Nachricht für Projektanfragen oder Kooperationen.</p>
+            
+            <form action="https://formspree.io/f/xnjqdepv" method="POST" class="contact-form">
+                <input type="text" name="name" placeholder="Dein Name" required>
+                <input type="email" name="email" placeholder="Deine E-Mail Adresse" required>
+                <textarea name="message" rows="4" placeholder="Deine Nachricht an mich..." required></textarea>
+                <button type="submit" class="email-btn">NACHRICHT SENDEN</button>
+            </form>
+
             <div class="social-links">
-                <a href="#"><i class="fab fa-github"></i></a>
-                <a href="#"><i class="fab fa-linkedin"></i></a>
-                <a href="mailto:trimlind-maliqi@hotmail.com"><i class="fas fa-envelope"></i></a>
+                <a href="https://github.com" target="_blank"><i class="fab fa-github"></i></a>
+                <a href="https://linkedin.com" target="_blank"><i class="fab fa-linkedin"></i></a>
             </div>
-            <a href="mailto:trimlind-maliqi@hotmai.com" class="email-btn">PROJEKT ANFRAGEN</a>
         </div>
     </section>
 
     <footer>
-        &copy; 2025 Trimlind Maliqi.
+        &copy; 2025 Trimlind Maliqi — Trimify.ch
     </footer>
 
 </body>
