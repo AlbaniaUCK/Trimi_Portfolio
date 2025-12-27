@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trimlind Maliqi | Developer Portfolio</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=Fira+Code:wght@400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            /* Neue Farbpalette basierend auf dem Screenshot */
+            --bg-dark: #1a2a3a;        /* Dunkelblau / Navy */
+            --accent-red: #8b2626;     /* Ziegelrot / Bordeaux */
+            --text-light: #e0e6ed;     /* Helles Blaugrau */
+            --text-dim: #94a3b8;       /* Gedimmtes Grau */
+            --white: #ffffff;
+            --card-bg: rgba(255, 255, 255, 0.05);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-dark);
+            color: var(--text-light);
+            line-height: 1.6;
+            scroll-behavior: smooth;
+        }
+
+        /* Navigation */
+        nav {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 1rem 10%; position: fixed; width: 100%;
+            background: rgba(26, 42, 58, 0.95); backdrop-filter: blur(10px);
+            z-index: 1000; border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        .logo { font-weight: 600; color: var(--white); letter-spacing: 1px; }
+        nav ul { display: flex; list-style: none; }
+        nav ul li { margin-left: 2rem; }
+        nav ul li a { text-decoration: none; color: var(--text-dim); font-size: 0.8rem; font-weight: 600; text-transform: uppercase; transition: color 0.3s; }
+        nav ul li a:hover { color: var(--accent-red); }
+
+        section { padding: 80px 10%; min-height: 100vh; display: flex; flex-direction: column; justify-content: center; }
+
+        /* Home */
+        .dev-tag { color: var(--accent-red); font-family: 'Fira Code', monospace; margin-bottom: 0.5rem; font-size: 0.9rem; }
+        h1 { font-size: clamp(2.5rem, 6vw, 4rem); line-height: 1.1; margin-bottom: 1rem; font-weight: 600; color: var(--white); }
+        .highlight { color: var(--accent-red); }
+        .hero-p { max-width: 500px; color: var(--text-dim); font-size: 1.1rem; }
+
+        /* Über mich - Rot abgesetzt */
+        #about { background-color: var(--accent-red); color: var(--white); }
+        .about-grid { display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 3rem; align-items: center; }
+        
+        /* Kleinere Tech-Box */
+        .tech-box { 
+            border: 1px solid rgba(255,255,255,0.3); 
+            padding: 1.2rem; 
+            border-radius: 4px; 
+            background: rgba(0,0,0,0.1);
+            font-size: 0.85rem;
+        }
+
+        /* Roadmap */
+        #roadmap { background-color: var(--bg-dark); }
+        .roadmap-header { color: var(--white); margin-bottom: 2.5rem; font-size: 2rem; }
+        .timeline { position: relative; max-width: 700px; border-left: 1px solid var(--accent-red); padding-left: 25px; }
+        
+        /* Kleinere Roadmap-Container */
+        .container { position: relative; margin-bottom: 2rem; }
+        .container::before { content: ''; position: absolute; width: 10px; height: 10px; background: var(--accent-red); left: -31px; top: 6px; border-radius: 50%; }
+        
+        .content { 
+            background: var(--card-bg); 
+            padding: 1rem 1.5rem; 
+            border-radius: 4px; 
+            border-left: 2px solid var(--accent-red);
+            transition: transform 0.3s;
+        }
+        .content:hover { transform: translateX(5px); background: rgba(255,255,255,0.08); }
+        .content h3 { font-size: 1.1rem; margin-bottom: 0.3rem; color: var(--white); }
+        .content p { font-size: 0.9rem; color: var(--text-dim); }
+        .date { color: var(--accent-red); font-family: 'Fira Code', monospace; font-size: 0.75rem; font-weight: bold; }
+
+        /* Kontakt */
+        #contact { text-align: center; background: #14212e; }
+        .social-links { display: flex; justify-content: center; gap: 2rem; margin-top: 2rem; }
+        .social-links a { color: var(--text-dim); font-size: 2rem; transition: 0.3s; }
+        .social-links a:hover { color: var(--white); }
+        
+        .email-btn { 
+            display: inline-block; margin-top: 2rem; padding: 0.8rem 2rem; 
+            background-color: var(--accent-red); color: white; 
+            text-decoration: none; border-radius: 2px; font-weight: 600; font-size: 0.9rem;
+        }
+
+        footer { padding: 2rem; text-align: center; font-size: 0.7rem; color: var(--text-dim); border-top: 1px solid rgba(255,255,255,0.05); }
+
+        @media (max-width: 768px) { .about-grid { grid-template-columns: 1fr; } nav ul { display: none; } }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <div class="logo">T. MALIQI</div>
+        <ul>
+            <li><a href="#home">Start</a></li>
+            <li><a href="#about">Über mich</a></li>
+            <li><a href="#roadmap">Roadmap</a></li>
+            <li><a href="#contact">Kontakt</a></li>
+        </ul>
+    </nav>
+
+    <section id="home">
+        <span class="dev-tag">&lt;software_engineer /&gt;</span>
+        <h1>Trimlind<br><span class="highlight">Maliqi</span></h1>
+        <p class="hero-p">Full-Stack Entwickler mit Fokus auf skalierbare Systeme und saubere Ästhetik.</p>
+    </section>
+
+    <section id="about">
+        <div class="about-grid">
+            <div>
+                <h2 style="margin-bottom: 1rem; font-size: 2rem;">Engineering & Design</h2>
+                <p style="font-size: 0.95rem; opacity: 0.9;">Ich entwickle Lösungen, die technologische Komplexität in einfache Benutzererfahrungen verwandeln. Mein Fokus liegt auf Clean Code und Performance.</p>
+            </div>
+            <div class="tech-box">
+                <h3 style="margin-bottom: 0.8rem; font-size: 1rem;">Tech Stack</h3>
+                <p style="font-family: 'Fira Code', monospace; line-height: 1.8;">
+                    > JavaScript / React<br>
+                    > Node.js / SQL<br>
+                    > Docker / AWS
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <section id="roadmap">
+        <h2 class="roadmap-header">Roadmap</h2>
+        <div class="timeline">
+            <div class="container">
+                <div class="content">
+                    <span class="date">2024</span>
+                    <h3>SaaS Innovation</h3>
+                    <p>Cloud-native Applikationen im B2B Bereich.</p>
+                </div>
+            </div>
+            <div class="container">
+                <div class="content">
+                    <span class="date">2023</span>
+                    <h3>E-Commerce Core</h3>
+                    <p>Checkout-Optimierung & API-Strukturen.</p>
+                </div>
+            </div>
+            <div class="container">
+                <div class="content">
+                    <span class="date">2022</span>
+                    <h3>Architecture</h3>
+                    <p>Konzeption von Microservices.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="contact">
+        <div class="contact-container">
+            <h2 style="font-size: 2rem; color: var(--white);">Kontakt</h2>
+            <div class="social-links">
+                <a href="#"><i class="fab fa-github"></i></a>
+                <a href="#"><i class="fab fa-linkedin"></i></a>
+                <a href="mailto:deine-email@beispiel.de"><i class="fas fa-envelope"></i></a>
+            </div>
+            <a href="mailto:deine-email@beispiel.de" class="email-btn">PROJEKT ANFRAGEN</a>
+        </div>
+    </section>
+
+    <footer>
+        &copy; 2025 Trimlind Maliqi.
+    </footer>
+
+</body>
+</html>
