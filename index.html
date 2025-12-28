@@ -17,7 +17,15 @@
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Inter', sans-serif; background-color: var(--bg-dark); color: var(--text-light); line-height: 1.6; scroll-behavior: smooth; }
+        body { font-family: 'Inter', sans-serif; background-color: var(--bg-dark); color: var(--text-light); line-height: 1.6; scroll-behavior: smooth; overflow-x: hidden; }
+
+        /* Animationen */
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .reveal { animation: fadeInUp 0.8s ease forwards; }
 
         /* Navigation */
         nav {
@@ -32,24 +40,23 @@
         nav ul li a { text-decoration: none; color: var(--text-dim); font-size: 0.8rem; font-weight: 600; text-transform: uppercase; transition: 0.3s; }
         nav ul li a:hover { color: var(--accent-red); }
 
-        /* Language Switcher mit Flaggen */
-        .lang-switch { display: flex; gap: 0.8rem; }
+        /* Lang Switcher */
+        .lang-switch { display: flex; gap: 0.5rem; }
         .lang-btn { 
             background: rgba(255,255,255,0.05); border: 1px solid var(--text-dim); color: var(--text-dim);
-            padding: 4px 10px; cursor: pointer; font-size: 0.75rem; border-radius: 20px;
+            padding: 4px 10px; cursor: pointer; font-size: 0.7rem; border-radius: 20px;
             display: flex; align-items: center; gap: 6px; transition: 0.3s;
         }
-        .lang-btn img { width: 16px; height: 16px; border-radius: 50%; object-fit: cover; }
-        .lang-btn:hover { border-color: var(--white); color: var(--white); }
+        .lang-btn img { width: 14px; height: 14px; border-radius: 50%; object-fit: cover; }
         .lang-btn.active { background: var(--accent-red); color: white; border-color: var(--accent-red); }
 
         section { padding: 100px 10% 80px; min-height: 100vh; display: flex; flex-direction: column; justify-content: center; }
 
-        /* Home */
-        .dev-tag { color: var(--accent-red); font-family: 'Fira Code', monospace; margin-bottom: 0.5rem; font-size: 0.9rem; }
-        h1 { font-size: clamp(2.5rem, 6vw, 4rem); line-height: 1.1; margin-bottom: 1rem; font-weight: 600; color: var(--white); }
+        /* Hero */
+        .dev-tag { color: var(--accent-red); font-family: 'Fira Code', monospace; margin-bottom: 0.5rem; font-size: 0.9rem; opacity: 0; animation: fadeInUp 0.8s ease 0.2s forwards; }
+        h1 { font-size: clamp(2.5rem, 6vw, 4rem); line-height: 1.1; margin-bottom: 1rem; font-weight: 600; color: var(--white); opacity: 0; animation: fadeInUp 0.8s ease 0.4s forwards; }
         .highlight { color: var(--accent-red); }
-        .hero-p { max-width: 500px; color: var(--text-dim); font-size: 1.1rem; }
+        .hero-p { max-width: 500px; color: var(--text-dim); font-size: 1.1rem; opacity: 0; animation: fadeInUp 0.8s ease 0.6s forwards; }
 
         /* About */
         #about { background-color: var(--accent-red); color: var(--white); }
@@ -57,32 +64,21 @@
         .tech-box { border: 1px solid rgba(255,255,255,0.3); padding: 1.2rem; border-radius: 4px; background: rgba(0,0,0,0.1); font-size: 0.85rem; }
 
         /* Roadmap */
-        #roadmap { background-color: var(--bg-dark); }
-        .roadmap-header { color: var(--white); margin-bottom: 2.5rem; font-size: 2rem; }
         .timeline { position: relative; max-width: 700px; border-left: 1px solid var(--accent-red); padding-left: 25px; }
         .container { position: relative; margin-bottom: 2rem; }
         .container::before { content: ''; position: absolute; width: 10px; height: 10px; background: var(--accent-red); left: -31px; top: 6px; border-radius: 50%; }
         .content { background: var(--card-bg); padding: 1rem 1.5rem; border-radius: 4px; border-left: 2px solid var(--accent-red); transition: 0.3s; }
-        .content:hover { transform: translateX(5px); }
-        .date { color: var(--accent-red); font-family: 'Fira Code', monospace; font-size: 0.75rem; font-weight: bold; }
+        .content:hover { transform: translateX(5px); background: rgba(255,255,255,0.08); }
 
-        /* Contact */
-        #contact { background-color: #14212e; text-align: center; }
-        .contact-container { max-width: 500px; margin: 0 auto; }
-        .contact-form { display: flex; flex-direction: column; gap: 1rem; margin-top: 2rem; text-align: left; }
-        .contact-form input, .contact-form textarea { background: var(--card-bg); border: 1px solid rgba(255,255,255,0.1); padding: 1rem; color: var(--white); border-radius: 4px; font-family: 'Inter', sans-serif; outline: none; }
+        /* Form */
+        .contact-form { display: flex; flex-direction: column; gap: 1rem; margin-top: 2rem; text-align: left; max-width: 500px; margin-inline: auto; }
+        .contact-form input, .contact-form textarea { background: var(--card-bg); border: 1px solid rgba(255,255,255,0.1); padding: 1rem; color: var(--white); border-radius: 4px; font-family: inherit; outline: none; }
         .contact-form input:focus, .contact-form textarea:focus { border-color: var(--accent-red); }
-        .email-btn { padding: 1rem 2rem; background-color: var(--accent-red); color: white; border: none; border-radius: 2px; font-weight: 600; cursor: pointer; transition: 0.3s; }
+        .email-btn { padding: 1rem 2rem; background-color: var(--accent-red); color: white; border: none; border-radius: 2px; font-weight: 600; cursor: pointer; transition: 0.3s; width: 100%; }
 
         footer { padding: 2rem; text-align: center; font-size: 0.7rem; color: var(--text-dim); border-top: 1px solid rgba(255,255,255,0.05); }
-        
-        @media (max-width: 768px) { 
-            nav { padding: 1rem 5%; }
-            .about-grid { grid-template-columns: 1fr; } 
-            nav ul { display: none; } 
-            .lang-switch { gap: 0.4rem; }
-            .lang-btn { padding: 4px 8px; font-size: 0.65rem; }
-        }
+
+        @media (max-width: 768px) { nav ul { display: none; } .about-grid { grid-template-columns: 1fr; } }
     </style>
 </head>
 <body>
@@ -97,15 +93,9 @@
                 <li><a href="#contact" data-key="nav_contact">Kontakt</a></li>
             </ul>
             <div class="lang-switch">
-                <button class="lang-btn" id="btn-de" onclick="setLanguage('de')">
-                    <img src="https://flagcdn.com/w40/de.png" alt="DE"> DE
-                </button>
-                <button class="lang-btn" id="btn-en" onclick="setLanguage('en')">
-                    <img src="https://flagcdn.com/w40/gb.png" alt="EN"> EN
-                </button>
-                <button class="lang-btn" id="btn-sq" onclick="setLanguage('sq')">
-                    <img src="https://flagcdn.com/w40/al.png" alt="SQ"> SQ
-                </button>
+                <button class="lang-btn" id="btn-de" onclick="setLanguage('de')"><img src="https://flagcdn.com/w40/de.png" alt=""> DE</button>
+                <button class="lang-btn" id="btn-en" onclick="setLanguage('en')"><img src="https://flagcdn.com/w40/gb.png" alt=""> EN</button>
+                <button class="lang-btn" id="btn-sq" onclick="setLanguage('sq')"><img src="https://flagcdn.com/w40/al.png" alt=""> SQ</button>
             </div>
         </div>
     </nav>
@@ -117,13 +107,13 @@
     </section>
 
     <section id="about">
-        <div class="about-grid">
+        <div class="about-grid reveal">
             <div>
                 <h2 style="margin-bottom: 1rem; font-size: 2rem;" data-key="about_title">Engineering & Design</h2>
-                <p style="font-size: 0.95rem; opacity: 0.9;" data-key="about_text">Ich entwickle Lösungen, die technologische Komplexität in einfache Benutzererfahrungen verwandeln. Mein Fokus liegt auf Clean Code und Performance.</p>
+                <p style="opacity: 0.9;" data-key="about_text">Ich entwickle Lösungen, die technologische Komplexität in einfache Benutzererfahrungen verwandeln. Mein Fokus liegt auf Clean Code und Performance.</p>
             </div>
             <div class="tech-box">
-                <h3 style="margin-bottom: 0.8rem; font-size: 1rem;">Tech Stack</h3>
+                <h3 style="margin-bottom: 0.8rem;">Tech Stack</h3>
                 <p style="font-family: 'Fira Code', monospace; line-height: 1.8;">
                     > JavaScript / React<br>
                     > Node.js / SQL<br>
@@ -134,42 +124,30 @@
     </section>
 
     <section id="roadmap">
-        <h2 class="roadmap-header" data-key="roadmap_title">Roadmap</h2>
-        <div class="timeline">
-            <div class="container">
-                <div class="content">
-                    <span class="date">2024</span>
-                    <h3 data-key="r1_title">SaaS Innovation</h3>
-                    <p data-key="r1_desc">Cloud-native Applikationen im B2B Bereich.</p>
-                </div>
-            </div>
-            <div class="container">
-                <div class="content">
-                    <span class="date">2023</span>
-                    <h3 data-key="r2_title">E-Commerce Core</h3>
-                    <p data-key="r2_desc">Checkout-Optimierung & API-Strukturen.</p>
-                </div>
-            </div>
+        <h2 style="margin-bottom: 2.5rem; font-size: 2rem;" data-key="roadmap_title">Roadmap</h2>
+        <div class="timeline reveal">
+            <div class="container"><div class="content"><span class="date">2024</span><h3 data-key="r1_title">SaaS Innovation</h3><p data-key="r1_desc">Cloud-native Applikationen im B2B Bereich.</p></div></div>
+            <div class="container"><div class="content"><span class="date">2023</span><h3 data-key="r2_title">E-Commerce Core</h3><p data-key="r2_desc">Checkout-Optimierung & API-Strukturen.</p></div></div>
         </div>
     </section>
 
     <section id="contact">
-        <div class="contact-container">
-            <h2 style="font-size: 2rem; color: var(--white); margin-bottom: 1rem;" data-key="nav_contact">Kontakt</h2>
-            <p style="color: var(--text-dim); font-size: 0.9rem; margin-bottom: 2rem;" data-key="contact_subtitle">Hinterlasse mir eine Nachricht für Projektanfragen.</p>
-            
+        <div class="contact-container reveal">
+            <h2 style="font-size: 2rem; margin-bottom: 1rem;" data-key="nav_contact">Kontakt</h2>
             <form action="https://formspree.io/f/xnjqdepv" method="POST" class="contact-form">
-                <input type="text" name="name" id="form_name" placeholder="Dein Name" required>
-                <input type="email" name="email" id="form_email" placeholder="Deine E-Mail Adresse" required>
-                <textarea name="message" id="form_msg" rows="4" placeholder="Deine Nachricht..." required></textarea>
+                <input type="text" name="name" id="form_name" placeholder="Name" required>
+                <input type="email" name="email" id="form_email" placeholder="Email" required>
+                <textarea name="message" id="form_msg" rows="4" placeholder="Message" required></textarea>
                 <button type="submit" class="email-btn" data-key="contact_btn">NACHRICHT SENDEN</button>
             </form>
+            <div style="margin-top: 2rem; display: flex; justify-content: center; gap: 2rem;">
+                <a href="#" style="color: var(--text-dim); font-size: 1.5rem;"><i class="fab fa-github"></i></a>
+                <a href="#" style="color: var(--text-dim); font-size: 1.5rem;"><i class="fab fa-linkedin"></i></a>
+            </div>
         </div>
     </section>
 
-    <footer>
-        &copy; 2025 Trimlind Maliqi — Trimify.ch
-    </footer>
+    <footer>&copy; 2025 Trimlind Maliqi — Trimify.ch</footer>
 
     <script>
         const translations = {
@@ -179,8 +157,7 @@
                 about_title: "Engineering & Design", about_text: "Ich entwickle Lösungen, die technologische Komplexität in einfache Benutzererfahrungen verwandeln. Mein Fokus liegt auf Clean Code und Performance.",
                 roadmap_title: "Projekt Roadmap", r1_title: "SaaS Innovation", r1_desc: "Cloud-native Applikationen im B2B Bereich.",
                 r2_title: "E-Commerce Core", r2_desc: "Checkout-Optimierung & API-Strukturen.",
-                contact_subtitle: "Hinterlasse mir eine Nachricht für Projektanfragen.", contact_btn: "NACHRICHT SENDEN",
-                p_name: "Dein Name", p_email: "Deine E-Mail Adresse", p_msg: "Deine Nachricht..."
+                contact_btn: "NACHRICHT SENDEN", p_name: "Dein Name", p_email: "Deine E-Mail Adresse", p_msg: "Deine Nachricht..."
             },
             en: {
                 nav_start: "Home", nav_about: "About", nav_roadmap: "Roadmap", nav_contact: "Contact",
@@ -188,44 +165,29 @@
                 about_title: "Engineering & Design", about_text: "I build solutions that transform technological complexity into simple user experiences. I focus on clean code and performance.",
                 roadmap_title: "Project Roadmap", r1_title: "SaaS Innovation", r1_desc: "Cloud-native applications in the B2B sector.",
                 r2_title: "E-Commerce Core", r2_desc: "Checkout optimization & API structures.",
-                contact_subtitle: "Leave me a message for project inquiries.", contact_btn: "SEND MESSAGE",
-                p_name: "Your Name", p_email: "Your Email Address", p_msg: "Your message..."
+                contact_btn: "SEND MESSAGE", p_name: "Your Name", p_email: "Your Email Address", p_msg: "Your message..."
             },
             sq: {
                 nav_start: "Fillimi", nav_about: "Rreth meje", nav_roadmap: "Roadmap", nav_contact: "Kontakt",
-                hero_desc: "Full-stack zhvillues i fokusuar në sisteme të shkallëzueshme dhe estetikë të pastër.",
-                about_title: "Inxhinieri & Dizajn", about_text: "Unë ndërtoj zgjidhje që transformojnë kompleksitetin teknologjik në përvoja të thjeshta për përdoruesit. Fokusimi im është te kodi i pastër dhe performanca.",
-                roadmap_title: "Roadmap e Projekteve", r1_title: "SaaS Inovacion", r1_desc: "Aplikacione cloud-native në sektorin B2B.",
+                hero_desc: "Zhvillues Full-stack i fokusuar në sisteme të shkallëzueshme dhe estetikë të pastër.",
+                about_title: "Inxhinieri & Dizajn", about_text: "Unë ndërtoj zgjidhje që transformojnë kompleksitetin teknologjik në përvoja të thjeshta për përdoruesit.",
+                roadmap_title: "Ecuria e Projekteve", r1_title: "Inovacion SaaS", r1_desc: "Aplikacione cloud-native në sektorin B2B.",
                 r2_title: "E-Commerce Core", r2_desc: "Optimizimi i arkëtimit dhe strukturat API.",
-                contact_subtitle: "Më lini një mesazh për kërkesa rreth projekteve.", contact_btn: "DËRGO MESAZHIN",
-                p_name: "Emri juaj", p_email: "E-mail adresa juaj", p_msg: "Mesazhi juaj..."
+                contact_btn: "DËRGO MESAZHIN", p_name: "Emri juaj", p_email: "Email adresa juaj", p_msg: "Mesazhi juaj..."
             }
         };
 
         function setLanguage(lang) {
-            // Update buttons active state
-            document.querySelectorAll('.lang-btn').forEach(btn => {
-                btn.classList.remove('active');
-            });
+            document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active'));
             document.getElementById('btn-' + lang).classList.add('active');
-
-            // Update text elements
-            document.querySelectorAll('[data-key]').forEach(el => {
-                const key = el.getAttribute('data-key');
-                el.innerText = translations[lang][key];
-            });
-
-            // Update Placeholders
+            document.querySelectorAll('[data-key]').forEach(el => el.innerText = translations[lang][el.getAttribute('data-key')]);
             document.getElementById('form_name').placeholder = translations[lang].p_name;
             document.getElementById('form_email').placeholder = translations[lang].p_email;
             document.getElementById('form_msg').placeholder = translations[lang].p_msg;
-
             localStorage.setItem('preferredLang', lang);
         }
 
-        // Init language on load
-        const savedLang = localStorage.getItem('preferredLang') || 'de';
-        setLanguage(savedLang);
+        setLanguage(localStorage.getItem('preferredLang') || 'de');
     </script>
 </body>
 </html>
