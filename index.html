@@ -4,9 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Trimlind Maliqi | Developer Portfolio</title>
-    <link rel="icon" href="https://fav.farm/💻">
+    
+    <link rel="icon" href="https://fav.farm/💻"> 
+    <link rel="apple-touch-icon" href="https://fav.farm/💻">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Fira+Code:wght@400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
     <style>
         :root {
             --bg-dark: #1a2a3a;
@@ -46,11 +52,13 @@
             text-decoration: none; display: flex; align-items: center; font-size: 0.9rem;
         }
         .logo-icon { color: var(--accent-red); font-weight: 800; }
-        .logo-cursor { width: 8px; height: 2px; background: var(--accent-red); display: inline-block; animation: blink 1s step-end infinite; margin-left: 3px; }
+        #logo-text { transition: opacity 0.5s ease; margin: 0 4px; }
+        .logo-cursor { width: 8px; height: 2px; background: var(--accent-red); display: inline-block; animation: blink 1s step-end infinite; }
 
         .nav-right { display: flex; align-items: center; gap: 1rem; }
         nav ul { display: flex; list-style: none; gap: 1.5rem; }
-        nav ul li a { text-decoration: none; color: var(--text-dim); font-size: 0.75rem; font-weight: 600; text-transform: uppercase; }
+        nav ul li a { text-decoration: none; color: var(--text-dim); font-size: 0.75rem; font-weight: 600; text-transform: uppercase; transition: 0.3s; }
+        nav ul li a:hover { color: var(--white); }
 
         .lang-switch { display: flex; gap: 0.3rem; }
         .lang-btn { 
@@ -69,28 +77,33 @@
         .hero-p { max-width: 450px; color: var(--text-dim); font-size: 1rem; margin-top: 1rem; border-left: 2px solid var(--accent-red); padding-left: 1rem; }
         .dev-tag { color: var(--accent-red); font-family: 'Fira Code', monospace; font-size: 0.9rem; margin-bottom: 0.5rem; display: block; }
 
-        /* Sektionen */
+        /* Sektionen Farben */
+        #home { background-color: var(--bg-dark); }
         #about { background-color: var(--accent-red); color: var(--white); }
+        #roadmap { background-color: var(--bg-dark); }
+        #contact { background-color: var(--accent-red); color: var(--white); text-align: center; }
+
         .about-grid { display: flex; flex-direction: column; gap: 2rem; }
         .tech-box { border: 1px solid rgba(255,255,255,0.3); padding: 1.2rem; border-radius: 4px; background: rgba(0,0,0,0.15); font-size: 0.85rem; }
 
-        #roadmap { background-color: var(--bg-dark); }
+        /* Timeline */
         .timeline { border-left: 1px solid var(--accent-red); padding-left: 20px; }
         .container { position: relative; margin-bottom: 1.5rem; }
         .container::before { content: ''; position: absolute; width: 8px; height: 8px; background: var(--accent-red); left: -25px; top: 8px; border-radius: 50%; }
-        .content { background: var(--card-bg); padding: 1rem; border-radius: 4px; border-left: 2px solid var(--accent-red); }
-        .content h3 { font-size: 1rem; }
-        .content p { font-size: 0.85rem; color: var(--text-dim); }
+        .content { background: var(--card-bg); padding: 1.2rem; border-radius: 4px; border-left: 2px solid var(--accent-red); transition: 0.3s; }
+        .content:hover { transform: translateX(5px); background: rgba(255,255,255,0.08); }
+        .date { font-size: 0.75rem; font-weight: 600; color: var(--accent-red); font-family: 'Fira Code', monospace; }
 
-        #contact { background-color: var(--accent-red); color: var(--white); text-align: center; }
-        .contact-form { display: flex; flex-direction: column; gap: 0.8rem; max-width: 400px; margin: 1.5rem auto 0; }
-        .contact-form input, .contact-form textarea { background: rgba(0, 0, 0, 0.2); border: 1px solid rgba(255,255,255,0.2); padding: 0.8rem; color: var(--white); border-radius: 4px; outline: none; font-size: 0.9rem; }
-        .email-btn { background-color: var(--white); color: var(--accent-red); padding: 0.8rem; border: none; border-radius: 4px; font-weight: 700; cursor: pointer; width: 100%; }
+        /* Form */
+        .contact-form { display: flex; flex-direction: column; gap: 0.8rem; max-width: 400px; margin: 1.5rem auto 0; text-align: left; }
+        .contact-form input, .contact-form textarea { background: rgba(0, 0, 0, 0.2); border: 1px solid rgba(255,255,255,0.2); padding: 0.8rem; color: var(--white); border-radius: 4px; outline: none; font-size: 0.9rem; width: 100%; }
+        .email-btn { background-color: var(--white); color: var(--accent-red); padding: 0.8rem; border: none; border-radius: 4px; font-weight: 700; cursor: pointer; transition: 0.3s; }
+        .email-btn:hover { background-color: var(--bg-dark-alt); color: var(--white); }
 
-        .like-btn { background: none; border: 1px solid var(--white); color: var(--white); padding: 6px 12px; border-radius: 20px; cursor: pointer; margin-top: 1.5rem; font-size: 0.8rem; }
+        .like-btn { background: none; border: 1px solid var(--white); color: var(--white); padding: 6px 12px; border-radius: 20px; cursor: pointer; margin-top: 1.5rem; font-size: 0.8rem; transition: 0.3s; }
         .like-btn.liked { background: var(--bg-dark); border-color: var(--bg-dark); }
 
-        footer { padding: 2rem; text-align: center; font-size: 0.7rem; color: var(--text-dim); background: var(--bg-dark-alt); }
+        footer { padding: 2.5rem; text-align: center; font-size: 0.7rem; color: var(--text-dim); background: var(--bg-dark-alt); }
 
         /* Desktop Adjustments */
         @media (min-width: 1024px) {
@@ -99,10 +112,11 @@
             nav { padding: 1rem 10%; }
             .logo { font-size: 1.1rem; }
             .lang-btn { font-size: 0.7rem; padding: 4px 10px; }
+            .hero-title { letter-spacing: -3px; }
         }
 
         @media (max-width: 600px) {
-            nav ul { display: none; } /* Versteckt Menü-Links auf kleinen Handys für Platz */
+            nav ul { display: none; }
         }
     </style>
 </head>
@@ -118,6 +132,7 @@
         <div class="nav-right">
             <ul>
                 <li><a href="#about" data-key="nav_about">Über mich</a></li>
+                <li><a href="#roadmap" data-key="nav_roadmap">Roadmap</a></li>
                 <li><a href="#contact" data-key="nav_contact">Kontakt</a></li>
             </ul>
             <div class="lang-switch">
@@ -142,32 +157,37 @@
     <section id="about">
         <div class="about-grid">
             <div style="flex:1;">
-                <h2 style="margin-bottom: 1rem; font-size: 1.8rem;" data-key="about_title">Engineering & Design</h2>
-                <p data-key="about_text">Ich entwickle Lösungen, die technologische Komplexität in einfache Benutzererfahrungen verwandeln. Mein Fokus liegt auf Clean Code und Performance.</p>
+                <h2 style="margin-bottom: 1rem; font-size: 2rem;" data-key="about_title">Engineering & Design</h2>
+                <p data-key="about_text" style="font-size: 1.1rem; opacity: 0.9;">Ich entwickle Lösungen, die technologische Komplexität in einfache Benutzererfahrungen verwandeln. Fokus auf Clean Code und Performance.</p>
             </div>
             <div class="tech-box">
-                <h3 style="margin-bottom: 0.5rem;">Tech Stack</h3>
-                <p style="font-family: 'Fira Code', monospace; line-height: 1.8;">
+                <h3 style="margin-bottom: 0.8rem;">Tech Stack</h3>
+                <p style="font-family: 'Fira Code', monospace; line-height: 2;">
                     > JavaScript / React<br>
                     > Node.js / SQL<br>
-                    > Docker / AWS<br>
-                    > PHP / HTML
+                    > Docker / AWS
                 </p>
             </div>
         </div>
     </section>
 
     <section id="roadmap">
-        <h2 style="margin-bottom: 2rem; font-size: 1.8rem; color: var(--white);" data-key="roadmap_title">Roadmap</h2>
+        <h2 style="margin-bottom: 2.5rem; font-size: 2rem; color: var(--white);" data-key="roadmap_title">Roadmap</h2>
         <div class="timeline">
-            <div class="container"><div class="content"><span class="date" style="font-size:0.7rem; color:var(--accent-red)">2024</span><h3 data-key="r1_title">SaaS Innovation</h3><p data-key="r1_desc">Cloud-native Apps im B2B Bereich.</p></div></div>
-            <div class="container"><div class="content"><span class="date" style="font-size:0.7rem; color:var(--accent-red)">2023</span><h3 data-key="r2_title">E-Commerce Core</h3><p data-key="r2_desc">Checkout & API-Strukturen.</p></div></div>
+            <div class="container"><div class="content"><span class="date">2025</span><h3 data-key="r25_title">AI & Scalability</h3><p data-key="r25_desc">KI-Workflows & Systeme.</p></div></div>
+            <div class="container"><div class="content"><span class="date">2024</span><h3 data-key="r1_title">SaaS Innovation</h3><p data-key="r1_desc">Cloud-native Apps B2B.</p></div></div>
+            <div class="container"><div class="content"><span class="date">2023</span><h3 data-key="r2_title">E-Commerce Core</h3><p data-key="r2_desc">API & Checkout Strukturen.</p></div></div>
+            <div class="container"><div class="content"><span class="date">2022</span><h3 data-key="r22_title">Backend Excellence</h3><p data-key="r22_desc">Node.js & SQL Fokus.</p></div></div>
+            <div class="container"><div class="content"><span class="date">2021</span><h3 data-key="r21_title">Frontend Mastery</h3><p data-key="r21_desc">React & State Management.</p></div></div>
+            <div class="container"><div class="content"><span class="date">2020</span><h3 data-key="r20_title">UI/UX Basics</h3><p data-key="r20_desc">Responsive Design Projekte.</p></div></div>
+            <div class="container"><div class="content"><span class="date">2019</span><h3 data-key="r19_title">The Start</h3><p data-key="r19_desc">Einstieg Software Engineering.</p></div></div>
         </div>
     </section>
 
     <section id="contact">
-        <div class="contact-container">
-            <h2 style="font-size: 1.8rem; margin-bottom: 0.5rem;" data-key="nav_contact">Kontakt</h2>
+        <div style="max-width: 600px; margin: 0 auto;">
+            <h2 style="font-size: 2rem; margin-bottom: 0.5rem;" data-key="nav_contact">Kontakt</h2>
+            <p data-key="contact_subtitle" style="opacity:0.9">Schreib mir eine Nachricht für Projektanfragen.</p>
             <form action="https://formspree.io/f/xnjqdepv" method="POST" class="contact-form">
                 <input type="text" name="name" id="form_name" placeholder="Name" required>
                 <input type="email" name="email" id="form_email" placeholder="Email" required>
@@ -177,43 +197,68 @@
             <button id="likeBtn" class="like-btn" onclick="toggleLike()">
                 <i class="far fa-heart"></i> <span id="likeText">Gefällt mir</span>
             </button>
+            <div style="margin-top: 2rem; display: flex; justify-content: center; gap: 1.5rem;">
+                <a href="https://github.com" target="_blank" style="color:white; font-size:1.5rem;"><i class="fab fa-github"></i></a>
+                <a href="https://linkedin.com" target="_blank" style="color:white; font-size:1.5rem;"><i class="fab fa-linkedin"></i></a>
+            </div>
         </div>
     </section>
 
-    <footer>&copy; 2025 Trimlind Maliqi</footer>
+    <footer>&copy; 2025 Trimlind Maliqi — Trimify.ch</footer>
 
     <script>
         const translations = {
             de: {
-                nav_about: "Über mich", nav_contact: "Kontakt",
+                nav_about: "Über mich", nav_roadmap: "Roadmap", nav_contact: "Kontakt",
                 hero_desc: "Full-Stack Entwickler mit Fokus auf skalierbare Systeme und saubere Ästhetik.",
-                about_title: "Engineering & Design", about_text: "Ich entwickle Lösungen, die technologische Komplexität in einfache Benutzererfahrungen verwandeln. Fokus auf Clean Code.",
-                roadmap_title: "Roadmap", r1_title: "SaaS Innovation", r1_desc: "Cloud-native Apps im B2B Bereich.",
+                about_title: "Engineering & Design", about_text: "Ich entwickle Lösungen, die technologische Komplexität in einfache Benutzererfahrungen verwandeln. Fokus auf Clean Code und Performance.",
+                roadmap_title: "Projekt Roadmap", 
+                r25_title: "AI Integration & Skalierbarkeit", r25_desc: "Fokus auf KI-Workflows und Systemarchitekturen.",
+                r1_title: "SaaS Innovation", r1_desc: "Cloud-native Apps im B2B Bereich.",
                 r2_title: "E-Commerce Core", r2_desc: "Checkout & API-Strukturen.",
-                contact_btn: "SENDEN", p_name: "Name", p_email: "Email", p_msg: "Nachricht", like: "Gefällt mir", liked: "Gefällt dir"
+                r22_title: "Backend Excellence", r22_desc: "Node.js, SQL und Microservices.",
+                r21_title: "Frontend Mastery", r21_desc: "Vertiefung in React und State-Management.",
+                r20_title: "UI/UX & Web Basics", r20_desc: "Responsives Design und Benutzererfahrung.",
+                r19_title: "Der Start", r19_desc: "Erste Schritte in der Softwareentwicklung.",
+                contact_subtitle: "Schreib mir eine Nachricht für Projektanfragen.", contact_btn: "SENDEN", 
+                p_name: "Name", p_email: "Email", p_msg: "Nachricht", like: "Gefällt mir", liked: "Gefällt dir"
             },
             en: {
-                nav_about: "About", nav_contact: "Contact",
+                nav_about: "About", nav_roadmap: "Roadmap", nav_contact: "Contact",
                 hero_desc: "Full-stack developer focused on scalable systems and clean aesthetics.",
                 about_title: "Engineering & Design", about_text: "I build solutions that transform complexity into simple experiences. Focus on clean code.",
-                roadmap_title: "Roadmap", r1_title: "SaaS Innovation", r1_desc: "Cloud-native apps in B2B.",
+                roadmap_title: "Roadmap", 
+                r25_title: "AI Integration & Scalability", r25_desc: "AI workflows and architectures.",
+                r1_title: "SaaS Innovation", r1_desc: "Cloud-native B2B apps.",
                 r2_title: "E-Commerce Core", r2_desc: "Checkout & API structures.",
-                contact_btn: "SEND", p_name: "Name", p_email: "Email", p_msg: "Message", like: "Like", liked: "Liked"
+                r22_title: "Backend Excellence", r22_desc: "Node.js, SQL and Microservices.",
+                r21_title: "Frontend Mastery", r21_desc: "Advanced React & State Management.",
+                r20_title: "UI/UX & Web Basics", r20_desc: "Responsive design & UX.",
+                r19_title: "The Start", r19_desc: "Entry into software engineering.",
+                contact_subtitle: "Leave a message for project inquiries.", contact_btn: "SEND", 
+                p_name: "Name", p_email: "Email", p_msg: "Message", like: "Like", liked: "Liked"
             },
             sq: {
-                nav_about: "Rreth meje", nav_contact: "Kontakt",
+                nav_about: "Rreth meje", nav_roadmap: "Rruga", nav_contact: "Kontakt",
                 hero_desc: "Zhvillues Full-stack i fokusuar në sisteme të shkallëzueshme dhe estetikë të pastër.",
                 about_title: "Inxhinieri & Dizajn", about_text: "Unë ndërtoj zgjidhje që transformojnë kompleksitetin në përvoja të thjeshta. Fokus te kodi i pastër.",
-                roadmap_title: "Roadmap", r1_title: "SaaS Inovacion", r1_desc: "Aplikacione cloud-native në B2B.",
-                r2_title: "E-Commerce Core", r2_desc: "Optimizimi i arkëtimit.",
-                contact_btn: "DËRGO", p_name: "Emri", p_email: "Email", p_msg: "Mesazhi", like: "Më pëlqen", liked: "Të pëlqen"
+                roadmap_title: "Ecuria e Projekteve", 
+                r25_title: "AI & Skalueshmëria", r25_desc: "Fokusi në AI dhe arkitekturat e sistemeve.",
+                r1_title: "SaaS Inovacion", r1_desc: "Aplikacione cloud-native në B2B.",
+                r2_title: "E-Commerce Core", r2_desc: "Optimizimi i arkëtimit dhe API.",
+                r22_title: "Backend Excellence", r22_desc: "Node.js, SQL dhe Microservices.",
+                r21_title: "Masteri në Frontend", r21_desc: "React dhe State Management.",
+                r20_title: "UI/UX & Web Basics", r20_desc: "Dizajn i përgjegjshëm.",
+                r19_title: "Fillimi", r19_desc: "Hapat e parë në inxhinieri softuerike.",
+                contact_subtitle: "Më lini një mesazh për kërkesa.", contact_btn: "DËRGO", 
+                p_name: "Emri", p_email: "Email", p_msg: "Mesazhi", like: "Më pëlqen", liked: "Të pëlqen"
             }
         };
 
+        // Logo Switcher Logic
         const logoText = document.getElementById('logo-text');
-        const phrases = ["T. MALIQI", "REACT.JS", "NODE.JS", "SQL", "DOCKER"];
+        const phrases = ["T. MALIQI", "REACT.JS", "NODE.JS", "FULLSTACK", "DOCKER"];
         let phraseIndex = 0;
-
         function switchLogoText() {
             logoText.style.opacity = 0;
             setTimeout(() => {
@@ -223,30 +268,44 @@
             }, 500);
         }
         setInterval(switchLogoText, 3500);
-        logoText.style.transition = "opacity 0.5s ease";
 
+        // Language Logic
         function setLanguage(lang) {
             document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active'));
-            document.getElementById('btn-' + lang).classList.add('active');
-            document.querySelectorAll('[data-key]').forEach(el => el.innerText = translations[lang][el.getAttribute('data-key')]);
+            const activeBtn = document.getElementById('btn-' + lang);
+            if(activeBtn) activeBtn.classList.add('active');
+            
+            document.querySelectorAll('[data-key]').forEach(el => {
+                const key = el.getAttribute('data-key');
+                if(translations[lang][key]) el.innerText = translations[lang][key];
+            });
+
             document.getElementById('form_name').placeholder = translations[lang].p_name;
             document.getElementById('form_email').placeholder = translations[lang].p_email;
             document.getElementById('form_msg').placeholder = translations[lang].p_msg;
+            
+            const isLiked = localStorage.getItem('hasLiked') === 'true';
+            document.getElementById('likeText').innerText = isLiked ? translations[lang].liked : translations[lang].like;
+            
             localStorage.setItem('preferredLang', lang);
         }
 
+        // Like Logic
         function toggleLike() {
             const btn = document.getElementById('likeBtn');
             const icon = btn.querySelector('i');
             const lang = localStorage.getItem('preferredLang') || 'de';
             const isLiked = localStorage.getItem('hasLiked') === 'true';
+            
             if (isLiked) {
                 localStorage.setItem('hasLiked', 'false');
-                btn.classList.remove('liked'); icon.className = 'far fa-heart';
+                btn.classList.remove('liked');
+                icon.className = 'far fa-heart';
                 document.getElementById('likeText').innerText = translations[lang].like;
             } else {
                 localStorage.setItem('hasLiked', 'true');
-                btn.classList.add('liked'); icon.className = 'fas fa-heart';
+                btn.classList.add('liked');
+                icon.className = 'fas fa-heart';
                 document.getElementById('likeText').innerText = translations[lang].liked;
             }
         }
@@ -254,8 +313,9 @@
         window.onload = () => {
             const savedLang = localStorage.getItem('preferredLang') || 'de';
             if (localStorage.getItem('hasLiked') === 'true') {
-                document.getElementById('likeBtn').classList.add('liked');
-                document.getElementById('likeBtn').querySelector('i').className = 'fas fa-heart';
+                const btn = document.getElementById('likeBtn');
+                btn.classList.add('liked');
+                btn.querySelector('i').className = 'fas fa-heart';
             }
             setLanguage(savedLang);
         }
