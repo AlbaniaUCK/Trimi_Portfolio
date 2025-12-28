@@ -5,6 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Trimlind Maliqi | Developer Portfolio</title>
     
+    <meta http-equiv="X-Frame-Options" content="DENY">
+    <meta http-equiv="X-Content-Type-Options" content="nosniff">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com https://flagcdn.com https://fav.farm; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; script-src 'self' 'unsafe-inline'; img-src 'self' data: https://flagcdn.com https://fav.farm; connect-src 'self' https://formspree.io;">
+
     <link rel="icon" href="https://fav.farm/💻"> 
     <link rel="apple-touch-icon" href="https://fav.farm/💻">
     <meta name="mobile-web-app-capable" content="yes">
@@ -28,10 +32,7 @@
         body { font-family: 'Inter', sans-serif; background-color: var(--bg-dark); color: var(--text-light); line-height: 1.5; scroll-behavior: smooth; overflow-x: hidden; }
 
         /* Animationen */
-        @keyframes revealUp {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
+        @keyframes revealUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
         @keyframes blink { 50% { opacity: 0; } }
 
         .animate { opacity: 0; animation: revealUp 0.6s cubic-bezier(0.2, 1, 0.3, 1) forwards; }
@@ -77,7 +78,7 @@
         .hero-p { max-width: 450px; color: var(--text-dim); font-size: 1rem; margin-top: 1rem; border-left: 2px solid var(--accent-red); padding-left: 1rem; }
         .dev-tag { color: var(--accent-red); font-family: 'Fira Code', monospace; font-size: 0.9rem; margin-bottom: 0.5rem; display: block; }
 
-        /* Sektionen Farben */
+        /* Sektionen */
         #home { background-color: var(--bg-dark); }
         #about { background-color: var(--accent-red); color: var(--white); }
         #roadmap { background-color: var(--bg-dark); }
@@ -86,7 +87,6 @@
         .about-grid { display: flex; flex-direction: column; gap: 2rem; }
         .tech-box { border: 1px solid rgba(255,255,255,0.3); padding: 1.2rem; border-radius: 4px; background: rgba(0,0,0,0.15); font-size: 0.85rem; }
 
-        /* Timeline */
         .timeline { border-left: 1px solid var(--accent-red); padding-left: 20px; }
         .container { position: relative; margin-bottom: 1.5rem; }
         .container::before { content: ''; position: absolute; width: 8px; height: 8px; background: var(--accent-red); left: -25px; top: 8px; border-radius: 50%; }
@@ -94,7 +94,7 @@
         .content:hover { transform: translateX(5px); background: rgba(255,255,255,0.08); }
         .date { font-size: 0.75rem; font-weight: 600; color: var(--accent-red); font-family: 'Fira Code', monospace; }
 
-        /* Form */
+        /* Kontaktformular */
         .contact-form { display: flex; flex-direction: column; gap: 0.8rem; max-width: 400px; margin: 1.5rem auto 0; text-align: left; }
         .contact-form input, .contact-form textarea { background: rgba(0, 0, 0, 0.2); border: 1px solid rgba(255,255,255,0.2); padding: 0.8rem; color: var(--white); border-radius: 4px; outline: none; font-size: 0.9rem; width: 100%; }
         .email-btn { background-color: var(--white); color: var(--accent-red); padding: 0.8rem; border: none; border-radius: 4px; font-weight: 700; cursor: pointer; transition: 0.3s; }
@@ -105,19 +105,13 @@
 
         footer { padding: 2.5rem; text-align: center; font-size: 0.7rem; color: var(--text-dim); background: var(--bg-dark-alt); }
 
-        /* Desktop Adjustments */
         @media (min-width: 1024px) {
             section { padding: 100px 15%; }
             .about-grid { flex-direction: row; gap: 4rem; }
             nav { padding: 1rem 10%; }
             .logo { font-size: 1.1rem; }
-            .lang-btn { font-size: 0.7rem; padding: 4px 10px; }
-            .hero-title { letter-spacing: -3px; }
         }
-
-        @media (max-width: 600px) {
-            nav ul { display: none; }
-        }
+        @media (max-width: 600px) { nav ul { display: none; } }
     </style>
 </head>
 <body>
@@ -136,9 +130,9 @@
                 <li><a href="#contact" data-key="nav_contact">Kontakt</a></li>
             </ul>
             <div class="lang-switch">
-                <button class="lang-btn" id="btn-de" onclick="setLanguage('de')"><img src="https://flagcdn.com/w40/de.png"> DE</button>
-                <button class="lang-btn" id="btn-en" onclick="setLanguage('en')"><img src="https://flagcdn.com/w40/gb.png"> EN</button>
-                <button class="lang-btn" id="btn-sq" onclick="setLanguage('sq')"><img src="https://flagcdn.com/w40/al.png"> SQ</button>
+                <button class="lang-btn" id="btn-de" onclick="setLanguage('de')"><img src="https://flagcdn.com/w40/de.png" alt="DE"> DE</button>
+                <button class="lang-btn" id="btn-en" onclick="setLanguage('en')"><img src="https://flagcdn.com/w40/gb.png" alt="EN"> EN</button>
+                <button class="lang-btn" id="btn-sq" onclick="setLanguage('sq')"><img src="https://flagcdn.com/w40/al.png" alt="SQ"> SQ</button>
             </div>
         </div>
     </nav>
@@ -192,6 +186,7 @@
             <h2 style="font-size: 2rem; margin-bottom: 0.5rem;" data-key="nav_contact">Kontakt</h2>
             <p data-key="contact_subtitle" style="opacity:0.9">Schreib mir eine Nachricht für Projektanfragen.</p>
             <form action="https://formspree.io/f/xnjqdepv" method="POST" class="contact-form">
+                <input type="text" name="_gotcha" style="display:none">
                 <input type="text" name="name" id="form_name" placeholder="Name" required>
                 <input type="email" name="email" id="form_email" placeholder="Email" required>
                 <textarea name="message" id="form_msg" rows="3" placeholder="Nachricht" required></textarea>
@@ -201,8 +196,8 @@
                 <i class="far fa-heart"></i> <span id="likeText">Gefällt mir</span>
             </button>
             <div style="margin-top: 2rem; display: flex; justify-content: center; gap: 1.5rem;">
-                <a href="https://github.com" target="_blank" style="color:white; font-size:1.5rem;"><i class="fab fa-github"></i></a>
-                <a href="https://linkedin.com" target="_blank" style="color:white; font-size:1.5rem;"><i class="fab fa-linkedin"></i></a>
+                <a href="https://github.com" target="_blank" rel="noopener noreferrer" style="color:white; font-size:1.5rem;"><i class="fab fa-github"></i></a>
+                <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" style="color:white; font-size:1.5rem;"><i class="fab fa-linkedin"></i></a>
             </div>
         </div>
     </section>
@@ -248,7 +243,7 @@
                 p_name: "Name", p_email: "Email", p_msg: "Message", like: "Like", liked: "Liked"
             },
             sq: {
-                nav_about: "Rreth meje", nav_roadmap: "Rruga", nav_contact: "Kontakt",
+                nav_about: "Rreth meje", nav_roadmap: "Roadmap", nav_contact: "Kontakt",
                 hero_desc: "Zhvillues Full-stack i fokusuar në sisteme të shkallëzueshme dhe estetikë të pastër.",
                 about_title: "Inxhinieri & Dizajn", about_text: "Unë ndërtoj zgjidhje që transformojnë kompleksitetin në përvoja të thjeshta. Fokus te kodi i pastër.",
                 roadmap_title: "Ecuria e Projekteve", 
@@ -267,7 +262,6 @@
             }
         };
 
-        // Logo Switcher Logic
         const logoText = document.getElementById('logo-text');
         const phrases = ["T. MALIQI", "REACT.JS", "NODE.JS", "FULLSTACK", "DOCKER"];
         let phraseIndex = 0;
@@ -281,43 +275,35 @@
         }
         setInterval(switchLogoText, 3500);
 
-        // Language Logic
         function setLanguage(lang) {
             document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active'));
             const activeBtn = document.getElementById('btn-' + lang);
             if(activeBtn) activeBtn.classList.add('active');
-            
             document.querySelectorAll('[data-key]').forEach(el => {
                 const key = el.getAttribute('data-key');
                 if(translations[lang][key]) el.innerText = translations[lang][key];
             });
-
             document.getElementById('form_name').placeholder = translations[lang].p_name;
             document.getElementById('form_email').placeholder = translations[lang].p_email;
             document.getElementById('form_msg').placeholder = translations[lang].p_msg;
-            
             const isLiked = localStorage.getItem('hasLiked') === 'true';
             document.getElementById('likeText').innerText = isLiked ? translations[lang].liked : translations[lang].like;
-            
             localStorage.setItem('preferredLang', lang);
         }
 
-        // Like Logic
         function toggleLike() {
             const btn = document.getElementById('likeBtn');
-            const icon = btn.querySelector('i');
             const lang = localStorage.getItem('preferredLang') || 'de';
             const isLiked = localStorage.getItem('hasLiked') === 'true';
-            
             if (isLiked) {
                 localStorage.setItem('hasLiked', 'false');
                 btn.classList.remove('liked');
-                icon.className = 'far fa-heart';
+                btn.querySelector('i').className = 'far fa-heart';
                 document.getElementById('likeText').innerText = translations[lang].like;
             } else {
                 localStorage.setItem('hasLiked', 'true');
                 btn.classList.add('liked');
-                icon.className = 'fas fa-heart';
+                btn.querySelector('i').className = 'fas fa-heart';
                 document.getElementById('likeText').innerText = translations[lang].liked;
             }
         }
@@ -326,8 +312,7 @@
             const savedLang = localStorage.getItem('preferredLang') || 'de';
             if (localStorage.getItem('hasLiked') === 'true') {
                 const btn = document.getElementById('likeBtn');
-                btn.classList.add('liked');
-                btn.querySelector('i').className = 'fas fa-heart';
+                btn.classList.add('liked'); btn.querySelector('i').className = 'fas fa-heart';
             }
             setLanguage(savedLang);
         }
