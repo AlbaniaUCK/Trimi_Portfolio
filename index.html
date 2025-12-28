@@ -18,88 +18,91 @@
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Inter', sans-serif; background-color: var(--bg-dark); color: var(--text-light); line-height: 1.6; scroll-behavior: smooth; overflow-x: hidden; }
+        body { font-family: 'Inter', sans-serif; background-color: var(--bg-dark); color: var(--text-light); line-height: 1.5; scroll-behavior: smooth; overflow-x: hidden; }
 
         /* Animationen */
         @keyframes revealUp {
-            from { opacity: 0; transform: translateY(40px); }
+            from { opacity: 0; transform: translateY(20px); }
             to { opacity: 1; transform: translateY(0); }
         }
+        @keyframes blink { 50% { opacity: 0; } }
 
-        @keyframes blink {
-            50% { opacity: 0; }
-        }
+        .animate { opacity: 0; animation: revealUp 0.6s cubic-bezier(0.2, 1, 0.3, 1) forwards; }
+        .delay-1 { animation-delay: 0.1s; }
+        .delay-2 { animation-delay: 0.2s; }
+        .delay-3 { animation-delay: 0.3s; }
 
-        .animate { opacity: 0; animation: revealUp 0.8s cubic-bezier(0.2, 1, 0.3, 1) forwards; }
-        .delay-1 { animation-delay: 0.2s; }
-        .delay-2 { animation-delay: 0.4s; }
-        .delay-3 { animation-delay: 0.6s; }
-
-        /* Navigation & Logo */
+        /* Navigation */
         nav {
             display: flex; justify-content: space-between; align-items: center;
-            padding: 1rem 10%; position: fixed; width: 100%;
-            background: rgba(26, 42, 58, 0.95); backdrop-filter: blur(10px);
+            padding: 0.8rem 5%; position: fixed; width: 100%;
+            background: rgba(26, 42, 58, 0.98); backdrop-filter: blur(10px);
             z-index: 1000; border-bottom: 1px solid rgba(255,255,255,0.1);
         }
         
         .logo { 
-            font-family: 'Fira Code', monospace; 
-            font-weight: 600; 
-            color: var(--white); 
-            text-decoration: none;
-            display: flex;
-            align-items: center;
-            font-size: 1.1rem;
+            font-family: 'Fira Code', monospace; font-weight: 600; color: var(--white); 
+            text-decoration: none; display: flex; align-items: center; font-size: 0.9rem;
         }
         .logo-icon { color: var(--accent-red); font-weight: 800; }
-        .logo-cursor { width: 10px; height: 2px; background: var(--accent-red); display: inline-block; animation: blink 1s step-end infinite; margin-left: 4px; }
+        .logo-cursor { width: 8px; height: 2px; background: var(--accent-red); display: inline-block; animation: blink 1s step-end infinite; margin-left: 3px; }
 
-        .nav-right { display: flex; align-items: center; gap: 2rem; }
-        nav ul { display: flex; list-style: none; gap: 2rem; }
-        nav ul li a { text-decoration: none; color: var(--text-dim); font-size: 0.8rem; font-weight: 600; text-transform: uppercase; transition: 0.3s; }
-        nav ul li a:hover { color: var(--white); }
+        .nav-right { display: flex; align-items: center; gap: 1rem; }
+        nav ul { display: flex; list-style: none; gap: 1.5rem; }
+        nav ul li a { text-decoration: none; color: var(--text-dim); font-size: 0.75rem; font-weight: 600; text-transform: uppercase; }
 
-        /* Language Switcher */
-        .lang-switch { display: flex; gap: 0.5rem; }
+        .lang-switch { display: flex; gap: 0.3rem; }
         .lang-btn { 
             background: rgba(255,255,255,0.05); border: 1px solid var(--text-dim); color: var(--text-dim);
-            padding: 4px 10px; cursor: pointer; font-size: 0.7rem; border-radius: 20px;
-            display: flex; align-items: center; gap: 6px; transition: 0.3s;
+            padding: 3px 6px; cursor: pointer; font-size: 0.6rem; border-radius: 4px;
+            display: flex; align-items: center; gap: 4px;
         }
-        .lang-btn img { width: 14px; height: 14px; border-radius: 50%; }
+        .lang-btn img { width: 12px; height: 12px; border-radius: 50%; }
         .lang-btn.active { background: var(--accent-red); color: white; border-color: var(--accent-red); }
 
-        section { padding: 120px 10% 100px; min-height: 100vh; display: flex; flex-direction: column; justify-content: center; }
+        section { padding: 80px 7% 60px; min-height: 100vh; display: flex; flex-direction: column; justify-content: center; }
 
         /* Hero Section */
-        #home { background-color: var(--bg-dark); }
-        .hero-title { font-size: clamp(3.5rem, 10vw, 6rem); font-weight: 800; line-height: 0.9; text-transform: uppercase; letter-spacing: -2px; }
+        .hero-title { font-size: clamp(2.5rem, 12vw, 5rem); font-weight: 800; line-height: 1; text-transform: uppercase; letter-spacing: -1px; }
         .outline-text { color: transparent; -webkit-text-stroke: 1px var(--text-dim); display: block; }
-        .hero-p { max-width: 550px; color: var(--text-dim); font-size: 1.2rem; margin-top: 1.5rem; border-left: 2px solid var(--accent-red); padding-left: 1.5rem; }
-        .dev-tag { display: inline-block; color: var(--accent-red); font-family: 'Fira Code', monospace; font-size: 1.1rem; margin-bottom: 1rem; }
+        .hero-p { max-width: 450px; color: var(--text-dim); font-size: 1rem; margin-top: 1rem; border-left: 2px solid var(--accent-red); padding-left: 1rem; }
+        .dev-tag { color: var(--accent-red); font-family: 'Fira Code', monospace; font-size: 0.9rem; margin-bottom: 0.5rem; display: block; }
 
         /* Sektionen */
         #about { background-color: var(--accent-red); color: var(--white); }
-        .about-grid { display: flex; flex-wrap: wrap; gap: 3rem; align-items: flex-start; }
-        .tech-box { flex: 0 1 350px; border: 1px solid rgba(255,255,255,0.3); padding: 1.5rem; border-radius: 4px; background: rgba(0,0,0,0.15); }
+        .about-grid { display: flex; flex-direction: column; gap: 2rem; }
+        .tech-box { border: 1px solid rgba(255,255,255,0.3); padding: 1.2rem; border-radius: 4px; background: rgba(0,0,0,0.15); font-size: 0.85rem; }
 
         #roadmap { background-color: var(--bg-dark); }
-        .timeline { border-left: 1px solid var(--accent-red); padding-left: 25px; }
-        .container { position: relative; margin-bottom: 2.5rem; }
-        .container::before { content: ''; position: absolute; width: 10px; height: 10px; background: var(--accent-red); left: -31px; top: 8px; border-radius: 50%; }
-        .content { background: var(--card-bg); padding: 1.5rem; border-radius: 4px; border-left: 3px solid var(--accent-red); }
+        .timeline { border-left: 1px solid var(--accent-red); padding-left: 20px; }
+        .container { position: relative; margin-bottom: 1.5rem; }
+        .container::before { content: ''; position: absolute; width: 8px; height: 8px; background: var(--accent-red); left: -25px; top: 8px; border-radius: 50%; }
+        .content { background: var(--card-bg); padding: 1rem; border-radius: 4px; border-left: 2px solid var(--accent-red); }
+        .content h3 { font-size: 1rem; }
+        .content p { font-size: 0.85rem; color: var(--text-dim); }
 
         #contact { background-color: var(--accent-red); color: var(--white); text-align: center; }
-        .contact-form { display: flex; flex-direction: column; gap: 1rem; max-width: 500px; margin: 2rem auto 0; text-align: left; }
-        .contact-form input, .contact-form textarea { background: rgba(0, 0, 0, 0.2); border: 1px solid rgba(255,255,255,0.2); padding: 1rem; color: var(--white); border-radius: 4px; outline: none; }
-        .email-btn { background-color: var(--white); color: var(--accent-red); padding: 1rem; border: none; border-radius: 4px; font-weight: 700; cursor: pointer; transition: 0.3s; width: 100%; }
+        .contact-form { display: flex; flex-direction: column; gap: 0.8rem; max-width: 400px; margin: 1.5rem auto 0; }
+        .contact-form input, .contact-form textarea { background: rgba(0, 0, 0, 0.2); border: 1px solid rgba(255,255,255,0.2); padding: 0.8rem; color: var(--white); border-radius: 4px; outline: none; font-size: 0.9rem; }
+        .email-btn { background-color: var(--white); color: var(--accent-red); padding: 0.8rem; border: none; border-radius: 4px; font-weight: 700; cursor: pointer; width: 100%; }
 
-        .like-btn { background: none; border: 1px solid var(--white); color: var(--white); padding: 8px 16px; border-radius: 30px; cursor: pointer; margin-top: 2rem; transition: 0.3s; }
+        .like-btn { background: none; border: 1px solid var(--white); color: var(--white); padding: 6px 12px; border-radius: 20px; cursor: pointer; margin-top: 1.5rem; font-size: 0.8rem; }
         .like-btn.liked { background: var(--bg-dark); border-color: var(--bg-dark); }
 
-        footer { padding: 3rem; text-align: center; font-size: 0.75rem; color: var(--text-dim); background: var(--bg-dark-alt); }
-        @media (max-width: 768px) { nav ul { display: none; } .hero-title { font-size: 3.5rem; } .nav-right { gap: 1rem; } }
+        footer { padding: 2rem; text-align: center; font-size: 0.7rem; color: var(--text-dim); background: var(--bg-dark-alt); }
+
+        /* Desktop Adjustments */
+        @media (min-width: 1024px) {
+            section { padding: 100px 15%; }
+            .about-grid { flex-direction: row; gap: 4rem; }
+            nav { padding: 1rem 10%; }
+            .logo { font-size: 1.1rem; }
+            .lang-btn { font-size: 0.7rem; padding: 4px 10px; }
+        }
+
+        @media (max-width: 600px) {
+            nav ul { display: none; } /* Versteckt Menü-Links auf kleinen Handys für Platz */
+        }
     </style>
 </head>
 <body>
@@ -113,9 +116,7 @@
         </a>
         <div class="nav-right">
             <ul>
-                <li><a href="#home" data-key="nav_start">Start</a></li>
                 <li><a href="#about" data-key="nav_about">Über mich</a></li>
-                <li><a href="#roadmap" data-key="nav_roadmap">Roadmap</a></li>
                 <li><a href="#contact" data-key="nav_contact">Kontakt</a></li>
             </ul>
             <div class="lang-switch">
@@ -139,13 +140,13 @@
 
     <section id="about">
         <div class="about-grid">
-            <div style="flex:1; min-width:300px;">
-                <h2 style="margin-bottom: 1.5rem; font-size: 2.5rem;" data-key="about_title">Engineering & Design</h2>
-                <p style="font-size: 1.1rem;" data-key="about_text">Ich entwickle Lösungen, die technologische Komplexität in einfache Benutzererfahrungen verwandeln. Mein Fokus liegt auf Clean Code und Performance.</p>
+            <div style="flex:1;">
+                <h2 style="margin-bottom: 1rem; font-size: 1.8rem;" data-key="about_title">Engineering & Design</h2>
+                <p data-key="about_text">Ich entwickle Lösungen, die technologische Komplexität in einfache Benutzererfahrungen verwandeln. Mein Fokus liegt auf Clean Code und Performance.</p>
             </div>
             <div class="tech-box">
-                <h3 style="margin-bottom: 1rem;">Tech Stack</h3>
-                <p style="font-family: 'Fira Code', monospace; line-height: 2;">
+                <h3 style="margin-bottom: 0.5rem;">Tech Stack</h3>
+                <p style="font-family: 'Fira Code', monospace; line-height: 1.8;">
                     > JavaScript / React<br>
                     > Node.js / SQL<br>
                     > Docker / AWS
@@ -155,21 +156,21 @@
     </section>
 
     <section id="roadmap">
-        <h2 style="margin-bottom: 3rem; font-size: 2.5rem; color: var(--white);" data-key="roadmap_title">Roadmap</h2>
+        <h2 style="margin-bottom: 2rem; font-size: 1.8rem; color: var(--white);" data-key="roadmap_title">Roadmap</h2>
         <div class="timeline">
-            <div class="container"><div class="content"><span class="date">2024</span><h3 data-key="r1_title">SaaS Innovation</h3><p data-key="r1_desc" style="color: var(--text-dim);">Cloud-native Applikationen im B2B Bereich.</p></div></div>
-            <div class="container"><div class="content"><span class="date">2023</span><h3 data-key="r2_title">E-Commerce Core</h3><p data-key="r2_desc" style="color: var(--text-dim);">Checkout-Optimierung & API-Strukturen.</p></div></div>
+            <div class="container"><div class="content"><span class="date" style="font-size:0.7rem; color:var(--accent-red)">2024</span><h3 data-key="r1_title">SaaS Innovation</h3><p data-key="r1_desc">Cloud-native Apps im B2B Bereich.</p></div></div>
+            <div class="container"><div class="content"><span class="date" style="font-size:0.7rem; color:var(--accent-red)">2023</span><h3 data-key="r2_title">E-Commerce Core</h3><p data-key="r2_desc">Checkout & API-Strukturen.</p></div></div>
         </div>
     </section>
 
     <section id="contact">
-        <div style="max-width: 600px; margin: 0 auto;">
-            <h2 style="font-size: 2.5rem; margin-bottom: 1rem;" data-key="nav_contact">Kontakt</h2>
+        <div class="contact-container">
+            <h2 style="font-size: 1.8rem; margin-bottom: 0.5rem;" data-key="nav_contact">Kontakt</h2>
             <form action="https://formspree.io/f/xnjqdepv" method="POST" class="contact-form">
                 <input type="text" name="name" id="form_name" placeholder="Name" required>
                 <input type="email" name="email" id="form_email" placeholder="Email" required>
-                <textarea name="message" id="form_msg" rows="4" placeholder="Nachricht" required></textarea>
-                <button type="submit" class="email-btn" data-key="contact_btn">NACHRICHT SENDEN</button>
+                <textarea name="message" id="form_msg" rows="3" placeholder="Nachricht" required></textarea>
+                <button type="submit" class="email-btn" data-key="contact_btn">SENDEN</button>
             </form>
             <button id="likeBtn" class="like-btn" onclick="toggleLike()">
                 <i class="far fa-heart"></i> <span id="likeText">Gefällt mir</span>
@@ -177,39 +178,38 @@
         </div>
     </section>
 
-    <footer>&copy; 2025 Trimlind Maliqi — Trimify.ch</footer>
+    <footer>&copy; 2025 Trimlind Maliqi</footer>
 
     <script>
         const translations = {
             de: {
-                nav_start: "Start", nav_about: "Über mich", nav_roadmap: "Roadmap", nav_contact: "Kontakt",
+                nav_about: "Über mich", nav_contact: "Kontakt",
                 hero_desc: "Full-Stack Entwickler mit Fokus auf skalierbare Systeme und saubere Ästhetik.",
-                about_title: "Engineering & Design", about_text: "Ich entwickle Lösungen, die technologische Komplexität in einfache Benutzererfahrungen verwandeln. Mein Fokus liegt auf Clean Code und Performance.",
-                roadmap_title: "Projekt Roadmap", r1_title: "SaaS Innovation", r1_desc: "Cloud-native Applikationen im B2B Bereich.",
-                r2_title: "E-Commerce Core", r2_desc: "Checkout-Optimierung & API-Strukturen.",
-                contact_btn: "NACHRICHT SENDEN", p_name: "Dein Name", p_email: "E-Mail Adresse", p_msg: "Deine Nachricht...", like: "Gefällt mir", liked: "Gefällt dir"
+                about_title: "Engineering & Design", about_text: "Ich entwickle Lösungen, die technologische Komplexität in einfache Benutzererfahrungen verwandeln. Fokus auf Clean Code.",
+                roadmap_title: "Roadmap", r1_title: "SaaS Innovation", r1_desc: "Cloud-native Apps im B2B Bereich.",
+                r2_title: "E-Commerce Core", r2_desc: "Checkout & API-Strukturen.",
+                contact_btn: "SENDEN", p_name: "Name", p_email: "Email", p_msg: "Nachricht", like: "Gefällt mir", liked: "Gefällt dir"
             },
             en: {
-                nav_start: "Home", nav_about: "About", nav_roadmap: "Roadmap", nav_contact: "Contact",
+                nav_about: "About", nav_contact: "Contact",
                 hero_desc: "Full-stack developer focused on scalable systems and clean aesthetics.",
-                about_title: "Engineering & Design", about_text: "I build solutions that transform technological complexity into simple user experiences. I focus on clean code and performance.",
-                roadmap_title: "Project Roadmap", r1_title: "SaaS Innovation", r1_desc: "Cloud-native applications in the B2B sector.",
-                r2_title: "E-Commerce Core", r2_desc: "Checkout optimization & API structures.",
-                contact_btn: "SEND MESSAGE", p_name: "Your Name", p_email: "Your Email Address", p_msg: "Your message...", like: "Like", liked: "Liked"
+                about_title: "Engineering & Design", about_text: "I build solutions that transform complexity into simple experiences. Focus on clean code.",
+                roadmap_title: "Roadmap", r1_title: "SaaS Innovation", r1_desc: "Cloud-native apps in B2B.",
+                r2_title: "E-Commerce Core", r2_desc: "Checkout & API structures.",
+                contact_btn: "SEND", p_name: "Name", p_email: "Email", p_msg: "Message", like: "Like", liked: "Liked"
             },
             sq: {
-                nav_start: "Fillimi", nav_about: "Rreth meje", nav_roadmap: "Roadmap", nav_contact: "Kontakt",
+                nav_about: "Rreth meje", nav_contact: "Kontakt",
                 hero_desc: "Zhvillues Full-stack i fokusuar në sisteme të shkallëzueshme dhe estetikë të pastër.",
-                about_title: "Inxhinieri & Dizajn", about_text: "Unë ndërtoj zgjidhje që transformojnë kompleksitetin teknologjik në përvoja të thjeshta për përdoruesit.",
-                roadmap_title: "Ecuria e Projekteve", r1_title: "Inovacion SaaS", r1_desc: "Aplikacione cloud-native në sektorin B2B.",
-                r2_title: "E-Commerce Core", r2_desc: "Optimizimi i arkëtimit dhe strukturat API.",
-                contact_btn: "DËRGO MESAZHIN", p_name: "Emri juaj", p_email: "Email adresa juaj", p_msg: "Mesazhi juaj...", like: "Më pëlqen", liked: "Të pëlqen"
+                about_title: "Inxhinieri & Dizajn", about_text: "Unë ndërtoj zgjidhje që transformojnë kompleksitetin në përvoja të thjeshta. Fokus te kodi i pastër.",
+                roadmap_title: "Roadmap", r1_title: "SaaS Inovacion", r1_desc: "Aplikacione cloud-native në B2B.",
+                r2_title: "E-Commerce Core", r2_desc: "Optimizimi i arkëtimit.",
+                contact_btn: "DËRGO", p_name: "Emri", p_email: "Email", p_msg: "Mesazhi", like: "Më pëlqen", liked: "Të pëlqen"
             }
         };
 
-        // LOGO SWITCHER LOGIC
         const logoText = document.getElementById('logo-text');
-        const phrases = ["T. MALIQI", "REACT.JS", "NODE.JS", "FULLSTACK", "DOCKER"];
+        const phrases = ["T. MALIQI", "REACT.JS", "NODE.JS", "SQL", "DOCKER"];
         let phraseIndex = 0;
 
         function switchLogoText() {
@@ -220,7 +220,7 @@
                 logoText.style.opacity = 1;
             }, 500);
         }
-        setInterval(switchLogoText, 4000);
+        setInterval(switchLogoText, 3500);
         logoText.style.transition = "opacity 0.5s ease";
 
         function setLanguage(lang) {
@@ -238,16 +238,13 @@
             const icon = btn.querySelector('i');
             const lang = localStorage.getItem('preferredLang') || 'de';
             const isLiked = localStorage.getItem('hasLiked') === 'true';
-            
             if (isLiked) {
                 localStorage.setItem('hasLiked', 'false');
-                btn.classList.remove('liked');
-                icon.className = 'far fa-heart';
+                btn.classList.remove('liked'); icon.className = 'far fa-heart';
                 document.getElementById('likeText').innerText = translations[lang].like;
             } else {
                 localStorage.setItem('hasLiked', 'true');
-                btn.classList.add('liked');
-                icon.className = 'fas fa-heart';
+                btn.classList.add('liked'); icon.className = 'fas fa-heart';
                 document.getElementById('likeText').innerText = translations[lang].liked;
             }
         }
