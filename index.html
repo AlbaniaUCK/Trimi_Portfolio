@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Trimlind Maliqi | Developer Portfolio</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Fira+Code:wght@400&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Fira+Code:wght@400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
@@ -35,18 +35,32 @@
         .delay-2 { animation-delay: 0.4s; }
         .delay-3 { animation-delay: 0.6s; }
 
-        /* Navigation */
+        /* Navigation & Logo */
         nav {
             display: flex; justify-content: space-between; align-items: center;
             padding: 1rem 10%; position: fixed; width: 100%;
             background: rgba(26, 42, 58, 0.95); backdrop-filter: blur(10px);
             z-index: 1000; border-bottom: 1px solid rgba(255,255,255,0.1);
         }
+        
+        .logo { 
+            font-family: 'Fira Code', monospace; 
+            font-weight: 600; 
+            color: var(--white); 
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            font-size: 1.1rem;
+        }
+        .logo-icon { color: var(--accent-red); font-weight: 800; }
+        .logo-cursor { width: 10px; height: 2px; background: var(--accent-red); display: inline-block; animation: blink 1s step-end infinite; margin-left: 4px; }
+
         .nav-right { display: flex; align-items: center; gap: 2rem; }
         nav ul { display: flex; list-style: none; gap: 2rem; }
         nav ul li a { text-decoration: none; color: var(--text-dim); font-size: 0.8rem; font-weight: 600; text-transform: uppercase; transition: 0.3s; }
         nav ul li a:hover { color: var(--white); }
 
+        /* Language Switcher */
         .lang-switch { display: flex; gap: 0.5rem; }
         .lang-btn { 
             background: rgba(255,255,255,0.05); border: 1px solid var(--text-dim); color: var(--text-dim);
@@ -58,24 +72,12 @@
 
         section { padding: 120px 10% 100px; min-height: 100vh; display: flex; flex-direction: column; justify-content: center; }
 
-        /* Hero Section Styling */
+        /* Hero Section */
         #home { background-color: var(--bg-dark); }
         .hero-title { font-size: clamp(3.5rem, 10vw, 6rem); font-weight: 800; line-height: 0.9; text-transform: uppercase; letter-spacing: -2px; }
-        .outline-text { 
-            color: transparent; 
-            -webkit-text-stroke: 1px var(--text-dim); 
-            display: block;
-        }
+        .outline-text { color: transparent; -webkit-text-stroke: 1px var(--text-dim); display: block; }
         .hero-p { max-width: 550px; color: var(--text-dim); font-size: 1.2rem; margin-top: 1.5rem; border-left: 2px solid var(--accent-red); padding-left: 1.5rem; }
-        
-        .dev-tag { 
-            display: inline-block;
-            color: var(--accent-red); 
-            font-family: 'Fira Code', monospace; 
-            font-size: 1.1rem; 
-            margin-bottom: 1rem;
-        }
-        .cursor { display: inline-block; width: 10px; height: 1.1rem; background: var(--accent-red); margin-left: 5px; animation: blink 1s step-end infinite; vertical-align: middle; }
+        .dev-tag { display: inline-block; color: var(--accent-red); font-family: 'Fira Code', monospace; font-size: 1.1rem; margin-bottom: 1rem; }
 
         /* Sektionen */
         #about { background-color: var(--accent-red); color: var(--white); }
@@ -91,19 +93,24 @@
         #contact { background-color: var(--accent-red); color: var(--white); text-align: center; }
         .contact-form { display: flex; flex-direction: column; gap: 1rem; max-width: 500px; margin: 2rem auto 0; text-align: left; }
         .contact-form input, .contact-form textarea { background: rgba(0, 0, 0, 0.2); border: 1px solid rgba(255,255,255,0.2); padding: 1rem; color: var(--white); border-radius: 4px; outline: none; }
-        .email-btn { background-color: var(--white); color: var(--accent-red); padding: 1rem; border: none; border-radius: 4px; font-weight: 700; cursor: pointer; transition: 0.3s; }
+        .email-btn { background-color: var(--white); color: var(--accent-red); padding: 1rem; border: none; border-radius: 4px; font-weight: 700; cursor: pointer; transition: 0.3s; width: 100%; }
 
         .like-btn { background: none; border: 1px solid var(--white); color: var(--white); padding: 8px 16px; border-radius: 30px; cursor: pointer; margin-top: 2rem; transition: 0.3s; }
         .like-btn.liked { background: var(--bg-dark); border-color: var(--bg-dark); }
 
         footer { padding: 3rem; text-align: center; font-size: 0.75rem; color: var(--text-dim); background: var(--bg-dark-alt); }
-        @media (max-width: 768px) { nav ul { display: none; } .hero-title { font-size: 3.5rem; } }
+        @media (max-width: 768px) { nav ul { display: none; } .hero-title { font-size: 3.5rem; } .nav-right { gap: 1rem; } }
     </style>
 </head>
 <body>
 
     <nav>
-        <div class="logo">T. MALIQI</div>
+        <a href="#home" class="logo">
+            <span class="logo-icon">{</span>
+            <span id="logo-text">T. MALIQI</span>
+            <span class="logo-icon">}</span>
+            <span class="logo-cursor"></span>
+        </a>
         <div class="nav-right">
             <ul>
                 <li><a href="#home" data-key="nav_start">Start</a></li>
@@ -121,7 +128,7 @@
 
     <section id="home">
         <div class="animate">
-            <span class="dev-tag">&lt;software_engineer /&gt;<span class="cursor"></span></span>
+            <span class="dev-tag">&lt;software_engineer /&gt;</span>
         </div>
         <h1 class="hero-title">
             <span class="outline-text animate delay-1">Trimlind</span>
@@ -199,6 +206,22 @@
                 contact_btn: "DËRGO MESAZHIN", p_name: "Emri juaj", p_email: "Email adresa juaj", p_msg: "Mesazhi juaj...", like: "Më pëlqen", liked: "Të pëlqen"
             }
         };
+
+        // LOGO SWITCHER LOGIC
+        const logoText = document.getElementById('logo-text');
+        const phrases = ["T. MALIQI", "REACT.JS", "NODE.JS", "FULLSTACK", "DOCKER"];
+        let phraseIndex = 0;
+
+        function switchLogoText() {
+            logoText.style.opacity = 0;
+            setTimeout(() => {
+                phraseIndex = (phraseIndex + 1) % phrases.length;
+                logoText.innerText = phrases[phraseIndex];
+                logoText.style.opacity = 1;
+            }, 500);
+        }
+        setInterval(switchLogoText, 4000);
+        logoText.style.transition = "opacity 0.5s ease";
 
         function setLanguage(lang) {
             document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active'));
