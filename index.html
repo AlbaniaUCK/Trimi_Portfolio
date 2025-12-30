@@ -48,8 +48,10 @@
             background: rgba(26, 42, 58, 0.85); backdrop-filter: blur(10px);
             z-index: 1000; border-bottom: 1px solid rgba(255,255,255,0.1);
         }
+        body.light-mode nav { background: rgba(255, 255, 255, 0.85); border-bottom: 1px solid rgba(0,0,0,0.1); }
         
         .logo { font-family: 'Fira Code', monospace; font-weight: 600; color: var(--white); text-decoration: none; display: flex; align-items: center; font-size: 0.9rem; }
+        .logo-icon { color: var(--accent-red); font-weight: 800; }
         #logo-text { margin: 0 6px; transition: opacity 0.5s; color: var(--accent-red); font-weight: 700; }
 
         .nav-right { display: flex; align-items: center; gap: 0.8rem; }
@@ -58,11 +60,11 @@
             padding: 5px 8px; border-radius: 5px; cursor: pointer; display: flex; align-items: center; gap: 5px; font-size: 0.75rem;
         }
         .lang-btn.active { background: var(--accent-red); color: white; border-color: var(--accent-red); }
-        .lang-btn img { width: 14px; }
+        .lang-btn img { width: 14px; border-radius: 2px; }
 
         section { position: relative; z-index: 2; padding: 100px 7% 60px; min-height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; width: 100%; }
 
-        /* HERO FIX: Dynamische Schriftgröße gegen Abschneiden */
+        /* iPhone Fix: Name wird nicht abgeschnitten */
         .hero-title { 
             font-size: clamp(2.2rem, 10vw, 6rem); 
             font-weight: 800; 
@@ -85,36 +87,31 @@
 
         .roadmap-container { width: 100%; max-width: 800px; margin: 0 auto; }
         .timeline { border-left: 2px solid var(--accent-red); padding-left: 20px; }
-        .container { position: relative; margin-bottom: 2.5rem; width: 100%; }
+        .container { position: relative; margin-bottom: 2.5rem; width: 100%; cursor: pointer; }
         .container::before { content: ''; position: absolute; width: 10px; height: 10px; background: var(--accent-red); left: -26px; top: 10px; border-radius: 50%; }
-        .content { background: var(--card-bg); padding: 1.5rem; border-radius: 8px; border-left: 4px solid var(--accent-red); position: relative; overflow: hidden; }
-        
-        /* KONTAKT FORMULAR FIX */
-        #contact { width: 100%; background-color: var(--accent-red); color: white; padding-left: 5%; padding-right: 5%; }
+        .content { background: var(--card-bg); padding: 1.5rem; border-radius: 8px; border-left: 4px solid var(--accent-red); transition: 0.4s; position: relative; overflow: hidden; text-align: left; }
+        .content:hover { transform: translateX(10px); background: rgba(255,255,255,0.1); }
+        .hover-info { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: var(--accent-red); color: white; display: flex; align-items: center; justify-content: center; transform: translateY(100%); transition: 0.3s; font-weight: 800; }
+        .content:hover .hover-info { transform: translateY(0); }
+
+        #contact { width: 100%; background-color: var(--accent-red); color: white; padding-left: 5%; padding-right: 5%; transition: background 0.3s; }
         body.light-mode #contact { background-color: #cbd5e0; color: #1a2a3a; }
         .contact-form { display: flex; flex-direction: column; gap: 1rem; width: 100%; max-width: 500px; margin: 2rem auto 0; }
         .contact-form input, .contact-form textarea { 
             background: rgba(0, 0, 0, 0.2); border: 1px solid rgba(255, 255, 255, 0.3); 
             padding: 1rem; color: white; border-radius: 6px; outline: none; font-size: 1rem;
-            width: 100%; -webkit-appearance: none; /* Safari Fix */
+            width: 100%; -webkit-appearance: none;
         }
         body.light-mode .contact-form input, body.light-mode .contact-form textarea {
             background: rgba(255, 255, 255, 0.5); border: 1px solid rgba(0, 0, 0, 0.1); color: #1a2a3a;
         }
-        .email-btn { background: white; color: var(--accent-red); padding: 1rem; border: none; font-weight: 800; cursor: pointer; border-radius: 6px; width: 100%; }
+        .email-btn { background: white; color: var(--accent-red); padding: 1rem; border: none; font-weight: 800; cursor: pointer; border-radius: 6px; width: 100%; transition: 0.3s; }
 
         .modal { display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); backdrop-filter: blur(10px); align-items: center; justify-content: center; padding: 20px; }
-        .modal-content { background: var(--bg-dark-alt); padding: 2rem; width: 100%; max-width: 500px; border-radius: 12px; border: 1px solid var(--accent-red); position: relative; }
-        .close-modal { position: absolute; top: 1rem; right: 1rem; font-size: 1.5rem; color: var(--text-dim); }
+        .modal-content { background: var(--bg-dark-alt); padding: 2rem; width: 100%; max-width: 550px; border-radius: 12px; border: 1px solid var(--accent-red); position: relative; text-align: left; }
+        .close-modal { position: absolute; top: 1rem; right: 1rem; font-size: 1.5rem; color: var(--text-dim); cursor: pointer; }
 
         footer { z-index: 2; position: relative; padding: 3rem 5%; text-align: center; background: var(--bg-dark-alt); font-size: 0.75rem; color: var(--text-dim); }
-
-        /* Media Query für sehr kleine Handys */
-        @media (max-width: 400px) {
-            section { padding-left: 5%; padding-right: 5%; }
-            .hero-title { font-size: 1.8rem; }
-            .content { padding: 1rem; }
-        }
     </style>
 </head>
 <body>
@@ -169,7 +166,7 @@
             <span class="close-modal" onclick="document.getElementById('projectModal').style.display='none'">&times;</span>
             <h2 id="modalTitle" style="font-size: 1.5rem; color: var(--accent-red); margin-bottom: 1rem;"></h2>
             <p id="modalBody" style="line-height: 1.6; font-size: 0.95rem; color: var(--text-light);"></p>
-            <div id="modalIcons" style="display: flex; gap: 15px; font-size: 2rem; color: var(--accent-red); margin-top: 1.5rem;"></div>
+            <div id="modalIcons" style="display: flex; gap: 15px; font-size: 2.5rem; color: var(--accent-red); margin-top: 1.5rem; flex-wrap: wrap;"></div>
         </div>
     </div>
 
@@ -191,15 +188,22 @@
         function toggleTheme() { document.body.classList.toggle('light-mode'); }
 
         const years = [
-            { id: 'r26', year: '2026', title: { de: "Next Horizon", en: "Next Horizon", sq: "Horizonti i ardhshëm" }, desc: { de: "Web3 & Scaling.", en: "Web3 & Scaling.", sq: "Web3 & Skalimi." }, icons: ['fa-brands fa-ethereum', 'fa-solid fa-cloud'], long: { de: "Vision für Dezentralisierung.", en: "Vision for decentralization.", sq: "Vizioni për deçentralizimin." } },
-            { id: 'r25', year: '2025', title: { de: "AI & Scalability", en: "AI & Scalability", sq: "AI dhe Skalueshmëria" }, desc: { de: "KI-Workflows.", en: "AI workflows.", sq: "Proceset AI." }, icons: ['fa-solid fa-robot', 'fa-solid fa-brain'], long: { de: "Zukunft der KI-Integration.", en: "Future of AI integration.", sq: "E ardhmja e AI." } },
-            { id: 'r22', year: '2022', title: { de: "Backend Excellence", en: "Backend Excellence", sq: "Backend Excellence" }, desc: { de: "Node.js & SQL.", en: "Node.js & SQL.", sq: "Node.js & SQL." }, icons: ['fa-brands fa-node-js', 'fa-solid fa-database'], long: { de: "Zotërimi i serverëve.", en: "Mastering servers.", sq: "Zotërimi i serverëve." } }
+            { id: 'r26', year: '2026', title: { de: "Next Horizon", en: "Next Horizon", sq: "Horizonti i ardhshëm" }, desc: { de: "Web3 & Cloud Scaling.", en: "Web3 & Cloud Scaling.", sq: "Web3 & Skalimi." }, icons: ['fa-brands fa-ethereum', 'fa-solid fa-cloud'], long: { de: "Geplante Projekte im Bereich Web3 und dezentrale Cloud-Architekturen zur Minimierung globaler Latenzen.", en: "Planned projects in Web3 and decentralized cloud architectures to minimize global latencies.", sq: "Projekte të planifikuara në Web3 dhe arkitekturat cloud për minimizimin e latencës." } },
+            { id: 'r25', year: '2025', title: { de: "AI & Scalability", en: "AI & Scalability", sq: "AI dhe Skalueshmëria" }, desc: { de: "KI-Workflows.", en: "AI workflows.", sq: "Proceset AI." }, icons: ['fa-solid fa-robot', 'fa-solid fa-brain'], long: { de: "Zentrierung auf KI-Modelle und RAG-Systeme zur effizienten Datenverarbeitung.", en: "Focusing on AI models and RAG systems for efficient data processing.", sq: "Fokusi në modelet AI dhe sistemet RAG për përpunimin e të dhënave." } },
+            { id: 'r1', year: '2024', title: { de: "SaaS Innovation", en: "SaaS Innovation", sq: "SaaS Inovacion" }, desc: { de: "Cloud-native B2B Apps.", en: "Cloud-native B2B apps.", sq: "Aplikacione cloud-native." }, icons: ['fa-brands fa-docker', 'fa-brands fa-aws'], long: { de: "Entwicklung hochverfügbarer SaaS-Lösungen mittels Docker und AWS-Infrastruktur.", en: "Development of high-availability SaaS solutions using Docker and AWS infrastructure.", sq: "Zhvillimi i zgjidhjeve SaaS me Docker dhe AWS." } },
+            { id: 'r2', year: '2023', title: { de: "E-Commerce Core", en: "E-Commerce Core", sq: "Baza e E-Commerce" }, desc: { de: "API & Checkout.", en: "API & Checkout.", sq: "API & Checkout." }, icons: ['fa-solid fa-bolt', 'fa-solid fa-server'], long: { de: "Optimierung kritischer Checkout-Prozesse und Implementierung performanter API-Strukturen.", en: "Optimization of critical checkout processes and implementation of performant API structures.", sq: "Optimizimi i proceseve të arkëtimit dhe strukturave API." } },
+            { id: 'r22', year: '2022', title: { de: "Backend Excellence", en: "Backend Excellence", sq: "Backend Excellence" }, desc: { de: "Node.js & SQL.", en: "Node.js & SQL.", sq: "Node.js & SQL." }, icons: ['fa-brands fa-node-js', 'fa-solid fa-database'], long: { de: "Vertiefung in komplexe Serverarchitekturen und relationale Datenverwaltung.", en: "Deep dive into complex server architectures and relational data management.", sq: "Thellimi në arkitekturat e serverëve dhe menaxhimin e të dhënave." } },
+            { id: 'r21', year: '2021', title: { de: "Frontend Mastery", en: "Frontend Mastery", sq: "Frontend Mastery" }, desc: { de: "React & State Mgmt.", en: "React & State Mgmt.", sq: "React & State Mgmt." }, icons: ['fa-brands fa-react', 'fa-brands fa-js'], long: { de: "Spezialisierung auf moderne Frontend-Entwicklung mit React und Redux.", en: "Specialization in modern frontend development with React and Redux.", sq: "Specializimi në zhvillimin e frontend-it me React dhe Redux." } },
+            { id: 'r20', year: '2020', title: { de: "UI/UX Basics", en: "UI/UX Basics", sq: "Bazat UI/UX" }, desc: { de: "Responsive Design.", en: "Responsive Design.", sq: "Dizajn responsive." }, icons: ['fa-solid fa-mobile-screen', 'fa-solid fa-pen-nib'], long: { de: "Fokus auf Barrierefreiheit und die Erstellung responsiver Benutzeroberflächen.", en: "Focus on accessibility and the creation of responsive user interfaces.", sq: "Fokusi në aksesueshmërinë dhe krijimin e ndërfaqeve responsive." } },
+            { id: 'r19', year: '2019', title: { de: "The Start", en: "The Start", sq: "Fillimi" }, desc: { de: "Official Entry.", en: "Official Entry.", sq: "Fillimi zyrtar." }, icons: ['fa-brands fa-git-alt', 'fa-solid fa-terminal'], long: { de: "Erste Schritte in der professionellen Softwareentwicklung und Versionskontrolle.", en: "First steps in professional software development and version control.", sq: "Hapat e parë në zhvillimin e softuerit dhe kontrollin e versioneve." } },
+            { id: 'r17', year: '2017-18', title: { de: "Logic Deepening", en: "Logic Deepening", sq: "Thellimi i logjikës" }, desc: { de: "Algorithms & JS.", en: "Algorithms & JS.", sq: "Algoritmet & JS." }, icons: ['fa-solid fa-code', 'fa-solid fa-microchip'], long: { de: "Studium fundamentaler Algorithmen und Datenstrukturen mit JavaScript.", en: "Study of fundamental algorithms and data structures with JavaScript.", sq: "Studimi i algoritmeve dhe strukturave të të dhënave me JavaScript." } },
+            { id: 'r15', year: '2015-16', title: { de: "First Lines", en: "First Lines", sq: "Rreshtat e parë" }, desc: { de: "HTML & CSS Start.", en: "HTML & CSS start.", sq: "HTML & CSS." }, icons: ['fa-brands fa-html5', 'fa-brands fa-css3-alt'], long: { de: "Entdeckung der Webentwicklung und Erstellung erster statischer Webseiten.", en: "Discovery of web development and creation of the first static websites.", sq: "Zbulimi i zhvillimit web dhe krijimi i faqeve të para statike." } }
         ];
 
         const translations = {
-            de: { roadmap_title: "Roadmap", nav_contact: "Kontakt", contact_btn: "NACHRICHT SENDEN", p_name: "Name", p_email: "Email", p_msg: "Nachricht" },
-            en: { roadmap_title: "Roadmap", nav_contact: "Contact", contact_btn: "SEND MESSAGE", p_name: "Name", p_email: "Email", p_msg: "Message" },
-            sq: { roadmap_title: "Ecuria", nav_contact: "Kontakt", contact_btn: "DËRGO MESAZH", p_name: "Emri", p_email: "Email", p_msg: "Mesazhi" }
+            de: { roadmap_title: "Roadmap", nav_about: "Über mich", nav_roadmap: "Roadmap", nav_contact: "Kontakt", contact_btn: "NACHRICHT SENDEN", p_name: "Name", p_email: "Email", p_msg: "Nachricht", more_info: "MEHR INFOS" },
+            en: { roadmap_title: "Roadmap", nav_about: "About", nav_roadmap: "Roadmap", nav_contact: "Contact", contact_btn: "SEND MESSAGE", p_name: "Name", p_email: "Email", p_msg: "Message", more_info: "MORE INFO" },
+            sq: { roadmap_title: "Ecuria", nav_about: "Rreth meje", nav_roadmap: "Roadmap", nav_contact: "Kontakt", contact_btn: "DËRGO MESAZH", p_name: "Emri", p_email: "Email", p_msg: "Mesazhi", more_info: "MË SHUMË" }
         };
 
         function renderRoadmap(lang) {
@@ -212,6 +216,7 @@
                         <span style="color:var(--accent-red); font-weight:800; font-size:0.8rem;">${y.year}</span>
                         <h3 style="font-size:1.1rem;">${y.title[lang]}</h3>
                         <p style="font-size:0.9rem;">${y.desc[lang]}</p>
+                        <div class="hover-info">${translations[lang].more_info}</div>
                     </div>
                 </div>`;
             });
@@ -242,7 +247,12 @@
             document.getElementById('projectModal').style.display = 'flex';
         }
 
-        window.onload = () => setLanguage('de');
+        function closeDetails(e) { if(e.target.id === 'projectModal') e.target.style.display = 'none'; }
+
+        window.onload = () => {
+            const savedLang = localStorage.getItem('preferredLang') || 'de';
+            setLanguage(savedLang);
+        };
 
         const logoText = document.getElementById('logo-text');
         const phrases = ["T. MALIQI", "FULLSTACK", "REACT.JS"];
