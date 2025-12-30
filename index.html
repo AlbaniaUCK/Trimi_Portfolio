@@ -88,11 +88,44 @@
         .tech-box { border: 1px solid rgba(255,255,255,0.3); padding: 1.2rem; border-radius: 4px; background: rgba(0,0,0,0.15); font-size: 0.85rem; }
 
         .timeline { border-left: 1px solid var(--accent-red); padding-left: 20px; }
-        .container { position: relative; margin-bottom: 1.5rem; }
+        .container { position: relative; margin-bottom: 1.5rem; cursor: pointer; }
         .container::before { content: ''; position: absolute; width: 8px; height: 8px; background: var(--accent-red); left: -25px; top: 8px; border-radius: 50%; }
-        .content { background: var(--card-bg); padding: 1.2rem; border-radius: 4px; border-left: 2px solid var(--accent-red); transition: 0.3s; }
+        
+        .content { 
+            background: var(--card-bg); padding: 1.2rem; border-radius: 4px; border-left: 2px solid var(--accent-red); 
+            transition: 0.3s; position: relative; overflow: hidden;
+        }
+        
+        /* Hover Beschreibung Overlay */
+        .hover-info {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: var(--accent-red); color: white;
+            display: flex; align-items: center; justify-content: center;
+            transform: translateY(100%); transition: 0.4s ease;
+            font-size: 0.8rem; padding: 1rem; text-align: center; font-weight: 600;
+        }
+
+        .content:hover .hover-info { transform: translateY(0); }
         .content:hover { transform: translateX(5px); background: rgba(255,255,255,0.08); }
         .date { font-size: 0.75rem; font-weight: 600; color: var(--accent-red); font-family: 'Fira Code', monospace; }
+
+        /* Modal / Detailansicht */
+        .modal {
+            display: none; position: fixed; z-index: 2000; left: 0; top: 0;
+            width: 100%; height: 100%; background: rgba(0,0,0,0.9);
+            backdrop-filter: blur(8px); align-items: center; justify-content: center;
+        }
+        .modal-content {
+            background: var(--bg-dark-alt); padding: 2.5rem; width: 90%; max-width: 600px;
+            border-radius: 8px; border: 1px solid var(--accent-red); position: relative;
+            animation: revealUp 0.4s ease;
+        }
+        .close-modal {
+            position: absolute; top: 1rem; right: 1.5rem; font-size: 2rem;
+            cursor: pointer; color: var(--text-dim); transition: 0.3s;
+        }
+        .close-modal:hover { color: var(--white); }
+        .modal-detail-tag { font-family: 'Fira Code', monospace; color: var(--accent-red); font-size: 0.8rem; margin-bottom: 1rem; display: block; }
 
         /* Kontaktformular */
         .contact-form { display: flex; flex-direction: column; gap: 0.8rem; max-width: 400px; margin: 1.5rem auto 0; text-align: left; }
@@ -168,17 +201,33 @@
     <section id="roadmap">
         <h2 style="margin-bottom: 2.5rem; font-size: 2rem; color: var(--white);" data-key="roadmap_title">Roadmap</h2>
         <div class="timeline">
-            <div class="container"><div class="content"><span class="date">2026</span><h3 data-key="r26_title">Next Horizon</h3><p data-key="r26_desc">TBA - In Kürze mehr.</p></div></div>
-            <div class="container"><div class="content"><span class="date">2025</span><h3 data-key="r25_title">AI & Scalability</h3><p data-key="r25_desc">KI-Workflows & Systeme.</p></div></div>
-            <div class="container"><div class="content"><span class="date">2024</span><h3 data-key="r1_title">SaaS Innovation</h3><p data-key="r1_desc">Cloud-native Apps B2B.</p></div></div>
-            <div class="container"><div class="content"><span class="date">2023</span><h3 data-key="r2_title">E-Commerce Core</h3><p data-key="r2_desc">API & Checkout Strukturen.</p></div></div>
-            <div class="container"><div class="content"><span class="date">2022</span><h3 data-key="r22_title">Backend Excellence</h3><p data-key="r22_desc">Node.js & SQL Fokus.</p></div></div>
-            <div class="container"><div class="content"><span class="date">2021</span><h3 data-key="r21_title">Frontend Mastery</h3><p data-key="r21_desc">React & State Management.</p></div></div>
-            <div class="container"><div class="content"><span class="date">2020</span><h3 data-key="r20_title">UI/UX Basics</h3><p data-key="r20_desc">Responsive Design Projekte.</p></div></div>
-            <div class="container"><div class="content"><span class="date">2019</span><h3 data-key="r19_title">The Start</h3><p data-key="r19_desc">Einstieg Software Engineering.</p></div></div>
-            <div class="container"><div class="content"><span class="date">2017 - 2018</span><h3 data-key="r17_title">Deepening Logic</h3><p data-key="r17_desc">Algorithmen & Web-Apps.</p></div></div>
-            <div class="container"><div class="content"><span class="date">2015 - 2016</span><h3 data-key="r15_title">First Lines of Code</h3><p data-key="r15_desc">Leidenschaft für Software.</p></div></div>
-        </div>
+            <div class="container" onclick="openDetails('r25')">
+                <div class="content">
+                    <span class="date">2025</span>
+                    <h3 data-key="r25_title">AI & Scalability</h3>
+                    <p data-key="r25_desc">KI-Workflows & Systeme.</p>
+                    <div class="hover-info">Klicken für Details zur Architektur</div>
+                </div>
+            </div>
+
+            <div class="container" onclick="openDetails('r1')">
+                <div class="content">
+                    <span class="date">2024</span>
+                    <h3 data-key="r1_title">SaaS Innovation</h3>
+                    <p data-key="r1_desc">Cloud-native Apps B2B.</p>
+                    <div class="hover-info">Klicken für Stack & Deployment Details</div>
+                </div>
+            </div>
+
+            <div class="container" onclick="openDetails('r2')">
+                <div class="content">
+                    <span class="date">2023</span>
+                    <h3 data-key="r2_title">E-Commerce Core</h3>
+                    <p data-key="r2_desc">API & Checkout Strukturen.</p>
+                    <div class="hover-info">Klicken für Performance Metriken</div>
+                </div>
+            </div>
+            </div>
     </section>
 
     <section id="contact">
@@ -202,9 +251,56 @@
         </div>
     </section>
 
+    <div id="projectModal" class="modal" onclick="closeDetails(event)">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <span class="close-modal" onclick="document.getElementById('projectModal').style.display='none'">&times;</span>
+            <span class="modal-detail-tag" id="modalTag">> detailed_view</span>
+            <h2 id="modalTitle" style="margin-bottom: 1rem; color: white;">Projekt Titel</h2>
+            <div id="modalBody" style="color: var(--text-dim); font-size: 0.95rem; line-height: 1.6;">
+                Beschreibung wird geladen...
+            </div>
+        </div>
+    </div>
+
     <footer>&copy; 2025 Trimlind Maliqi — Trimify.ch</footer>
 
     <script>
+        // Detail-Daten für die Projekte
+        const projectDetails = {
+            r25: {
+                de: "Implementierung von Large Language Models in bestehende Workflows. Fokus auf Vektordatenbanken und effizientes Prompt-Engineering zur Automatisierung von Support-Prozessen.",
+                en: "Implementation of LLMs into existing workflows. Focus on vector databases and efficient prompt engineering to automate support processes.",
+                sq: "Zbatimi i LLM në rrjedhat ekzistuese të punës. Fokusimi në bazat e të dhënave vektoriale dhe inxhinieria efikase e prompt-it."
+            },
+            r1: {
+                de: "Entwicklung einer mandantenfähigen SaaS-Plattform unter Nutzung von Docker und AWS Lambda. Reduzierung der Infrastrukturkosten um 40% durch serverlose Architektur.",
+                en: "Development of a multi-tenant SaaS platform using Docker and AWS Lambda. Reduced infrastructure costs by 40% through serverless architecture.",
+                sq: "Zhvillimi i një platforme SaaS duke përdorur Docker dhe AWS Lambda. Reduktimi i kostove të infrastrukturës me 40%."
+            },
+            r2: {
+                de: "Neugestaltung eines hochperformanten Checkouts. Optimierung der API-Antwortzeiten von 1.2s auf 200ms durch Redis-Caching und Datenbank-Indizierung.",
+                en: "Redesign of a high-performance checkout. Optimized API response times from 1.2s to 200ms using Redis caching and DB indexing.",
+                sq: "Rizgjidhja e një procesi arkëtimi me performancë të lartë. Optimizimi i kohës së përgjigjes së API nga 1.2s në 200ms."
+            }
+        };
+
+        function openDetails(projectId) {
+            const lang = localStorage.getItem('preferredLang') || 'de';
+            const modal = document.getElementById('projectModal');
+            const title = document.querySelector(`[data-key="${projectId}_title"]`).innerText;
+            
+            document.getElementById('modalTitle').innerText = title;
+            document.getElementById('modalBody').innerText = projectDetails[projectId][lang] || "Details coming soon...";
+            
+            modal.style.display = "flex";
+        }
+
+        function closeDetails(event) {
+            if(event.target.id === "projectModal") {
+                document.getElementById('projectModal').style.display = 'none';
+            }
+        }
+
         const translations = {
             de: {
                 nav_about: "Über mich", nav_roadmap: "Roadmap", nav_contact: "Kontakt",
