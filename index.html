@@ -5,7 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Trimlind Maliqi | Developer Portfolio</title>
     
+    <meta http-equiv="X-Frame-Options" content="DENY">
+    <meta http-equiv="X-Content-Type-Options" content="nosniff">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com https://flagcdn.com https://fav.farm; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; script-src 'self' 'unsafe-inline'; img-src 'self' data: https://flagcdn.com https://fav.farm; connect-src 'self' https://formspree.io;">
+
     <link rel="icon" href="https://fav.farm/💻"> 
+    <link rel="apple-touch-icon" href="https://fav.farm/💻">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Fira+Code:wght@400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
@@ -23,6 +31,16 @@
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: 'Inter', sans-serif; background-color: var(--bg-dark); color: var(--text-light); line-height: 1.5; scroll-behavior: smooth; overflow-x: hidden; }
 
+        /* Animationen */
+        @keyframes revealUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes blink { 50% { opacity: 0; } }
+
+        .animate { opacity: 0; animation: revealUp 0.6s cubic-bezier(0.2, 1, 0.3, 1) forwards; }
+        .delay-1 { animation-delay: 0.1s; }
+        .delay-2 { animation-delay: 0.2s; }
+        .delay-3 { animation-delay: 0.3s; }
+
+        /* Navigation */
         nav {
             display: flex; justify-content: space-between; align-items: center;
             padding: 0.8rem 5%; position: fixed; width: 100%;
@@ -30,8 +48,13 @@
             z-index: 1000; border-bottom: 1px solid rgba(255,255,255,0.1);
         }
         
-        .logo { font-family: 'Fira Code', monospace; font-weight: 600; color: var(--white); text-decoration: none; display: flex; align-items: center; font-size: 0.9rem; }
+        .logo { 
+            font-family: 'Fira Code', monospace; font-weight: 600; color: var(--white); 
+            text-decoration: none; display: flex; align-items: center; font-size: 0.9rem;
+        }
         .logo-icon { color: var(--accent-red); font-weight: 800; }
+        #logo-text { transition: opacity 0.5s ease; margin: 0 4px; }
+        .logo-cursor { width: 8px; height: 2px; background: var(--accent-red); display: inline-block; animation: blink 1s step-end infinite; }
 
         .nav-right { display: flex; align-items: center; gap: 1rem; }
         nav ul { display: flex; list-style: none; gap: 1.5rem; }
@@ -39,38 +62,63 @@
         nav ul li a:hover { color: var(--white); }
 
         .lang-switch { display: flex; gap: 0.3rem; }
-        .lang-btn { background: rgba(255,255,255,0.05); border: 1px solid var(--text-dim); color: var(--text-dim); padding: 3px 6px; cursor: pointer; font-size: 0.6rem; border-radius: 4px; display: flex; align-items: center; gap: 4px; }
+        .lang-btn { 
+            background: rgba(255,255,255,0.05); border: 1px solid var(--text-dim); color: var(--text-dim);
+            padding: 3px 6px; cursor: pointer; font-size: 0.6rem; border-radius: 4px;
+            display: flex; align-items: center; gap: 4px;
+        }
+        .lang-btn img { width: 12px; height: 12px; border-radius: 50%; }
         .lang-btn.active { background: var(--accent-red); color: white; border-color: var(--accent-red); }
 
-        section { padding: 100px 7% 60px; min-height: 100vh; display: flex; flex-direction: column; justify-content: center; }
+        section { padding: 80px 7% 60px; min-height: 100vh; display: flex; flex-direction: column; justify-content: center; }
 
-        .hero-title { font-size: clamp(2.5rem, 12vw, 5rem); font-weight: 800; text-transform: uppercase; }
-        .outline-text { color: transparent; -webkit-text-stroke: 1px var(--text-dim); }
+        /* Hero Section */
+        .hero-title { font-size: clamp(2.5rem, 12vw, 5rem); font-weight: 800; line-height: 1; text-transform: uppercase; letter-spacing: -1px; }
+        .outline-text { color: transparent; -webkit-text-stroke: 1px var(--text-dim); display: block; }
+        .hero-p { max-width: 450px; color: var(--text-dim); font-size: 1rem; margin-top: 1rem; border-left: 2px solid var(--accent-red); padding-left: 1rem; }
+        .dev-tag { color: var(--accent-red); font-family: 'Fira Code', monospace; font-size: 0.9rem; margin-bottom: 0.5rem; display: block; }
 
-        /* Roadmap Styles */
-        .timeline { border-left: 1px solid var(--accent-red); padding-left: 20px; max-width: 800px; margin: 0 auto; }
-        .container { position: relative; margin-bottom: 2rem; cursor: pointer; }
-        .container::before { content: ''; position: absolute; width: 10px; height: 10px; background: var(--accent-red); left: -26px; top: 12px; border-radius: 50%; border: 2px solid var(--bg-dark); }
-        .content { background: var(--card-bg); padding: 1.5rem; border-radius: 4px; border-left: 3px solid var(--accent-red); transition: 0.3s; position: relative; overflow: hidden; }
-        .content:hover { background: rgba(255, 255, 255, 0.08); transform: translateX(10px); }
+        /* About Section */
+        #about { background-color: var(--accent-red); color: var(--white); }
+        .about-grid { display: flex; flex-direction: column; gap: 2rem; }
+        .tech-box { border: 1px solid rgba(255,255,255,0.3); padding: 1.2rem; border-radius: 4px; background: rgba(0,0,0,0.15); font-size: 0.85rem; }
+
+        /* Roadmap Section */
+        .timeline { border-left: 1px solid var(--accent-red); padding-left: 20px; }
+        .container { position: relative; margin-bottom: 1.5rem; cursor: pointer; }
+        .container::before { content: ''; position: absolute; width: 8px; height: 8px; background: var(--accent-red); left: -25px; top: 8px; border-radius: 50%; }
+        .content { background: var(--card-bg); padding: 1.2rem; border-radius: 4px; border-left: 2px solid var(--accent-red); transition: 0.3s; position: relative; overflow: hidden; }
+        .content:hover { transform: translateX(5px); background: rgba(255,255,255,0.08); }
         
         .hover-info { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: var(--accent-red); color: white; display: flex; align-items: center; justify-content: center; transform: translateY(100%); transition: 0.4s ease; font-size: 0.8rem; font-weight: 600; }
         .content:hover .hover-info { transform: translateY(0); }
-        .date { font-size: 0.8rem; font-weight: 800; color: var(--accent-red); font-family: 'Fira Code', monospace; }
+        .date { font-size: 0.75rem; font-weight: 600; color: var(--accent-red); font-family: 'Fira Code', monospace; }
 
         /* Modal */
         .modal { display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); backdrop-filter: blur(8px); align-items: center; justify-content: center; }
-        .modal-content { background: var(--bg-dark-alt); padding: 2.5rem; width: 90%; max-width: 500px; border-radius: 8px; border: 1px solid var(--accent-red); position: relative; }
+        .modal-content { background: var(--bg-dark-alt); padding: 2.5rem; width: 90%; max-width: 500px; border-radius: 8px; border: 1px solid var(--accent-red); position: relative; animation: revealUp 0.4s ease; }
         .close-modal { position: absolute; top: 1rem; right: 1.5rem; font-size: 2rem; cursor: pointer; color: var(--text-dim); }
-        .tech-icons-row { display: flex; gap: 1.2rem; margin-top: 1.5rem; font-size: 2rem; color: var(--accent-red); }
+        .tech-icons-row { display: flex; gap: 1.2rem; margin-top: 1.5rem; font-size: 1.8rem; color: var(--accent-red); }
 
+        /* Kontakt & Footer */
+        #contact { background-color: var(--accent-red); color: var(--white); text-align: center; }
+        .contact-form { display: flex; flex-direction: column; gap: 0.8rem; max-width: 400px; margin: 1.5rem auto 0; text-align: left; }
+        .contact-form input, .contact-form textarea { background: rgba(0, 0, 0, 0.2); border: 1px solid rgba(255,255,255,0.2); padding: 0.8rem; color: var(--white); border-radius: 4px; outline: none; width: 100%; }
+        .email-btn { background-color: var(--white); color: var(--accent-red); padding: 0.8rem; border: none; border-radius: 4px; font-weight: 700; cursor: pointer; transition: 0.3s; }
+        .like-btn { background: none; border: 1px solid var(--white); color: var(--white); padding: 6px 12px; border-radius: 20px; cursor: pointer; margin-top: 1.5rem; font-size: 0.8rem; }
+        .like-btn.liked { background: var(--bg-dark); border-color: var(--bg-dark); }
+        footer { padding: 2.5rem; text-align: center; font-size: 0.7rem; color: var(--text-dim); background: var(--bg-dark-alt); }
+
+        @media (min-width: 1024px) { section { padding: 100px 15%; } .about-grid { flex-direction: row; gap: 4rem; } }
         @media (max-width: 600px) { nav ul { display: none; } }
     </style>
 </head>
 <body>
 
     <nav>
-        <a href="#home" class="logo"><span class="logo-icon">{</span> T. MALIQI <span class="logo-icon">}</span></a>
+        <a href="#home" class="logo">
+            <span class="logo-icon">{</span><span id="logo-text">T. MALIQI</span><span class="logo-icon">}</span><span class="logo-cursor"></span>
+        </a>
         <div class="nav-right">
             <ul>
                 <li><a href="#about" data-key="nav_about">Über mich</a></li>
@@ -78,217 +126,144 @@
                 <li><a href="#contact" data-key="nav_contact">Kontakt</a></li>
             </ul>
             <div class="lang-switch">
-                <button class="lang-btn" id="btn-de" onclick="setLanguage('de')">DE</button>
-                <button class="lang-btn" id="btn-en" onclick="setLanguage('en')">EN</button>
-                <button class="lang-btn" id="btn-sq" onclick="setLanguage('sq')">SQ</button>
+                <button class="lang-btn" id="btn-de" onclick="setLanguage('de')"><img src="https://flagcdn.com/w40/de.png"> DE</button>
+                <button class="lang-btn" id="btn-en" onclick="setLanguage('en')"><img src="https://flagcdn.com/w40/gb.png"> EN</button>
+                <button class="lang-btn" id="btn-sq" onclick="setLanguage('sq')"><img src="https://flagcdn.com/w40/al.png"> SQ</button>
             </div>
         </div>
     </nav>
 
     <section id="home">
-        <h1 class="hero-title"><span class="outline-text">Trimlind</span><br>Maliqi</h1>
+        <div class="animate"><span class="dev-tag">&lt;software_engineer /&gt;</span></div>
+        <h1 class="hero-title"><span class="outline-text animate delay-1">Trimlind</span><span class="animate delay-2">Maliqi</span></h1>
+        <p class="hero-p animate delay-3" data-key="hero_desc">Full-Stack Entwickler mit Fokus auf skalierbare Systeme und saubere Ästhetik.</p>
+    </section>
+
+    <section id="about">
+        <div class="about-grid">
+            <div style="flex:1;">
+                <h2 style="margin-bottom: 1rem; font-size: 2rem;" data-key="about_title">Engineering & Design</h2>
+                <p data-key="about_text">Ich entwickle Lösungen, die technologische Komplexität in einfache Benutzererfahrungen verwandeln. Fokus auf Clean Code.</p>
+            </div>
+            <div class="tech-box">
+                <h3 style="margin-bottom: 0.8rem;">Tech Stack</h3>
+                <p style="font-family: 'Fira Code', monospace; line-height: 2;">> JavaScript / React<br>> Node.js / SQL<br>> Docker / AWS</p>
+            </div>
+        </div>
     </section>
 
     <section id="roadmap">
-        <h2 style="margin-bottom: 3rem; font-size: 2.5rem; text-align: center;" data-key="roadmap_title">Meine Roadmap</h2>
+        <h2 style="margin-bottom: 2.5rem; font-size: 2rem; color: var(--white);" data-key="roadmap_title">Roadmap</h2>
         <div class="timeline">
-            <div class="container" onclick="openDetails('r26')">
-                <div class="content">
-                    <span class="date">2026</span>
-                    <h3 data-key="r26_title">Next Horizon</h3>
-                    <p data-key="r26_desc">TBA - In Kürze mehr.</p>
-                    <div class="hover-info">DETAILS ANZEIGEN</div>
-                </div>
-            </div>
-            <div class="container" onclick="openDetails('r25')">
-                <div class="content">
-                    <span class="date">2025</span>
-                    <h3 data-key="r25_title">AI Integration</h3>
-                    <p data-key="r25_desc">KI-Workflows & Skalierung.</p>
-                    <div class="hover-info">DETAILS ANZEIGEN</div>
-                </div>
-            </div>
-            <div class="container" onclick="openDetails('r1')">
-                <div class="content">
-                    <span class="date">2024</span>
-                    <h3 data-key="r1_title">SaaS Innovation</h3>
-                    <p data-key="r1_desc">Cloud-native Applikationen.</p>
-                    <div class="hover-info">DETAILS ANZEIGEN</div>
-                </div>
-            </div>
-            <div class="container" onclick="openDetails('r2')">
-                <div class="content">
-                    <span class="date">2023</span>
-                    <h3 data-key="r2_title">E-Commerce Core</h3>
-                    <p data-key="r2_desc">API & Checkout Fokus.</p>
-                    <div class="hover-info">DETAILS ANZEIGEN</div>
-                </div>
-            </div>
-            <div class="container" onclick="openDetails('r22')">
-                <div class="content">
-                    <span class="date">2022</span>
-                    <h3 data-key="r22_title">Backend Excellence</h3>
-                    <p data-key="r22_desc">Node.js & Datenbanken.</p>
-                    <div class="hover-info">DETAILS ANZEIGEN</div>
-                </div>
-            </div>
-            <div class="container" onclick="openDetails('r21')">
-                <div class="content">
-                    <span class="date">2021</span>
-                    <h3 data-key="r21_title">Frontend Mastery</h3>
-                    <p data-key="r21_desc">React & State Management.</p>
-                    <div class="hover-info">DETAILS ANZEIGEN</div>
-                </div>
-            </div>
-            <div class="container" onclick="openDetails('r20')">
-                <div class="content">
-                    <span class="date">2020</span>
-                    <h3 data-key="r20_title">UI/UX & Web</h3>
-                    <p data-key="r20_desc">Responsive Design.</p>
-                    <div class="hover-info">DETAILS ANZEIGEN</div>
-                </div>
-            </div>
-            <div class="container" onclick="openDetails('r19')">
-                <div class="content">
-                    <span class="date">2019</span>
-                    <h3 data-key="r19_title">The Journey Begins</h3>
-                    <p data-key="r19_desc">Einstieg in die Softwareentwicklung.</p>
-                    <div class="hover-info">DETAILS ANZEIGEN</div>
-                </div>
-            </div>
-            <div class="container" onclick="openDetails('r17')">
-                <div class="content">
-                    <span class="date">2017 - 2018</span>
-                    <h3 data-key="r17_title">Deepening Logic</h3>
-                    <p data-key="r17_desc">Algorithmen & Web-Apps.</p>
-                    <div class="hover-info">DETAILS ANZEIGEN</div>
-                </div>
-            </div>
-            <div class="container" onclick="openDetails('r15')">
-                <div class="content">
-                    <span class="date">2015 - 2016</span>
-                    <h3 data-key="r15_title">First Lines of Code</h3>
-                    <p data-key="r15_desc">Start mit HTML & CSS.</p>
-                    <div class="hover-info">DETAILS ANZEIGEN</div>
-                </div>
-            </div>
+            <div class="container" onclick="openDetails('r26')"><div class="content"><span class="date">2026</span><h3 data-key="r26_title">Next Horizon</h3><p data-key="r26_desc">TBA</p><div class="hover-info">DETAILS</div></div></div>
+            <div class="container" onclick="openDetails('r25')"><div class="content"><span class="date">2025</span><h3 data-key="r25_title">AI Integration</h3><p data-key="r25_desc">KI-Workflows.</p><div class="hover-info">DETAILS</div></div></div>
+            <div class="container" onclick="openDetails('r1')"><div class="content"><span class="date">2024</span><h3 data-key="r1_title">SaaS Innovation</h3><p data-key="r1_desc">Cloud-native Apps.</p><div class="hover-info">DETAILS</div></div></div>
+            <div class="container" onclick="openDetails('r2')"><div class="content"><span class="date">2023</span><h3 data-key="r2_title">E-Commerce Core</h3><p data-key="r2_desc">API Strukturen.</p><div class="hover-info">DETAILS</div></div></div>
+            <div class="container" onclick="openDetails('r22')"><div class="content"><span class="date">2022</span><h3 data-key="r22_title">Backend Excellence</h3><p data-key="r22_desc">Node.js & SQL.</p><div class="hover-info">DETAILS</div></div></div>
+            <div class="container" onclick="openDetails('r21')"><div class="content"><span class="date">2021</span><h3 data-key="r21_title">Frontend Mastery</h3><p data-key="r21_desc">React Fokus.</p><div class="hover-info">DETAILS</div></div></div>
+            <div class="container" onclick="openDetails('r20')"><div class="content"><span class="date">2020</span><h3 data-key="r20_title">UI/UX Basics</h3><p data-key="r20_desc">Responsive Design.</p><div class="hover-info">DETAILS</div></div></div>
+            <div class="container" onclick="openDetails('r19')"><div class="content"><span class="date">2019</span><h3 data-key="r19_title">The Start</h3><p data-key="r19_desc">Einstieg Software.</p><div class="hover-info">DETAILS</div></div></div>
+            <div class="container" onclick="openDetails('r17')"><div class="content"><span class="date">2017-18</span><h3 data-key="r17_title">Deepening Logic</h3><p data-key="r17_desc">Algorithmen.</p><div class="hover-info">DETAILS</div></div></div>
+            <div class="container" onclick="openDetails('r15')"><div class="content"><span class="date">2015-16</span><h3 data-key="r15_title">First Lines</h3><p data-key="r15_desc">HTML/CSS Start.</p><div class="hover-info">DETAILS</div></div></div>
+        </div>
+    </section>
+
+    <section id="contact">
+        <h2 style="font-size: 2rem; margin-bottom: 0.5rem;" data-key="nav_contact">Kontakt</h2>
+        <form action="https://formspree.io/f/xnjqdepv" method="POST" class="contact-form">
+            <input type="text" name="name" id="form_name" placeholder="Name" required>
+            <input type="email" name="email" id="form_email" placeholder="Email" required>
+            <textarea name="message" id="form_msg" rows="3" placeholder="Nachricht" required></textarea>
+            <button type="submit" class="email-btn" data-key="contact_btn">SENDEN</button>
+        </form>
+        <button id="likeBtn" class="like-btn" onclick="toggleLike()">
+            <i class="far fa-heart"></i> <span id="likeText">Gefällt mir</span>
+        </button>
+        <div style="margin-top: 2rem; display: flex; justify-content: center; gap: 1.5rem;">
+            <a href="https://github.com" target="_blank" style="color:white; font-size:1.5rem;"><i class="fab fa-github"></i></a>
+            <a href="https://linkedin.com" target="_blank" style="color:white; font-size:1.5rem;"><i class="fab fa-linkedin"></i></a>
         </div>
     </section>
 
     <div id="projectModal" class="modal" onclick="closeDetails(event)">
         <div class="modal-content" onclick="event.stopPropagation()">
             <span class="close-modal" onclick="document.getElementById('projectModal').style.display='none'">&times;</span>
-            <h2 id="modalTitle">Projekt</h2>
-            <p id="modalBody" style="margin-top: 1.5rem; color: var(--text-dim); line-height: 1.6;"></p>
+            <h2 id="modalTitle">Titel</h2>
+            <p id="modalBody" style="margin-top: 1rem; color: var(--text-dim); line-height: 1.6;"></p>
             <div class="tech-icons-row" id="modalIcons"></div>
         </div>
     </div>
 
+    <footer>&copy; 2025 Trimlind Maliqi</footer>
+
     <script>
         const projectDetails = {
-            r26: { 
-                de: "Zukünftige Projekte im Bereich Web3 und Cloud-native Infrastrukturen. TBA.", 
-                en: "Future projects in Web3 and cloud-native infrastructure. TBA.", 
-                sq: "Projekte të ardhshme në Web3 dhe Cloud. TBA.",
-                icons: ['fa-ethereum', 'fa-cloud-meatball'] 
-            },
-            r25: { 
-                de: "Implementierung von LLMs und Vektordatenbanken (Pinecone) zur Prozessautomatisierung.", 
-                en: "Implementation of LLMs and vector databases (Pinecone) for automation.", 
-                sq: "Zbatimi i LLM dhe bazave të të dhënave vektoriale.",
-                icons: ['fa-robot', 'fa-brain'] 
-            },
-            r1: { 
-                de: "Entwicklung von SaaS-Plattformen mit Docker und AWS Lambda (Serverless).", 
-                en: "Developing SaaS platforms using Docker and AWS Lambda (Serverless).", 
-                sq: "Zhvillimi i platformave SaaS me Docker dhe AWS.",
-                icons: ['fa-docker', 'fa-aws'] 
-            },
-            r2: { 
-                de: "API-Optimierung und hochverfügbare Checkout-Systeme mit Redis Caching.", 
-                en: "API optimization and high-availability checkout systems with Redis.", 
-                sq: "Optimizimi i API dhe sistemeve të arkëtimit.",
-                icons: ['fa-bolt', 'fa-server'] 
-            },
-            r22: { 
-                de: "Fokus auf skalierbare Backends mit Node.js, Express und PostgreSQL.", 
-                en: "Focus on scalable backends with Node.js, Express and PostgreSQL.", 
-                sq: "Fokusi në Backend me Node.js dhe PostgreSQL.",
-                icons: ['fa-node-js', 'fa-database'] 
-            },
-            r21: { 
-                de: "Mastery in modernen Frontends mit React, Redux und komplexen SPAs.", 
-                en: "Mastery in modern frontends with React, Redux and complex SPAs.", 
-                sq: "Master në Frontend me React dhe Redux.",
-                icons: ['fa-react', 'fa-js-square'] 
-            },
-            r20: { 
-                de: "Umsetzung von Mobile-First Designs und intuitiven UI/UX Prinzipien.", 
-                en: "Implementation of mobile-first designs and intuitive UI/UX principles.", 
-                sq: "Zbatimi i dizajnit mobile-first dhe UI/UX.",
-                icons: ['fa-mobile-alt', 'fa-paint-brush'] 
-            },
-            r19: { 
-                de: "Offizieller Einstieg ins Engineering, Erlernen von Git und Team-Workflows.", 
-                en: "Official entry into engineering, learning Git and team workflows.", 
-                sq: "Hyrja zyrtare në inxhinieri dhe mësimi i Git.",
-                icons: ['fa-git-alt', 'fa-terminal'] 
-            },
-            r17: { 
-                de: "Vertiefung der Programmierlogik und erste interaktive Apps mit JavaScript.", 
-                en: "Deepening logic and building first interactive apps with JavaScript.", 
-                sq: "Thellimi i logjikës dhe aplikacionet e para me JS.",
-                icons: ['fa-code', 'fa-laptop-code'] 
-            },
-            r15: { 
-                de: "Die Entdeckung der Webentwicklung mit HTML5, CSS3 und ersten statischen Seiten.", 
-                en: "Discovering web development with HTML5, CSS3 and first static sites.", 
-                sq: "Zbulimi i zhvillimit web me HTML5 dhe CSS3.",
-                icons: ['fa-html5', 'fa-css3-alt'] 
-            }
+            r26: { de: "Web3 Projekte & Cloud-Infrastruktur.", en: "Web3 projects.", sq: "Projekte në Web3.", icons: ['fa-ethereum', 'fa-cloud'] },
+            r25: { de: "KI-Workflows & Vektordatenbanken.", en: "AI workflows.", sq: "AI dhe LLM.", icons: ['fa-robot', 'fa-brain'] },
+            r1: { de: "SaaS mit Docker & AWS Lambda.", en: "SaaS with Docker.", sq: "SaaS me Docker.", icons: ['fa-docker', 'fa-aws'] },
+            r2: { de: "API Optimierung & Redis Caching.", en: "API optimization.", sq: "Optimizimi i API.", icons: ['fa-bolt', 'fa-server'] },
+            r22: { de: "Skalierbare Backends (Node.js/SQL).", en: "Scalable backends.", sq: "Backend me Node.js.", icons: ['fa-node-js', 'fa-database'] },
+            r21: { de: "Frontend mit React & Redux.", en: "React & Redux.", sq: "Frontend me React.", icons: ['fa-react', 'fa-js'] },
+            r20: { de: "Responsive Design & UX Fokus.", en: "UX Focus.", sq: "Dizajn responsive.", icons: ['fa-mobile-alt', 'fa-paint-brush'] },
+            r19: { de: "Start Engineering & Git Workflows.", en: "Git workflows.", sq: "Fillimi me Git.", icons: ['fa-git-alt', 'fa-terminal'] },
+            r17: { de: "Programmierlogik & JavaScript Apps.", en: "JS Logic.", sq: "Logjika JS.", icons: ['fa-code', 'fa-laptop-code'] },
+            r15: { de: "Erste Schritte HTML5 & CSS3.", en: "First steps HTML/CSS.", sq: "Hapat e parë.", icons: ['fa-html5', 'fa-css3-alt'] }
         };
 
         const translations = {
-            de: { roadmap_title: "Meine Roadmap", nav_about: "Über mich", nav_roadmap: "Roadmap", nav_contact: "Kontakt" },
-            en: { roadmap_title: "My Roadmap", nav_about: "About", nav_roadmap: "Roadmap", nav_contact: "Contact" },
-            sq: { roadmap_title: "Ecuria ime", nav_about: "Rreth meje", nav_roadmap: "Roadmap", nav_contact: "Kontakt" }
+            de: { nav_about: "Über mich", nav_roadmap: "Roadmap", nav_contact: "Kontakt", hero_desc: "Full-Stack Entwickler mit Fokus auf skalierbare Systeme.", about_title: "Engineering & Design", about_text: "Ich entwickle Lösungen für komplexe Probleme.", roadmap_title: "Projekt Roadmap", contact_btn: "SENDEN", like: "Gefällt mir", liked: "Gefällt dir" },
+            en: { nav_about: "About", nav_roadmap: "Roadmap", nav_contact: "Contact", hero_desc: "Full-stack developer focused on scalable systems.", about_title: "Engineering & Design", about_text: "I build solutions for complex problems.", roadmap_title: "Roadmap", contact_btn: "SEND", like: "Like", liked: "Liked" },
+            sq: { nav_about: "Rreth meje", nav_roadmap: "Roadmap", nav_contact: "Kontakt", hero_desc: "Zhvillues Full-stack i fokusuar në sisteme.", about_title: "Inxhinieri & Dizajn", about_text: "Unë ndërtoj zgjidhje për probleme komplekse.", roadmap_title: "Ecuria", contact_btn: "DËRGO", like: "Më pëlqen", liked: "Të pëlqen" }
         };
-
-        function openDetails(id) {
-            const lang = localStorage.getItem('preferredLang') || 'de';
-            const data = projectDetails[id];
-            
-            // Titel aus dem HTML holen
-            const title = document.querySelector(`[data-key="${id}_title"]`).innerText;
-            
-            document.getElementById('modalTitle').innerText = title;
-            document.getElementById('modalBody').innerText = data[lang];
-            
-            const iconContainer = document.getElementById('modalIcons');
-            iconContainer.innerHTML = '';
-            data.icons.forEach(icon => {
-                iconContainer.innerHTML += `<i class="fab ${icon}"></i>`;
-            });
-            
-            document.getElementById('projectModal').style.display = 'flex';
-        }
-
-        function closeDetails(e) { if(e.target.id === 'projectModal') e.target.style.display = 'none'; }
 
         function setLanguage(lang) {
             localStorage.setItem('preferredLang', lang);
             document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
             document.getElementById('btn-'+lang).classList.add('active');
-            
             document.querySelectorAll('[data-key]').forEach(el => {
                 const key = el.getAttribute('data-key');
-                if(translations[lang] && translations[lang][key]) {
-                    el.innerText = translations[lang][key];
-                }
+                if(translations[lang][key]) el.innerText = translations[lang][key];
             });
         }
 
-        window.onload = () => { setLanguage(localStorage.getItem('preferredLang') || 'de'); };
+        function openDetails(id) {
+            const lang = localStorage.getItem('preferredLang') || 'de';
+            const data = projectDetails[id];
+            document.getElementById('modalTitle').innerText = document.querySelector(`[data-key="${id}_title"]`).innerText;
+            document.getElementById('modalBody').innerText = data[lang];
+            const iconContainer = document.getElementById('modalIcons');
+            iconContainer.innerHTML = '';
+            data.icons.forEach(icon => {
+                const prefix = icon.includes('fa-js') || icon.includes('fa-react') || icon.includes('fa-node') || icon.includes('fa-aws') || icon.includes('fa-docker') || icon.includes('fa-html') || icon.includes('fa-css') || icon.includes('fa-git') || icon.includes('fa-ethereum') ? 'fab' : 'fas';
+                iconContainer.innerHTML += `<i class="${prefix} ${icon}"></i> `;
+            });
+            document.getElementById('projectModal').style.display = 'flex';
+        }
+
+        function closeDetails(e) { if(e.target.id === 'projectModal') e.target.style.display = 'none'; }
+
+        function toggleLike() {
+            const isLiked = localStorage.getItem('hasLiked') === 'true';
+            localStorage.setItem('hasLiked', !isLiked);
+            location.reload();
+        }
+
+        window.onload = () => {
+            const lang = localStorage.getItem('preferredLang') || 'de';
+            if(localStorage.getItem('hasLiked') === 'true') {
+                const btn = document.getElementById('likeBtn');
+                btn.classList.add('liked'); btn.querySelector('i').className = 'fas fa-heart';
+            }
+            setLanguage(lang);
+        };
+
+        const logoText = document.getElementById('logo-text');
+        const phrases = ["T. MALIQI", "REACT.JS", "NODE.JS", "FULLSTACK"];
+        let pIdx = 0;
+        setInterval(() => {
+            logoText.style.opacity = 0;
+            setTimeout(() => { pIdx = (pIdx + 1) % phrases.length; logoText.innerText = phrases[pIdx]; logoText.style.opacity = 1; }, 500);
+        }, 3500);
     </script>
 </body>
 </html>
