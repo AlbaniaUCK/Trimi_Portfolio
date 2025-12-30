@@ -3,7 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Trimlind Maliqi | Developer Portfolio Pro</title>
+    <title>Trimlind Maliqi | Developer Portfolio</title>
+    
+    <link rel="icon" href="https://fav.farm/💻"> 
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Fira+Code:wght@400;600&display=swap" rel="stylesheet">
@@ -19,69 +21,82 @@
             --card-bg: rgba(255, 255, 255, 0.05);
         }
 
-        /* Custom Cursor */
-        #cursor-dot { width: 8px; height: 8px; background: var(--accent-red); position: fixed; border-radius: 50%; pointer-events: none; z-index: 9999; }
-        #cursor-outline { width: 40px; height: 40px; border: 2px solid var(--accent-red); position: fixed; border-radius: 50%; pointer-events: none; z-index: 9998; transition: transform 0.15s ease-out; }
+        /* Light Mode Styles */
+        body.light-mode {
+            --bg-dark: #f0f2f5;
+            --bg-dark-alt: #ffffff;
+            --text-light: #1a2a3a;
+            --text-dim: #4a5568;
+            --white: #000000;
+            --card-bg: rgba(0, 0, 0, 0.05);
+        }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; cursor: none !important; }
-        body { font-family: 'Inter', sans-serif; background-color: var(--bg-dark); color: var(--text-light); line-height: 1.6; overflow-x: hidden; }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { 
+            font-family: 'Inter', sans-serif; 
+            background-color: var(--bg-dark); 
+            color: var(--text-light); 
+            line-height: 1.6; 
+            overflow-x: hidden; 
+            transition: background 0.3s, color 0.3s;
+        }
 
-        #particles-js { position: fixed; width: 100%; height: 100%; z-index: 1; top: 0; left: 0; }
+        #particles-js { position: fixed; width: 100%; height: 100%; z-index: 1; top: 0; left: 0; pointer-events: none; }
 
         nav {
             display: flex; justify-content: space-between; align-items: center;
             padding: 1rem 5%; position: fixed; width: 100%;
-            background: rgba(26, 42, 58, 0.9); backdrop-filter: blur(10px);
+            background: rgba(26, 42, 58, 0.8); backdrop-filter: blur(10px);
             z-index: 1000; border-bottom: 1px solid rgba(255,255,255,0.1);
         }
+        body.light-mode nav { background: rgba(255, 255, 255, 0.8); }
+        
+        .logo { font-family: 'Fira Code', monospace; font-weight: 600; color: var(--white); text-decoration: none; display: flex; align-items: center; font-size: 1.1rem; }
+        .logo-icon { color: var(--accent-red); font-weight: 800; }
+        #logo-text { margin: 0 6px; transition: opacity 0.5s; color: var(--accent-red); font-weight: 700; }
+
+        .nav-right { display: flex; align-items: center; gap: 1rem; }
+        
+        .theme-toggle, .lang-btn {
+            background: none; border: 1px solid var(--text-dim); color: var(--text-dim); 
+            padding: 5px 10px; border-radius: 5px; cursor: pointer; display: flex; align-items: center; gap: 5px; font-size: 0.8rem;
+        }
+        .lang-btn.active { background: var(--accent-red); color: white; border-color: var(--accent-red); }
+        .lang-btn img { width: 16px; }
 
         section { position: relative; z-index: 2; padding: 120px 10%; min-height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; }
 
         .hero-title { font-size: clamp(3rem, 10vw, 6rem); font-weight: 800; text-transform: uppercase; line-height: 0.9; text-align: center; }
         .outline-text { color: transparent; -webkit-text-stroke: 1px var(--text-dim); }
 
-        /* Terminal Window */
         .terminal-window {
             background: #0d1117; border-radius: 8px; border: 1px solid #30363d;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.5); max-width: 600px; width: 100%;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.3); max-width: 600px; width: 100%;
             font-family: 'Fira Code', monospace; overflow: hidden; margin-top: 2rem;
         }
         .terminal-header { background: #161b22; padding: 10px 15px; display: flex; gap: 8px; }
-        .dot { width: 12px; height: 12px; border-radius: 50%; }
+        .dot { width: 10px; height: 10px; border-radius: 50%; }
         .red { background: #ff5f56; } .yellow { background: #ffbd2e; } .green { background: #27c93f; }
         .terminal-body { padding: 20px; font-size: 0.85rem; color: #c9d1d9; }
 
-        /* Roadmap */
         .roadmap-container { width: 100%; max-width: 800px; margin: 0 auto; }
         .timeline { border-left: 2px solid var(--accent-red); padding-left: 30px; }
-        .container { position: relative; margin-bottom: 3rem; }
-        .container::before { content: ''; position: absolute; width: 12px; height: 12px; background: var(--accent-red); left: -37px; top: 12px; border-radius: 50%; border: 2px solid var(--bg-dark); }
+        .container { position: relative; margin-bottom: 3rem; cursor: pointer; }
+        .container::before { content: ''; position: absolute; width: 12px; height: 12px; background: var(--accent-red); left: -37px; top: 12px; border-radius: 50%; }
         .content { background: var(--card-bg); padding: 2rem; border-radius: 8px; border-left: 4px solid var(--accent-red); transition: 0.4s; position: relative; overflow: hidden; }
-        .content:hover { transform: translateX(15px); background: rgba(255,255,255,0.08); }
-        .hover-info { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: var(--accent-red); color: white; display: flex; align-items: center; justify-content: center; transform: translateY(100%); transition: 0.4s; font-weight: 800; }
+        .content:hover { transform: translateX(10px); background: rgba(255,255,255,0.1); }
+        .hover-info { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: var(--accent-red); color: white; display: flex; align-items: center; justify-content: center; transform: translateY(100%); transition: 0.3s; font-weight: 800; }
         .content:hover .hover-info { transform: translateY(0); }
 
-        /* Modal */
-        .modal { display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); backdrop-filter: blur(15px); align-items: center; justify-content: center; padding: 20px; }
-        .modal-content { background: var(--bg-dark-alt); padding: 3rem; width: 100%; max-width: 650px; border-radius: 15px; border: 1px solid var(--accent-red); position: relative; }
-        .close-modal { position: absolute; top: 1.5rem; right: 1.5rem; font-size: 2rem; color: var(--text-dim); }
+        .modal { display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); backdrop-filter: blur(10px); align-items: center; justify-content: center; padding: 20px; }
+        .modal-content { background: var(--bg-dark-alt); padding: 2.5rem; width: 100%; max-width: 600px; border-radius: 12px; border: 1px solid var(--accent-red); position: relative; }
+        .close-modal { position: absolute; top: 1rem; right: 1rem; font-size: 1.5rem; cursor: pointer; color: var(--text-dim); }
 
-        .lang-btn { display: flex; align-items: center; gap: 8px; background: none; border: 1px solid var(--text-dim); color: var(--text-dim); padding: 5px 10px; border-radius: 5px; }
-        .lang-btn.active { background: var(--accent-red); color: white; border-color: var(--accent-red); }
-        .lang-btn img { width: 18px; }
-
-        #contact { background-color: var(--accent-red); color: white; }
-        .contact-form { display: flex; flex-direction: column; gap: 1rem; width: 100%; max-width: 500px; margin-top: 2rem; }
-        .contact-form input, .contact-form textarea { background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.3); padding: 1rem; color: white; border-radius: 5px; outline: none; }
-        .email-btn { background: white; color: var(--accent-red); padding: 1rem; border: none; font-weight: 800; cursor: pointer; border-radius: 5px; }
-
-        footer { z-index: 2; position: relative; padding: 4rem; text-align: center; background: var(--bg-dark-alt); }
+        footer { z-index: 2; position: relative; padding: 3rem; text-align: center; background: var(--bg-dark-alt); font-size: 0.8rem; color: var(--text-dim); }
     </style>
 </head>
 <body>
 
-    <div id="cursor-dot"></div>
-    <div id="cursor-outline"></div>
     <div id="particles-js"></div>
 
     <nav>
@@ -89,7 +104,8 @@
             <span class="logo-icon">{</span> <span id="logo-text">T. MALIQI</span> <span class="logo-icon">}</span>
         </a>
         <div class="nav-right">
-            <div class="lang-switch">
+            <button class="theme-toggle" onclick="toggleTheme()"><i class="fas fa-adjust"></i></button>
+            <div class="lang-switch" style="display: flex; gap: 5px;">
                 <button class="lang-btn" id="btn-de" onclick="setLanguage('de')"><img src="https://flagcdn.com/w40/de.png"> DE</button>
                 <button class="lang-btn" id="btn-en" onclick="setLanguage('en')"><img src="https://flagcdn.com/w40/gb.png"> EN</button>
                 <button class="lang-btn" id="btn-sq" onclick="setLanguage('sq')"><img src="https://flagcdn.com/w40/al.png"> SQ</button>
@@ -102,80 +118,56 @@
         <div class="terminal-window">
             <div class="terminal-header"><div class="dot red"></div><div class="dot yellow"></div><div class="dot green"></div></div>
             <div class="terminal-body">
-                <div id="typewriter">> Initializing...</div>
-                <div style="color: #7ee787; margin-top: 10px;">✓ Full-Stack Mastery</div>
-                <div style="color: #7ee787;">✓ AI & Cloud Architecture</div>
-                <div style="color: var(--accent-red); margin-top: 10px;">> Location: Switzerland</div>
+                <div>> Initializing system...</div>
+                <div style="color: #7ee787; margin-top: 10px;">✓ Full-Stack Developer</div>
+                <div style="color: #7ee787;">✓ AI Infrastructure Ready</div>
+                <div style="color: var(--accent-red); margin-top: 10px;">> Status: Available for hire</div>
             </div>
         </div>
     </section>
 
     <section id="roadmap">
-        <h2 style="font-size: 3rem; margin-bottom: 4rem;" data-key="roadmap_title">Roadmap</h2>
+        <h2 style="font-size: 2.5rem; margin-bottom: 3rem;" data-key="roadmap_title">Roadmap</h2>
         <div class="roadmap-container">
-            <div class="timeline" id="roadmap-list">
-                </div>
+            <div class="timeline" id="roadmap-list"></div>
         </div>
-    </section>
-
-    <section id="contact">
-        <h2 style="font-size: 3rem;" data-key="nav_contact">Kontakt</h2>
-        <form action="https://formspree.io/f/xnjqdepv" method="POST" class="contact-form">
-            <input type="text" name="name" id="p_name" placeholder="Name" required>
-            <input type="email" name="email" id="p_email" placeholder="Email" required>
-            <textarea name="message" id="p_msg" rows="5" placeholder="Nachricht" required></textarea>
-            <button type="submit" class="email-btn" data-key="contact_btn">SENDEN</button>
-        </form>
     </section>
 
     <div id="projectModal" class="modal" onclick="closeDetails(event)">
         <div class="modal-content" onclick="event.stopPropagation()">
             <span class="close-modal" onclick="document.getElementById('projectModal').style.display='none'">&times;</span>
-            <h2 id="modalTitle" style="font-size: 2rem; margin-bottom: 1rem;"></h2>
-            <p id="modalBody" style="line-height: 1.8; color: var(--text-light); margin-bottom: 2rem;"></p>
-            <div id="modalIcons" style="display: flex; gap: 20px; font-size: 3rem; color: var(--accent-red); flex-wrap: wrap;"></div>
+            <h2 id="modalTitle" style="margin-bottom: 1rem;"></h2>
+            <p id="modalBody" style="margin-bottom: 2rem;"></p>
+            <div id="modalIcons" style="display: flex; gap: 15px; font-size: 2.5rem; color: var(--accent-red);"></div>
         </div>
     </div>
 
-    <footer>&copy; 2025 Trimlind Maliqi | Built with Precision</footer>
+    <footer>&copy; 2025 Trimlind Maliqi</footer>
 
     <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
     <script>
-        // Cursor
-        const dot = document.getElementById('cursor-dot');
-        const outline = document.getElementById('cursor-outline');
-        window.addEventListener('mousemove', (e) => {
-            dot.style.left = e.clientX + 'px'; dot.style.top = e.clientY + 'px';
-            outline.style.left = e.clientX - 20 + 'px'; outline.style.top = e.clientY - 20 + 'px';
-        });
-
-        // Particles
+        // Particles Config (Subtiler)
         particlesJS('particles-js', {
             "particles": {
-                "number": { "value": 60 },
-                "color": { "value": "#8b2626" },
-                "line_linked": { "enable": true, "color": "#8b2626", "opacity": 0.2 },
-                "move": { "enable": true, "speed": 1.5 }
+                "number": { "value": 40 },
+                "color": { "value": "#94a3b8" },
+                "opacity": { "value": 0.2 },
+                "size": { "value": 2 },
+                "line_linked": { "enable": true, "distance": 150, "color": "#94a3b8", "opacity": 0.1, "width": 1 },
+                "move": { "enable": true, "speed": 1 }
             }
         });
 
-        const translations = {
-            de: { roadmap_title: "Projekt Roadmap", more_info: "MEHR INFOS", nav_contact: "Kontakt", contact_btn: "NACHRICHT SENDEN", p_name: "Name", p_email: "Email", p_msg: "Nachricht" },
-            en: { roadmap_title: "Project Roadmap", more_info: "MORE INFO", nav_contact: "Contact", contact_btn: "SEND MESSAGE", p_name: "Name", p_email: "Email", p_msg: "Message" },
-            sq: { roadmap_title: "Ecuria e Projekteve", more_info: "MË SHUMË", nav_contact: "Kontakt", contact_btn: "DËRGO MESAZH", p_name: "Emri", p_email: "Email", p_msg: "Mesazhi" }
-        };
+        // Theme Toggle
+        function toggleTheme() {
+            document.body.classList.toggle('light-mode');
+        }
 
         const years = [
-            { id: 'r26', year: '2026', title: { de: "Next Horizon", en: "Next Horizon", sq: "Horizonti i ardhshëm" }, desc: { de: "Web3 & Cloud Scaling.", en: "Web3 & Cloud Scaling.", sq: "Web3 dhe Cloud Scaling." }, icons: ['fa-brands fa-ethereum', 'fa-solid fa-cloud'], long: { de: "Zukunftsvisionen: Dezentrale Apps und globale Cloud-Infrastrukturen.", en: "Future visions: Decentralized apps and global cloud infrastructures.", sq: "Vizionet e ardhshme: Aplikacione deçentrale dhe cloud." } },
-            { id: 'r25', year: '2025', title: { de: "AI & Scalability", en: "AI & Scalability", sq: "AI dhe Skalueshmëria" }, desc: { de: "KI-Workflows & RAG.", en: "AI workflows & RAG.", sq: "AI rrjedhat e punës." }, icons: ['fa-solid fa-robot', 'fa-solid fa-brain'], long: { de: "Zentrierung auf KI-Modelle und Automatisierung komplexer Systeme.", en: "Focusing on AI models and automation of complex systems.", sq: "Fokusi në modelet AI dhe automatizimin e sistemeve." } },
-            { id: 'r1', year: '2024', title: { de: "SaaS Innovation", en: "SaaS Innovation", sq: "SaaS Inovacion" }, desc: { de: "Docker & AWS Lambda.", en: "Docker & AWS Lambda.", sq: "Docker dhe AWS." }, icons: ['fa-brands fa-docker', 'fa-brands fa-aws'], long: { de: "Entwicklung von Cloud-Native Plattformen im B2B-Bereich.", en: "Development of cloud-native platforms in the B2B sector.", sq: "Zhvillimi i platformave cloud-native në B2B." } },
-            { id: 'r2', year: '2023', title: { de: "E-Commerce Core", en: "E-Commerce Core", sq: "Baza e E-Commerce" }, desc: { de: "API & Caching.", en: "API & Caching.", sq: "API dhe Caching." }, icons: ['fa-solid fa-bolt', 'fa-solid fa-server'], long: { de: "Optimierung von Checkout-Prozessen und Datenbank-Performance.", en: "Optimization of checkout processes and database performance.", sq: "Optimizimi i proceseve të arkëtimit dhe performancës." } },
-            { id: 'r22', year: '2022', title: { de: "Backend Excellence", en: "Backend Excellence", sq: "Backend Excellence" }, desc: { de: "Node.js & SQL.", en: "Node.js & SQL.", sq: "Node.js dhe SQL." }, icons: ['fa-brands fa-node-js', 'fa-solid fa-database'], long: { de: "Meisterung komplexer Server-Architekturen und Datenmodelle.", en: "Mastering complex server architectures and data models.", sq: "Zotërimi i arkitekturave të serverëve dhe modeleve të të dhënave." } },
-            { id: 'r21', year: '2021', title: { de: "Frontend Mastery", en: "Frontend Mastery", sq: "Frontend Mastery" }, desc: { de: "React & Redux.", en: "React & Redux.", sq: "React dhe Redux." }, icons: ['fa-brands fa-react', 'fa-brands fa-js'], long: { de: "Spezialisierung auf interaktive User-Interfaces und SPAs.", en: "Specializing in interactive user interfaces and SPAs.", sq: "Specializimi në ndërfaqet e përdoruesit dhe SPA." } },
-            { id: 'r20', year: '2020', title: { de: "UI/UX Basics", en: "UI/UX Basics", sq: "Bazat UI/UX" }, desc: { de: "Responsive Design.", en: "Responsive Design.", sq: "Dizajn responsive." }, icons: ['fa-solid fa-mobile-screen', 'fa-solid fa-pen-nib'], long: { de: "Erste Schritte in Benutzererfahrung und mobilem Design.", en: "First steps in user experience and mobile design.", sq: "Hapat e parë në përvojën e përdoruesit dhe dizajnin mobile." } },
-            { id: 'r19', year: '2019', title: { de: "The Start", en: "The Start", sq: "Fillimi" }, desc: { de: "Entry into Engineering.", en: "Entry into Engineering.", sq: "Hyrja në inxhinieri." }, icons: ['fa-brands fa-git-alt', 'fa-solid fa-terminal'], long: { de: "Beruflicher Einstieg und Erlernen professioneller Workflows.", en: "Professional entry and learning professional workflows.", sq: "Fillimi profesional dhe mësimi i rrjedhave të punës." } },
-            { id: 'r17', year: '2017-18', title: { de: "Logic Deepening", en: "Logic Deepening", sq: "Thellimi i logjikës" }, desc: { de: "Algorithms & JS.", en: "Algorithms & JS.", sq: "Algoritmet dhe JS." }, icons: ['fa-solid fa-code', 'fa-solid fa-microchip'], long: { de: "Vertiefung von Logik und algorithmischem Denken.", en: "Deepening of logic and algorithmic thinking.", sq: "Thellimi i logjikës dhe mendimit algoritmik." } },
-            { id: 'r15', year: '2015-16', title: { de: "First Lines", en: "First Lines", sq: "Rreshtat e parë" }, desc: { de: "HTML & CSS Start.", en: "HTML & CSS start.", sq: "Fillimi me HTML/CSS." }, icons: ['fa-brands fa-html5', 'fa-brands fa-css3-alt'], long: { de: "Entdeckung der Leidenschaft für die Erstellung von Webseiten.", en: "Discovering the passion for creating websites.", sq: "Zbulimi i pasionit për krijimin e faqeve web." } }
+            { id: 'r26', year: '2026', title: { de: "Next Horizon", en: "Next Horizon", sq: "Horizonti i ardhshëm" }, desc: { de: "Web3 & Cloud Scaling.", en: "Web3 & Cloud Scaling.", sq: "Web3 dhe Cloud Scaling." }, icons: ['fa-brands fa-ethereum', 'fa-solid fa-cloud'], long: { de: "Zukunftsvisionen: Dezentrale Apps.", en: "Future visions: Decentralized apps.", sq: "Vizionet e ardhshme." } },
+            { id: 'r25', year: '2025', title: { de: "AI & Scalability", en: "AI & Scalability", sq: "AI dhe Skalueshmëria" }, desc: { de: "KI-Workflows & RAG.", en: "AI workflows & RAG.", sq: "AI rrjedhat e punës." }, icons: ['fa-solid fa-robot', 'fa-solid fa-brain'], long: { de: "Fokus auf KI-Modelle.", en: "Focusing on AI models.", sq: "Fokusi në modelet AI." } },
+            { id: 'r22', year: '2022', title: { de: "Backend Excellence", en: "Backend Excellence", sq: "Backend Excellence" }, desc: { de: "Node.js & SQL.", en: "Node.js & SQL.", sq: "Node.js dhe SQL." }, icons: ['fa-brands fa-node-js', 'fa-solid fa-database'], long: { de: "Meisterung komplexer Server.", en: "Mastering complex servers.", sq: "Zotërimi i serverëve." } }
+            // Weitere Jahre können hier nach gleichem Schema ergänzt werden
         ];
 
         function renderRoadmap(lang) {
@@ -185,10 +177,10 @@
                 list.innerHTML += `
                 <div class="container" onclick="openDetails('${y.id}')">
                     <div class="content">
-                        <span class="date">${y.year}</span>
+                        <span style="color:var(--accent-red); font-weight:800;">${y.year}</span>
                         <h3>${y.title[lang]}</h3>
                         <p>${y.desc[lang]}</p>
-                        <div class="hover-info">${translations[lang].more_info}</div>
+                        <div class="hover-info">INFO</div>
                     </div>
                 </div>`;
             });
@@ -198,13 +190,6 @@
             localStorage.setItem('preferredLang', lang);
             document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
             document.getElementById('btn-'+lang).classList.add('active');
-            document.querySelectorAll('[data-key]').forEach(el => {
-                const key = el.getAttribute('data-key');
-                if(translations[lang][key]) el.innerText = translations[lang][key];
-            });
-            document.getElementById('p_name').placeholder = translations[lang].p_name;
-            document.getElementById('p_email').placeholder = translations[lang].p_email;
-            document.getElementById('p_msg').placeholder = translations[lang].p_msg;
             renderRoadmap(lang);
         }
 
@@ -220,15 +205,20 @@
         }
 
         function closeDetails(e) { if(e.target.id === 'projectModal') e.target.style.display = 'none'; }
+        
         window.onload = () => setLanguage('de');
 
-        // Logo Swapper
+        // Logo Animation Fix (Farbe)
         const logoText = document.getElementById('logo-text');
         const phrases = ["T. MALIQI", "FULLSTACK", "REACT.JS", "AI DEV"];
         let pIdx = 0;
         setInterval(() => {
             logoText.style.opacity = 0;
-            setTimeout(() => { pIdx = (pIdx+1)%phrases.length; logoText.innerText = phrases[pIdx]; logoText.style.opacity = 1; }, 500);
+            setTimeout(() => { 
+                pIdx = (pIdx+1)%phrases.length; 
+                logoText.innerText = phrases[pIdx]; 
+                logoText.style.opacity = 1; 
+            }, 500);
         }, 3500);
     </script>
 </body>
