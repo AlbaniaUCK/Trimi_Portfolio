@@ -6,8 +6,8 @@
     <title>Trimlind Maliqi | Developer Portfolio</title>
     
     <link rel="icon" href="https://fav.farm/💻"> 
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Fira+Code:wght@400;600&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
         :root {
@@ -21,74 +21,81 @@
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Inter', sans-serif; background-color: var(--bg-dark); color: var(--text-light); line-height: 1.5; scroll-behavior: smooth; overflow-x: hidden; }
+        body { font-family: 'Inter', sans-serif; background-color: var(--bg-dark); color: var(--text-light); line-height: 1.6; scroll-behavior: smooth; overflow-x: hidden; }
 
+        /* Animationen */
         @keyframes revealUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
         @keyframes blink { 50% { opacity: 0; } }
 
-        .animate { opacity: 0; animation: revealUp 0.6s forwards; }
+        .animate { opacity: 0; animation: revealUp 0.8s cubic-bezier(0.2, 1, 0.3, 1) forwards; }
         .delay-1 { animation-delay: 0.1s; }
         .delay-2 { animation-delay: 0.2s; }
 
+        /* Navigation */
         nav {
             display: flex; justify-content: space-between; align-items: center;
-            padding: 0.8rem 5%; position: fixed; width: 100%;
-            background: rgba(26, 42, 58, 0.98); backdrop-filter: blur(10px);
+            padding: 1rem 5%; position: fixed; width: 100%;
+            background: rgba(26, 42, 58, 0.95); backdrop-filter: blur(12px);
             z-index: 1000; border-bottom: 1px solid rgba(255,255,255,0.1);
         }
         
-        .logo { font-family: 'Fira Code', monospace; font-weight: 600; color: var(--white); text-decoration: none; display: flex; align-items: center; }
+        .logo { font-family: 'Fira Code', monospace; font-weight: 600; color: var(--white); text-decoration: none; display: flex; align-items: center; font-size: 1.1rem; }
         .logo-icon { color: var(--accent-red); font-weight: 800; }
-        #logo-text { margin: 0 4px; transition: opacity 0.5s; }
+        #logo-text { margin: 0 6px; transition: opacity 0.5s; }
 
-        .nav-right { display: flex; align-items: center; gap: 1rem; }
+        .nav-right { display: flex; align-items: center; gap: 1.5rem; }
         nav ul { display: flex; list-style: none; gap: 1.5rem; }
-        nav ul li a { text-decoration: none; color: var(--text-dim); font-size: 0.75rem; text-transform: uppercase; font-weight: 600; }
+        nav ul li a { text-decoration: none; color: var(--text-dim); font-size: 0.75rem; text-transform: uppercase; font-weight: 600; transition: 0.3s; }
+        nav ul li a:hover { color: var(--white); }
 
-        .lang-switch { display: flex; gap: 0.3rem; }
-        .lang-btn { background: rgba(255,255,255,0.05); border: 1px solid var(--text-dim); color: var(--text-dim); padding: 3px 6px; cursor: pointer; font-size: 0.6rem; border-radius: 4px; }
+        .lang-switch { display: flex; gap: 0.5rem; }
+        .lang-btn { background: rgba(255,255,255,0.05); border: 1px solid var(--text-dim); color: var(--text-dim); padding: 4px 8px; cursor: pointer; font-size: 0.7rem; border-radius: 4px; transition: 0.3s; }
         .lang-btn.active { background: var(--accent-red); color: white; border-color: var(--accent-red); }
 
-        section { padding: 100px 7% 60px; min-height: 100vh; display: flex; flex-direction: column; justify-content: center; }
+        section { padding: 120px 10% 80px; min-height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; }
 
-        .hero-title { font-size: clamp(2.5rem, 10vw, 5rem); font-weight: 800; text-transform: uppercase; line-height: 1; }
+        .hero-title { font-size: clamp(3rem, 12vw, 6rem); font-weight: 800; text-transform: uppercase; line-height: 0.9; text-align: center; }
         .outline-text { color: transparent; -webkit-text-stroke: 1px var(--text-dim); display: block; }
-        .hero-p { max-width: 500px; color: var(--text-dim); margin-top: 1.5rem; border-left: 2px solid var(--accent-red); padding-left: 1rem; }
+        .hero-p { max-width: 600px; color: var(--text-dim); margin-top: 2rem; border-left: 3px solid var(--accent-red); padding-left: 1.5rem; font-size: 1.1rem; text-align: left; }
 
-        #about { background-color: var(--accent-red); color: white; }
-        .about-grid { display: grid; grid-template-columns: 1fr; gap: 2rem; }
-        .tech-box { border: 1px solid rgba(255,255,255,0.3); padding: 1.5rem; background: rgba(0,0,0,0.1); border-radius: 4px; }
+        #about { background-color: var(--accent-red); color: white; align-items: stretch; }
+        .about-grid { display: grid; grid-template-columns: 1fr; gap: 3rem; max-width: 1100px; margin: 0 auto; }
+        .tech-box { border: 1px solid rgba(255,255,255,0.3); padding: 2rem; background: rgba(0,0,0,0.15); border-radius: 8px; }
 
-        /* Roadmap */
-        .timeline { border-left: 1px solid var(--accent-red); padding-left: 25px; max-width: 900px; margin-top: 2rem; }
-        .container { position: relative; margin-bottom: 2.5rem; cursor: pointer; }
-        .container::before { content: ''; position: absolute; width: 10px; height: 10px; background: var(--accent-red); left: -31px; top: 10px; border-radius: 50%; }
-        .content { background: var(--card-bg); padding: 1.5rem; border-radius: 4px; border-left: 3px solid var(--accent-red); transition: 0.3s; position: relative; overflow: hidden; }
-        .content:hover { background: rgba(255,255,255,0.1); transform: translateX(10px); }
+        #roadmap { width: 100%; max-width: 100vw; }
+        .roadmap-container { width: 100%; max-width: 800px; margin: 0 auto; display: flex; justify-content: center; }
+        .timeline { border-left: 2px solid var(--accent-red); padding-left: 30px; position: relative; width: 100%; }
         
-        .hover-info { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: var(--accent-red); color: white; display: flex; align-items: center; justify-content: center; transform: translateY(100%); transition: 0.4s ease; font-weight: 800; font-size: 0.9rem; letter-spacing: 1px; }
+        .container { position: relative; margin-bottom: 3rem; width: 100%; }
+        .container::before { content: ''; position: absolute; width: 12px; height: 12px; background: var(--accent-red); left: -37px; top: 12px; border-radius: 50%; border: 2px solid var(--bg-dark); }
+        
+        .content { background: var(--card-bg); padding: 2rem; border-radius: 8px; border-left: 4px solid var(--accent-red); transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); position: relative; overflow: hidden; }
+        .content:hover { background: rgba(255,255,255,0.08); transform: translateX(15px); }
+        
+        .hover-info { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: var(--accent-red); color: white; display: flex; align-items: center; justify-content: center; transform: translateY(100%); transition: 0.4s ease; font-weight: 800; font-size: 1rem; letter-spacing: 1px; }
         .content:hover .hover-info { transform: translateY(0); }
         
-        .date { font-size: 0.8rem; font-weight: 800; color: var(--accent-red); font-family: 'Fira Code', monospace; display: block; margin-bottom: 0.5rem; }
-        .content h3 { margin-bottom: 0.5rem; font-size: 1.2rem; }
-        .content p { font-size: 0.9rem; color: var(--text-dim); line-height: 1.4; }
+        .date { font-size: 0.9rem; font-weight: 800; color: var(--accent-red); font-family: 'Fira Code', monospace; display: block; margin-bottom: 0.8rem; }
+        .content h3 { margin-bottom: 0.8rem; font-size: 1.4rem; color: var(--white); }
+        .content p { font-size: 1rem; color: var(--text-dim); line-height: 1.6; }
 
-        /* Modal */
-        .modal { display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); backdrop-filter: blur(8px); align-items: center; justify-content: center; }
-        .modal-content { background: var(--bg-dark-alt); padding: 2.5rem; width: 90%; max-width: 500px; border-radius: 8px; border: 1px solid var(--accent-red); position: relative; }
-        .close-modal { position: absolute; top: 1rem; right: 1.5rem; font-size: 2rem; cursor: pointer; color: var(--text-dim); }
-        .tech-icons-row { display: flex; gap: 1.5rem; margin-top: 1.5rem; font-size: 2.5rem; color: var(--accent-red); justify-content: center; }
+        /* Modal - Stark verbessert für mehr "Leben" */
+        .modal { display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); backdrop-filter: blur(15px); align-items: center; justify-content: center; padding: 20px; }
+        .modal-content { background: var(--bg-dark-alt); padding: 3rem; width: 100%; max-width: 650px; border-radius: 15px; border: 1px solid var(--accent-red); position: relative; text-align: left; box-shadow: 0 20px 50px rgba(0,0,0,0.5); }
+        .close-modal { position: absolute; top: 1.5rem; right: 1.5rem; font-size: 2rem; cursor: pointer; color: var(--text-dim); transition: 0.3s; }
+        .modal-tag { color: var(--accent-red); font-family: 'Fira Code', monospace; font-size: 0.8rem; text-transform: uppercase; margin-bottom: 0.5rem; display: block; }
+        .modal-title { font-size: 2.2rem; color: white; margin-bottom: 1.5rem; line-height: 1.1; }
+        .modal-body { color: var(--text-light); font-size: 1.05rem; line-height: 1.8; margin-bottom: 2rem; }
+        .tech-icons-row { display: flex; gap: 1.5rem; padding-top: 1.5rem; border-top: 1px solid rgba(255,255,255,0.1); font-size: 2.5rem; color: var(--accent-red); flex-wrap: wrap; }
 
-        /* Contact */
-        #contact { background-color: var(--accent-red); color: white; text-align: center; }
-        .contact-form { display: flex; flex-direction: column; gap: 1rem; max-width: 450px; margin: 2rem auto 0; }
-        .contact-form input, .contact-form textarea { background: rgba(0, 0, 0, 0.2); border: 1px solid rgba(255,255,255,0.2); padding: 1rem; color: white; border-radius: 4px; outline: none; }
-        .email-btn { background: white; color: var(--accent-red); padding: 1rem; border: none; font-weight: 800; cursor: pointer; border-radius: 4px; }
+        #contact { background-color: var(--accent-red); color: white; }
+        .contact-form { display: flex; flex-direction: column; gap: 1.2rem; width: 100%; max-width: 500px; margin-top: 2rem; }
+        .contact-form input, .contact-form textarea { background: rgba(0, 0, 0, 0.2); border: 1px solid rgba(255,255,255,0.3); padding: 1.2rem; color: white; border-radius: 6px; outline: none; font-size: 1rem; }
+        .email-btn { background: white; color: var(--accent-red); padding: 1.2rem; border: none; font-weight: 800; cursor: pointer; border-radius: 6px; transition: 0.3s; font-size: 1rem; }
         
-        footer { padding: 3rem; text-align: center; font-size: 0.8rem; color: var(--text-dim); background: var(--bg-dark-alt); }
+        footer { padding: 4rem; text-align: center; font-size: 0.9rem; color: var(--text-dim); background: var(--bg-dark-alt); }
 
         @media (min-width: 1024px) { .about-grid { grid-template-columns: 1fr 1fr; } }
-        @media (max-width: 600px) { nav ul { display: none; } }
     </style>
 </head>
 <body>
@@ -120,12 +127,12 @@
     <section id="about">
         <div class="about-grid">
             <div>
-                <h2 style="font-size: 2.5rem; margin-bottom: 1rem;" data-key="about_title">Engineering & Design</h2>
-                <p data-key="about_text">Ich entwickle Lösungen, die technologische Komplexität in einfache Benutzererfahrungen verwandeln. Fokus auf Clean Code und Performance.</p>
+                <h2 style="font-size: 3rem; margin-bottom: 1.5rem;" data-key="about_title">Engineering & Design</h2>
+                <p data-key="about_text" style="font-size: 1.2rem; opacity: 0.95;">Ich entwickle Lösungen, die technologische Komplexität in einfache Benutzererfahrungen verwandeln. Fokus auf Clean Code und Performance.</p>
             </div>
             <div class="tech-box">
-                <h3 style="margin-bottom: 1rem;">Core Tech Stack</h3>
-                <p style="font-family: 'Fira Code', monospace; line-height: 1.8;">
+                <h3 style="margin-bottom: 1.5rem; font-size: 1.5rem; color: white;">Core Tech Stack</h3>
+                <p style="font-family: 'Fira Code', monospace; line-height: 2; font-size: 1.1rem;">
                     > JavaScript (ES6+) / React.js<br>
                     > Node.js / Express / PostgreSQL<br>
                     > Docker / AWS / Cloud Native
@@ -135,97 +142,99 @@
     </section>
 
     <section id="roadmap">
-        <h2 style="font-size: 2.5rem; margin-bottom: 3rem;" data-key="roadmap_title">Roadmap</h2>
-        <div class="timeline">
-            <div class="container" onclick="openDetails('r26')">
-                <div class="content">
-                    <span class="date">2026</span>
-                    <h3 data-key="r26_title">Next Horizon</h3>
-                    <p data-key="r26_desc">Geplante Projekte im Bereich Web3 und Cloud-native Infrastruktur. Bleiben Sie gespannt.</p>
-                    <div class="hover-info">TECH-STACK ANSEHEN</div>
+        <h2 style="font-size: 3rem; margin-bottom: 4rem; text-align: center;" data-key="roadmap_title">Roadmap</h2>
+        <div class="roadmap-container">
+            <div class="timeline">
+                <div class="container" onclick="openDetails('r26')">
+                    <div class="content">
+                        <span class="date">2026</span>
+                        <h3 data-key="r26_title">Next Horizon</h3>
+                        <p data-key="r26_desc">Geplante Projekte im Bereich Web3, Blockchain-Integration und erweiterte Cloud-native Architekturen.</p>
+                        <div class="hover-info">MEHR INFORMATIONEN</div>
+                    </div>
                 </div>
-            </div>
-            <div class="container" onclick="openDetails('r25')">
-                <div class="content">
-                    <span class="date">2025</span>
-                    <h3 data-key="r25_title">AI & Scalability</h3>
-                    <p data-key="r25_desc">Implementierung von LLMs und Vektordatenbanken (Pinecone) zur Automatisierung von Prozessen.</p>
-                    <div class="hover-info">TECH-STACK ANSEHEN</div>
+                <div class="container" onclick="openDetails('r25')">
+                    <div class="content">
+                        <span class="date">2025</span>
+                        <h3 data-key="r25_title">AI & Scalability</h3>
+                        <p data-key="r25_desc">Zentrierung auf KI-Workflows, Implementierung von LLMs und Vektordatenbanken zur Prozessautomatisierung.</p>
+                        <div class="hover-info">MEHR INFORMATIONEN</div>
+                    </div>
                 </div>
-            </div>
-            <div class="container" onclick="openDetails('r1')">
-                <div class="content">
-                    <span class="date">2024</span>
-                    <h3 data-key="r1_title">SaaS Innovation</h3>
-                    <p data-key="r1_desc">Entwicklung einer mandantenfähigen Plattform mit Docker und AWS Lambda. Fokus auf Serverless.</p>
-                    <div class="hover-info">TECH-STACK ANSEHEN</div>
+                <div class="container" onclick="openDetails('r1')">
+                    <div class="content">
+                        <span class="date">2024</span>
+                        <h3 data-key="r1_title">SaaS Innovation</h3>
+                        <p data-key="r1_desc">Architektur einer mandantenfähigen B2B-Plattform unter Nutzung von Docker-Containerisierung und AWS Lambda.</p>
+                        <div class="hover-info">MEHR INFORMATIONEN</div>
+                    </div>
                 </div>
-            </div>
-            <div class="container" onclick="openDetails('r2')">
-                <div class="content">
-                    <span class="date">2023</span>
-                    <h3 data-key="r2_title">E-Commerce Core</h3>
-                    <p data-key="r2_desc">Optimierung von API-Antwortzeiten und Checkout-Prozessen durch strategisches Caching.</p>
-                    <div class="hover-info">TECH-STACK ANSEHEN</div>
+                <div class="container" onclick="openDetails('r2')">
+                    <div class="content">
+                        <span class="date">2023</span>
+                        <h3 data-key="r2_title">E-Commerce Core</h3>
+                        <p data-key="r2_desc">Entwicklung performanter Checkout-Systeme und API-Strukturen mit Fokus auf Hochverfügbarkeit und Caching.</p>
+                        <div class="hover-info">MEHR INFORMATIONEN</div>
+                    </div>
                 </div>
-            </div>
-            <div class="container" onclick="openDetails('r22')">
-                <div class="content">
-                    <span class="date">2022</span>
-                    <h3 data-key="r22_title">Backend Excellence</h3>
-                    <p data-key="r22_desc">Vertiefung in Node.js Architekturen und Integration komplexer relationaler Datenbanksysteme.</p>
-                    <div class="hover-info">TECH-STACK ANSEHEN</div>
+                <div class="container" onclick="openDetails('r22')">
+                    <div class="content">
+                        <span class="date">2022</span>
+                        <h3 data-key="r22_title">Backend Excellence</h3>
+                        <p data-key="r22_desc">Tiefgreifende Spezialisierung auf Node.js Backends und die Verwaltung komplexer relationaler Datenbanksysteme.</p>
+                        <div class="hover-info">MEHR INFORMATIONEN</div>
+                    </div>
                 </div>
-            </div>
-            <div class="container" onclick="openDetails('r21')">
-                <div class="content">
-                    <span class="date">2021</span>
-                    <h3 data-key="r21_title">Frontend Mastery</h3>
-                    <p data-key="r21_desc">Spezialisierung auf React und State-Management mit Redux für Single-Page-Applications.</p>
-                    <div class="hover-info">TECH-STACK ANSEHEN</div>
+                <div class="container" onclick="openDetails('r21')">
+                    <div class="content">
+                        <span class="date">2021</span>
+                        <h3 data-key="r21_title">Frontend Mastery</h3>
+                        <p data-key="r21_desc">Intensive Arbeit mit React.js und State-Management Lösungen zur Erstellung dynamischer User-Interfaces.</p>
+                        <div class="hover-info">MEHR INFORMATIONEN</div>
+                    </div>
                 </div>
-            </div>
-            <div class="container" onclick="openDetails('r20')">
-                <div class="content">
-                    <span class="date">2020</span>
-                    <h3 data-key="r20_title">UI/UX Basics</h3>
-                    <p data-key="r20_desc">Fokus auf Benutzererfahrung und Erstellung von hochgradig responsiven Webdesigns.</p>
-                    <div class="hover-info">TECH-STACK ANSEHEN</div>
+                <div class="container" onclick="openDetails('r20')">
+                    <div class="content">
+                        <span class="date">2020</span>
+                        <h3 data-key="r20_title">UI/UX & Design</h3>
+                        <p data-key="r20_desc">Erstellung von responsive Webdesigns und Fokus auf die Optimierung der digitalen Benutzererfahrung (UX).</p>
+                        <div class="hover-info">MEHR INFORMATIONEN</div>
+                    </div>
                 </div>
-            </div>
-            <div class="container" onclick="openDetails('r19')">
-                <div class="content">
-                    <span class="date">2019</span>
-                    <h3 data-key="r19_title">Official Entry</h3>
-                    <p data-key="r19_desc">Einstieg in das professionelle Software Engineering und Erlernen von Git-Workflows.</p>
-                    <div class="hover-info">TECH-STACK ANSEHEN</div>
+                <div class="container" onclick="openDetails('r19')">
+                    <div class="content">
+                        <span class="date">2019</span>
+                        <h3 data-key="r19_title">Official Entry</h3>
+                        <p data-key="r19_desc">Start der professionellen Laufbahn. Erlernen von Versionskontrolle (Git) und agilen Entwicklungsmethoden.</p>
+                        <div class="hover-info">MEHR INFORMATIONEN</div>
+                    </div>
                 </div>
-            </div>
-            <div class="container" onclick="openDetails('r17')">
-                <div class="content">
-                    <span class="date">2017 - 2018</span>
-                    <h3 data-key="r17_title">Logic Deepening</h3>
-                    <p data-key="r17_desc">Intensives Studium der Programmierlogik und Entwicklung erster JS-Applikationen.</p>
-                    <div class="hover-info">TECH-STACK ANSEHEN</div>
+                <div class="container" onclick="openDetails('r17')">
+                    <div class="content">
+                        <span class="date">2017 - 2018</span>
+                        <h3 data-key="r17_title">Logic Deepening</h3>
+                        <p data-key="r17_desc">Vertiefung algorithmischer Probleme und Entwicklung erster Applikationen mit reinem JavaScript.</p>
+                        <div class="hover-info">MEHR INFORMATIONEN</div>
+                    </div>
                 </div>
-            </div>
-            <div class="container" onclick="openDetails('r15')">
-                <div class="content">
-                    <span class="date">2015 - 2016</span>
-                    <h3 data-key="r15_title">First Lines</h3>
-                    <p data-key="r15_desc">Erste Berührung mit HTML und CSS. Start der Leidenschaft für digitale Produkte.</p>
-                    <div class="hover-info">TECH-STACK ANSEHEN</div>
+                <div class="container" onclick="openDetails('r15')">
+                    <div class="content">
+                        <span class="date">2015 - 2016</span>
+                        <h3 data-key="r15_title">First Lines</h3>
+                        <p data-key="r15_desc">Erste Berührungspunkte mit Web-Technologien. Erstellung der ersten statischen Projekte mit HTML5 und CSS3.</p>
+                        <div class="hover-info">MEHR INFORMATIONEN</div>
+                    </div>
                 </div>
             </div>
         </div>
     </section>
 
     <section id="contact">
-        <h2 style="font-size: 2.5rem; margin-bottom: 1rem;" data-key="nav_contact">Kontakt</h2>
+        <h2 style="font-size: 3rem; margin-bottom: 1rem;" data-key="nav_contact">Kontakt</h2>
         <form action="https://formspree.io/f/xnjqdepv" method="POST" class="contact-form">
             <input type="text" name="name" placeholder="Name" required>
             <input type="email" name="email" placeholder="Email" required>
-            <textarea name="message" rows="4" placeholder="Ihre Nachricht" required></textarea>
+            <textarea name="message" rows="5" placeholder="Ihre Nachricht" required></textarea>
             <button type="submit" class="email-btn" data-key="contact_btn">NACHRICHT SENDEN</button>
         </form>
     </section>
@@ -233,63 +242,118 @@
     <div id="projectModal" class="modal" onclick="closeDetails(event)">
         <div class="modal-content" onclick="event.stopPropagation()">
             <span class="close-modal" onclick="document.getElementById('projectModal').style.display='none'">&times;</span>
-            <h2 id="modalTitle">Titel</h2>
+            <span class="modal-tag">> project_deep_dive</span>
+            <h2 id="modalTitle" class="modal-title">Titel</h2>
+            <p id="modalBody" class="modal-body">Text</p>
             <div id="modalIcons" class="tech-icons-row"></div>
-            <p id="modalBody" style="margin-top: 1.5rem; text-align: center; color: var(--text-dim);"></p>
         </div>
     </div>
 
-    <footer>&copy; 2025 Trimlind Maliqi | Built with Passion</footer>
+    <footer>&copy; 2025 Trimlind Maliqi</footer>
 
     <script>
         const projectData = {
-            r26: { icons: ['fa-ethereum', 'fa-cloud'], info: "Zukunftstechnologien & Web3" },
-            r25: { icons: ['fa-robot', 'fa-brain'], info: "Artificial Intelligence & LLM Integration" },
-            r1: { icons: ['fa-docker', 'fa-aws'], info: "Cloud-Native Infrastructure & DevOps" },
-            r2: { icons: ['fa-bolt', 'fa-server'], info: "High Performance APIs & Redis" },
-            r22: { icons: ['fa-node-js', 'fa-database'], info: "Scalable Backend Systems" },
-            r21: { icons: ['fa-react', 'fa-js-square'], info: "Modern Frontend Mastery" },
-            r20: { icons: ['fa-mobile-alt', 'fa-paint-brush'], info: "UI/UX & Responsive Design" },
-            r19: { icons: ['fa-git-alt', 'fa-terminal'], info: "Version Control & Engineering Ethics" },
-            r17: { icons: ['fa-code', 'fa-laptop-code'], info: "Algorithmic Thinking & JavaScript" },
-            r15: { icons: ['fa-html5', 'fa-css3-alt'], info: "Web Fundamentals & Design" }
+            r26: { 
+                icons: ['fa-brands fa-ethereum', 'fa-solid fa-cloud'], 
+                de: "Die Vision für 2026 ist die vollständige Dezentralisierung. Ich plane die Integration von Smart Contracts in Unternehmensprozesse und den Aufbau von hochskalierbaren Edge-Computing Architekturen, um Latenzen global zu minimieren.",
+                en: "The vision for 2026 is full decentralization. I plan to integrate smart contracts into business processes and build highly scalable edge computing architectures to minimize latency globally.",
+                sq: "Vizioni për vitin 2026 është deçentralizimi i plotë. Unë planifikoj të integroj kontratat inteligjente në proceset e biznesit dhe të ndërtoj arkitektura të shkallëzueshme."
+            },
+            r25: { 
+                icons: ['fa-solid fa-robot', 'fa-solid fa-brain'], 
+                de: "In diesem Jahr lag der Fokus auf der Symbiose von menschlicher Kreativität und künstlicher Intelligenz. Ich habe komplexe Agenten-Workflows entwickelt, die durch RAG-Systeme (Retrieval Augmented Generation) echtes Kontextwissen für Unternehmen nutzbar machen.",
+                en: "This year focused on the symbiosis of human creativity and AI. I developed complex agent workflows using RAG systems to make real contextual knowledge usable for companies.",
+                sq: "Ky vit u fokusua në simbiozën e krijimtarisë njerëzore dhe inteligjencës artificiale. Kam zhvilluar rrjedha komplekse të punës përmes sistemeve RAG."
+            },
+            r1: { 
+                icons: ['fa-brands fa-docker', 'fa-brands fa-aws'], 
+                de: "Der Sprung in die Cloud. Durch die Nutzung von Docker und AWS Lambda konnte ich Systeme schaffen, die sich automatisch an die Nutzerlast anpassen. Ein besonderer Meilenstein war die Migration einer monolithischen Struktur in eine agile Microservice-Landschaft.",
+                en: "The jump into the cloud. Using Docker and AWS Lambda, I created systems that automatically adapt to user load. A major milestone was migrating a monolithic structure to an agile microservices landscape.",
+                sq: "Kërcimi në cloud. Duke përdorur Docker dhe AWS Lambda, krijova sisteme që përshtaten automatikisht me ngarkesën e përdoruesve."
+            },
+            r2: { 
+                icons: ['fa-solid fa-bolt', 'fa-solid fa-server'], 
+                de: "E-Commerce bedeutet Geschwindigkeit. Ich habe Backend-Architekturen optimiert, um Millisekunden zu gewinnen, die über Conversions entscheiden. Redis wurde hierbei mein wichtigstes Werkzeug für blitzschnelles Caching und Session-Management.",
+                en: "E-commerce means speed. I optimized backend architectures to save milliseconds that decide conversions. Redis became my most important tool for lightning-fast caching and session management.",
+                sq: "E-commerce do të thotë shpejtësi. Unë optimizova arkitekturat backend për të fituar milisekonda që vendosin për konversionet."
+            },
+            r22: { 
+                icons: ['fa-brands fa-node-js', 'fa-solid fa-database'], 
+                de: "In diesem Zeitraum habe ich das Backend-Engineering gemeistert. Von komplexen SQL-Joins bis hin zu Sicherheits-Middleware in Node.js – das Ziel war es, Systeme zu bauen, die so sicher wie performant sind.",
+                en: "During this period, I mastered backend engineering. From complex SQL joins to security middleware in Node.js – the goal was to build systems as secure as they are performant.",
+                sq: "Në këtë periudhë kam zotëruar inxhinierinë backend. Nga SQL joins komplekse deri te sigurimi i Node.js."
+            },
+            r21: { 
+                icons: ['fa-brands fa-react', 'fa-brands fa-js'], 
+                de: "Der Fokus verschob sich auf das User Interface. React ermöglichte es mir, komplexe Zustände in eleganten, wiederverwendbaren Komponenten zu kapseln. Ich lernte, dass Code nicht nur funktionieren, sondern auch wartbar und modular sein muss.",
+                en: "The focus shifted to the user interface. React allowed me to encapsulate complex states into elegant, reusable components. I learned that code must not only work but also be maintainable and modular.",
+                sq: "Fokusi kaloi në ndërfaqen e përdoruesit. React më lejoi të enkapsuloj gjendje komplekse në komponentë elegantë."
+            },
+            r20: { 
+                icons: ['fa-solid fa-mobile-screen', 'fa-solid fa-pen-nib'], 
+                de: "Design ist nicht nur wie es aussieht, sondern wie es funktioniert. Ich vertiefte meine Kenntnisse in responsiven Rastern und UX-Psychologie, um sicherzustellen, dass jede Applikation auf jedem Gerät ein perfektes Erlebnis bietet.",
+                en: "Design is not just how it looks, but how it works. I deepened my knowledge in responsive grids and UX psychology to ensure every application provides a perfect experience on any device.",
+                sq: "Dizajni nuk është vetëm si duket, por si funksionon. Kam thelluar njohuritë e mia në rrjetat responsive dhe psikologjinë UX."
+            },
+            r19: { 
+                icons: ['fa-brands fa-git-alt', 'fa-solid fa-terminal'], 
+                de: "Der offizielle Start meiner Reise als Engineer. Ich lernte die Bedeutung von 'Clean Code' und wie man effektiv in Teams arbeitet. Git wurde zu meinem täglichen Begleiter für Versionierung und Deployment-Workflows.",
+                en: "The official start of my journey as an engineer. I learned the importance of 'Clean Code' and how to work effectively in teams. Git became my daily companion for versioning and deployment workflows.",
+                sq: "Fillimi zyrtar i udhëtimit tim si inxhinier. Mësova rëndësinë e 'Clean Code' dhe si të punoj në mënyrë efektive në ekipe."
+            },
+            r17: { 
+                icons: ['fa-solid fa-code', 'fa-solid fa-microchip'], 
+                de: "In diesen Jahren ging es darum, die Logik hinter der Fassade zu verstehen. Algorithmen, Datenstrukturen und die ersten Gehversuche mit reinem JavaScript legten den Grundstein für mein heutiges technisches Verständnis.",
+                en: "These years were about understanding the logic behind the facade. Algorithms, data structures, and first steps with pure JavaScript laid the foundation for my technical understanding today.",
+                sq: "Këto vite kishin të bënin me kuptimin e logjikës pas fasadës. Algoritmet dhe strukturat e të dhënave hodhën themelet."
+            },
+            r15: { 
+                icons: ['fa-brands fa-html5', 'fa-brands fa-css3-alt'], 
+                de: "Wo alles begann. Mit dem ersten 'Hello World' in HTML war meine Leidenschaft geweckt. Was als Spielerei mit Farben und Texten begann, entwickelte sich schnell zum Wunsch, das Internet aktiv mitzugestalten.",
+                en: "Where it all began. With the first 'Hello World' in HTML, my passion was ignited. What started as playing with colors and text quickly turned into a desire to actively shape the internet.",
+                sq: "Ku filloi gjithçka. Me 'Hello World' e parë në HTML, lindi pasioni im."
+            }
         };
 
         function openDetails(id) {
+            const lang = localStorage.getItem('preferredLang') || 'de';
             const data = projectData[id];
             const title = document.querySelector(`[data-key="${id}_title"]`).innerText;
+            
             document.getElementById('modalTitle').innerText = title;
-            document.getElementById('modalBody').innerText = data.info;
+            document.getElementById('modalBody').innerText = data[lang];
             
             const iconContainer = document.getElementById('modalIcons');
             iconContainer.innerHTML = '';
             data.icons.forEach(icon => {
-                iconContainer.innerHTML += `<i class="fab ${icon}"></i>`;
+                iconContainer.innerHTML += `<i class="${icon}"></i>`;
             });
+            
             document.getElementById('projectModal').style.display = 'flex';
         }
 
         function closeDetails(e) { if(e.target.id === 'projectModal') e.target.style.display = 'none'; }
 
-        const translations = {
-            de: { nav_about: "Über mich", nav_roadmap: "Roadmap", nav_contact: "Kontakt", hero_desc: "Full-Stack Entwickler mit Fokus auf skalierbare Systeme.", about_title: "Engineering & Design", about_text: "Ich entwickle Lösungen für komplexe Probleme.", roadmap_title: "Roadmap", contact_btn: "NACHRICHT SENDEN" },
-            en: { nav_about: "About", nav_roadmap: "Roadmap", nav_contact: "Contact", hero_desc: "Full-stack developer focused on scalable systems.", about_title: "Engineering & Design", about_text: "I build solutions for complex problems.", roadmap_title: "Roadmap", contact_btn: "SEND MESSAGE" },
-            sq: { nav_about: "Rreth meje", nav_roadmap: "Roadmap", nav_contact: "Kontakt", hero_desc: "Zhvillues Full-stack i fokusuar në sisteme.", about_title: "Inxhinieri & Dizajn", about_text: "Unë ndërtoj zgjidhje për probleme komplekse.", roadmap_title: "Ecuria", contact_btn: "DËRGO MËSIMIN" }
-        };
-
         function setLanguage(lang) {
             localStorage.setItem('preferredLang', lang);
             document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
-            document.getElementById('btn-'+lang).classList.add('active');
+            const btn = document.getElementById('btn-'+lang);
+            if(btn) btn.classList.add('active');
+            
             document.querySelectorAll('[data-key]').forEach(el => {
                 const key = el.getAttribute('data-key');
-                if(translations[lang][key]) el.innerText = translations[lang][key];
+                if(translations[lang] && translations[lang][key]) el.innerText = translations[lang][key];
             });
         }
 
+        const translations = {
+            de: { nav_about: "Über mich", nav_roadmap: "Roadmap", nav_contact: "Kontakt", hero_desc: "Full-Stack Entwickler mit Fokus auf skalierbare Systeme und saubere Ästhetik.", about_title: "Engineering & Design", roadmap_title: "Roadmap", contact_btn: "NACHRICHT SENDEN" },
+            en: { nav_about: "About", nav_roadmap: "Roadmap", nav_contact: "Contact", hero_desc: "Full-stack developer focused on scalable systems.", about_title: "Engineering & Design", roadmap_title: "Roadmap", contact_btn: "SEND MESSAGE" },
+            sq: { nav_about: "Rreth meje", nav_roadmap: "Roadmap", nav_contact: "Kontakt", hero_desc: "Zhvillues Full-stack i fokusuar në sisteme.", about_title: "Inxhinieri & Dizajn", roadmap_title: "Ecuria", contact_btn: "DËRGO MESAZH" }
+        };
+
         window.onload = () => setLanguage(localStorage.getItem('preferredLang') || 'de');
 
-        // Logo Animation
         const logoText = document.getElementById('logo-text');
         const phrases = ["T. MALIQI", "REACT.JS", "NODE.JS", "FULLSTACK"];
         let pIdx = 0;
