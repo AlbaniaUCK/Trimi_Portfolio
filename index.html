@@ -46,10 +46,10 @@
         nav {
             display: flex; justify-content: space-between; align-items: center;
             padding: 1rem 5%; position: fixed; width: 100%;
-            background: rgba(26, 42, 58, 0.8); backdrop-filter: blur(10px);
+            background: rgba(26, 42, 58, 0.85); backdrop-filter: blur(10px);
             z-index: 1000; border-bottom: 1px solid rgba(255,255,255,0.1);
         }
-        body.light-mode nav { background: rgba(255, 255, 255, 0.8); }
+        body.light-mode nav { background: rgba(255, 255, 255, 0.85); border-bottom: 1px solid rgba(0,0,0,0.1); }
         
         .logo { font-family: 'Fira Code', monospace; font-weight: 600; color: var(--white); text-decoration: none; display: flex; align-items: center; font-size: 1.1rem; }
         .logo-icon { color: var(--accent-red); font-weight: 800; }
@@ -59,10 +59,10 @@
         
         .theme-toggle, .lang-btn {
             background: none; border: 1px solid var(--text-dim); color: var(--text-dim); 
-            padding: 5px 10px; border-radius: 5px; cursor: pointer; display: flex; align-items: center; gap: 5px; font-size: 0.8rem;
+            padding: 5px 10px; border-radius: 5px; cursor: pointer; display: flex; align-items: center; gap: 5px; font-size: 0.8rem; transition: 0.3s;
         }
         .lang-btn.active { background: var(--accent-red); color: white; border-color: var(--accent-red); }
-        .lang-btn img { width: 16px; }
+        .lang-btn img { width: 16px; border-radius: 2px; }
 
         section { position: relative; z-index: 2; padding: 120px 10%; min-height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; }
 
@@ -77,20 +77,20 @@
         .terminal-header { background: #161b22; padding: 10px 15px; display: flex; gap: 8px; }
         .dot { width: 10px; height: 10px; border-radius: 50%; }
         .red { background: #ff5f56; } .yellow { background: #ffbd2e; } .green { background: #27c93f; }
-        .terminal-body { padding: 20px; font-size: 0.85rem; color: #c9d1d9; }
+        .terminal-body { padding: 20px; font-size: 0.85rem; color: #c9d1d9; text-align: left; }
 
         .roadmap-container { width: 100%; max-width: 800px; margin: 0 auto; }
         .timeline { border-left: 2px solid var(--accent-red); padding-left: 30px; }
-        .container { position: relative; margin-bottom: 3rem; cursor: pointer; }
+        .container { position: relative; margin-bottom: 3rem; cursor: pointer; width: 100%; }
         .container::before { content: ''; position: absolute; width: 12px; height: 12px; background: var(--accent-red); left: -37px; top: 12px; border-radius: 50%; }
-        .content { background: var(--card-bg); padding: 2rem; border-radius: 8px; border-left: 4px solid var(--accent-red); transition: 0.4s; position: relative; overflow: hidden; }
+        .content { background: var(--card-bg); padding: 2rem; border-radius: 8px; border-left: 4px solid var(--accent-red); transition: 0.4s; position: relative; overflow: hidden; text-align: left; }
         .content:hover { transform: translateX(10px); background: rgba(255,255,255,0.1); }
         .hover-info { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: var(--accent-red); color: white; display: flex; align-items: center; justify-content: center; transform: translateY(100%); transition: 0.3s; font-weight: 800; }
         .content:hover .hover-info { transform: translateY(0); }
 
         .modal { display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); backdrop-filter: blur(10px); align-items: center; justify-content: center; padding: 20px; }
-        .modal-content { background: var(--bg-dark-alt); padding: 2.5rem; width: 100%; max-width: 600px; border-radius: 12px; border: 1px solid var(--accent-red); position: relative; }
-        .close-modal { position: absolute; top: 1rem; right: 1rem; font-size: 1.5rem; cursor: pointer; color: var(--text-dim); }
+        .modal-content { background: var(--bg-dark-alt); padding: 3rem; width: 100%; max-width: 650px; border-radius: 12px; border: 1px solid var(--accent-red); position: relative; text-align: left; }
+        .close-modal { position: absolute; top: 1.5rem; right: 1.5rem; font-size: 1.5rem; cursor: pointer; color: var(--text-dim); }
 
         footer { z-index: 2; position: relative; padding: 3rem; text-align: center; background: var(--bg-dark-alt); font-size: 0.8rem; color: var(--text-dim); }
     </style>
@@ -104,7 +104,7 @@
             <span class="logo-icon">{</span> <span id="logo-text">T. MALIQI</span> <span class="logo-icon">}</span>
         </a>
         <div class="nav-right">
-            <button class="theme-toggle" onclick="toggleTheme()"><i class="fas fa-adjust"></i></button>
+            <button class="theme-toggle" onclick="toggleTheme()" title="Dark/Light Mode"><i class="fas fa-adjust"></i></button>
             <div class="lang-switch" style="display: flex; gap: 5px;">
                 <button class="lang-btn" id="btn-de" onclick="setLanguage('de')"><img src="https://flagcdn.com/w40/de.png"> DE</button>
                 <button class="lang-btn" id="btn-en" onclick="setLanguage('en')"><img src="https://flagcdn.com/w40/gb.png"> EN</button>
@@ -114,20 +114,20 @@
     </nav>
 
     <section id="home">
-        <h1 class="hero-title"><span class="outline-text">Trimlind</span><br>Maliqi</h1>
+        <h1 class="hero-title"><span class="outline-text">Trimlind</span>Maliqi</h1>
         <div class="terminal-window">
             <div class="terminal-header"><div class="dot red"></div><div class="dot yellow"></div><div class="dot green"></div></div>
             <div class="terminal-body">
-                <div>> Initializing system...</div>
-                <div style="color: #7ee787; margin-top: 10px;">✓ Full-Stack Developer</div>
-                <div style="color: #7ee787;">✓ AI Infrastructure Ready</div>
+                <div>> Initializing developer_profile.js...</div>
+                <div style="color: #7ee787; margin-top: 10px;">✓ Full-Stack Mastery</div>
+                <div style="color: #7ee787;">✓ AI & Cloud Architecture</div>
                 <div style="color: var(--accent-red); margin-top: 10px;">> Status: Available for hire</div>
             </div>
         </div>
     </section>
 
     <section id="roadmap">
-        <h2 style="font-size: 2.5rem; margin-bottom: 3rem;" data-key="roadmap_title">Roadmap</h2>
+        <h2 style="font-size: 3rem; margin-bottom: 4rem;" data-key="roadmap_title">Roadmap</h2>
         <div class="roadmap-container">
             <div class="timeline" id="roadmap-list"></div>
         </div>
@@ -136,38 +136,50 @@
     <div id="projectModal" class="modal" onclick="closeDetails(event)">
         <div class="modal-content" onclick="event.stopPropagation()">
             <span class="close-modal" onclick="document.getElementById('projectModal').style.display='none'">&times;</span>
-            <h2 id="modalTitle" style="margin-bottom: 1rem;"></h2>
-            <p id="modalBody" style="margin-bottom: 2rem;"></p>
-            <div id="modalIcons" style="display: flex; gap: 15px; font-size: 2.5rem; color: var(--accent-red);"></div>
+            <h2 id="modalTitle" style="font-size: 2rem; color: var(--accent-red); margin-bottom: 1rem;"></h2>
+            <p id="modalBody" style="line-height: 1.8; margin-bottom: 2rem; font-size: 1.1rem; color: var(--text-light);"></p>
+            <div id="modalIcons" style="display: flex; gap: 20px; font-size: 3rem; color: var(--accent-red); flex-wrap: wrap;"></div>
         </div>
     </div>
 
-    <footer>&copy; 2025 Trimlind Maliqi</footer>
+    <footer>&copy; 2025 Trimlind Maliqi | Built with Precision</footer>
 
     <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
     <script>
-        // Particles Config (Subtiler)
+        // Subtile Particles
         particlesJS('particles-js', {
             "particles": {
-                "number": { "value": 40 },
+                "number": { "value": 35 },
                 "color": { "value": "#94a3b8" },
-                "opacity": { "value": 0.2 },
+                "opacity": { "value": 0.15 },
                 "size": { "value": 2 },
                 "line_linked": { "enable": true, "distance": 150, "color": "#94a3b8", "opacity": 0.1, "width": 1 },
-                "move": { "enable": true, "speed": 1 }
+                "move": { "enable": true, "speed": 0.8 }
             }
         });
 
-        // Theme Toggle
+        // Dark/Light Theme
         function toggleTheme() {
             document.body.classList.toggle('light-mode');
         }
 
+        const translations = {
+            de: { roadmap_title: "Projekt Roadmap", more_info: "MEHR INFORMATIONEN" },
+            en: { roadmap_title: "Project Roadmap", more_info: "MORE INFORMATION" },
+            sq: { roadmap_title: "Ecuria e Projekteve", more_info: "MË SHUMË INFORMACION" }
+        };
+
         const years = [
-            { id: 'r26', year: '2026', title: { de: "Next Horizon", en: "Next Horizon", sq: "Horizonti i ardhshëm" }, desc: { de: "Web3 & Cloud Scaling.", en: "Web3 & Cloud Scaling.", sq: "Web3 dhe Cloud Scaling." }, icons: ['fa-brands fa-ethereum', 'fa-solid fa-cloud'], long: { de: "Zukunftsvisionen: Dezentrale Apps.", en: "Future visions: Decentralized apps.", sq: "Vizionet e ardhshme." } },
-            { id: 'r25', year: '2025', title: { de: "AI & Scalability", en: "AI & Scalability", sq: "AI dhe Skalueshmëria" }, desc: { de: "KI-Workflows & RAG.", en: "AI workflows & RAG.", sq: "AI rrjedhat e punës." }, icons: ['fa-solid fa-robot', 'fa-solid fa-brain'], long: { de: "Fokus auf KI-Modelle.", en: "Focusing on AI models.", sq: "Fokusi në modelet AI." } },
-            { id: 'r22', year: '2022', title: { de: "Backend Excellence", en: "Backend Excellence", sq: "Backend Excellence" }, desc: { de: "Node.js & SQL.", en: "Node.js & SQL.", sq: "Node.js dhe SQL." }, icons: ['fa-brands fa-node-js', 'fa-solid fa-database'], long: { de: "Meisterung komplexer Server.", en: "Mastering complex servers.", sq: "Zotërimi i serverëve." } }
-            // Weitere Jahre können hier nach gleichem Schema ergänzt werden
+            { id: 'r26', year: '2026', title: { de: "Next Horizon", en: "Next Horizon", sq: "Horizonti i ardhshëm" }, desc: { de: "Web3 & Cloud Scaling.", en: "Web3 & Cloud Scaling.", sq: "Web3 dhe Cloud Scaling." }, icons: ['fa-brands fa-ethereum', 'fa-solid fa-cloud'], long: { de: "Die Vision für 2026 ist die vollständige Dezentralisierung. Ich plane die Integration von Smart Contracts in Unternehmensprozesse und den Aufbau von hochskalierbaren Edge-Computing Architekturen.", en: "The vision for 2026 is full decentralization. I plan to integrate smart contracts into business processes and build highly scalable edge computing architectures.", sq: "Vizioni për vitin 2026 është deçentralizimi i plotë. Unë planifikoj të integroj kontratat inteligjente në proceset e biznesit." } },
+            { id: 'r25', year: '2025', title: { de: "AI & Scalability", en: "AI & Scalability", sq: "AI dhe Skalueshmëria" }, desc: { de: "KI-Workflows & RAG.", en: "AI workflows & RAG.", sq: "AI rrjedhat e punës." }, icons: ['fa-solid fa-robot', 'fa-solid fa-brain'], long: { de: "In diesem Jahr liegt der Fokus auf der Symbiose von menschlicher Kreativität und künstlicher Intelligenz. Ich habe komplexe Agenten-Workflows entwickelt.", en: "This year focuses on the symbiosis of human creativity and AI. I developed complex agent workflows using RAG systems.", sq: "Ky vit u fokusua në simbiozën e krijimtarisë njerëzore dhe inteligjencës artificiale." } },
+            { id: 'r1', year: '2024', title: { de: "SaaS Innovation", en: "SaaS Innovation", sq: "SaaS Inovacion" }, desc: { de: "Docker & AWS Lambda.", en: "Docker & AWS Lambda.", sq: "Docker dhe AWS." }, icons: ['fa-brands fa-docker', 'fa-brands fa-aws'], long: { de: "Architektur einer mandantenfähigen B2B-Plattform unter Nutzung von Docker-Containerisierung und AWS Lambda.", en: "Architecture of a multi-tenant B2B platform using Docker containerization and AWS Lambda.", sq: "Arkitektura e një platforme B2B duke përdorur Docker dhe AWS Lambda." } },
+            { id: 'r2', year: '2023', title: { de: "E-Commerce Core", en: "E-Commerce Core", sq: "Baza e E-Commerce" }, desc: { de: "API & Checkout.", en: "API & Checkout.", sq: "API dhe Checkout." }, icons: ['fa-solid fa-bolt', 'fa-solid fa-server'], long: { de: "Entwicklung performanter Checkout-Systeme und API-Strukturen mit Fokus auf Hochverfügbarkeit und Caching.", en: "Development of high-performance checkout systems and API structures with a focus on high availability.", sq: "Zhvillimi i sistemeve të arkëtimit me performancë të lartë." } },
+            { id: 'r22', year: '2022', title: { de: "Backend Excellence", en: "Backend Excellence", sq: "Backend Excellence" }, desc: { de: "Node.js & SQL.", en: "Node.js & SQL.", sq: "Node.js dhe SQL." }, icons: ['fa-brands fa-node-js', 'fa-solid fa-database'], long: { de: "In diesem Zeitraum habe ich das Backend-Engineering gemeistert. Von komplexen SQL-Joins bis hin zu Sicherheits-Middleware.", en: "During this period, I mastered backend engineering. From complex SQL joins to security middleware.", sq: "Në këtë periudhë kam zotëruar inxhinierinë backend. Nga SQL joins komplekse deri te sigurimi i Node.js." } },
+            { id: 'r21', year: '2021', title: { de: "Frontend Mastery", en: "Frontend Mastery", sq: "Frontend Mastery" }, desc: { de: "React & Redux.", en: "React & Redux.", sq: "React dhe Redux." }, icons: ['fa-brands fa-react', 'fa-brands fa-js'], long: { de: "Der Fokus verschob sich auf das User Interface. React ermöglichte es mir, komplexe Zustände in eleganten Komponenten zu kapseln.", en: "The focus shifted to the user interface. React allowed me to encapsulate complex states into elegant components.", sq: "Fokusi kaloi në ndërfaqen e përdoruesit. React më lejoi të enkapsuloj gjendje komplekse." } },
+            { id: 'r20', year: '2020', title: { de: "UI/UX Design", en: "UI/UX Design", sq: "Dizajni UI/UX" }, desc: { de: "Responsive Design.", en: "Responsive Design.", sq: "Dizajn responsive." }, icons: ['fa-solid fa-mobile-screen', 'fa-solid fa-pen-nib'], long: { de: "Design ist nicht nur wie es aussieht, sondern wie es funktioniert. Ich vertiefte meine Kenntnisse in responsiven Rastern.", en: "Design is not just how it looks, but how it works. I deepened my knowledge in responsive grids.", sq: "Dizajni nuk është vetëm si duket, por si funksionon. Kam thelluar njohuritë e mia." } },
+            { id: 'r19', year: '2019', title: { de: "Official Entry", en: "Official Entry", sq: "Hyrja zyrtare" }, desc: { de: "Start Engineering.", en: "Start Engineering.", sq: "Fillimi inxhinierik." }, icons: ['fa-brands fa-git-alt', 'fa-solid fa-terminal'], long: { de: "Der offizielle Start meiner Reise als Engineer. Ich lernte die Bedeutung von 'Clean Code' und wie man effektiv in Teams arbeitet.", en: "The official start of my journey as an engineer. I learned the importance of 'Clean Code'.", sq: "Fillimi zyrtar i udhëtimit tim si inxhinier. Mësova rëndësinë e 'Clean Code'." } },
+            { id: 'r17', year: '2017-18', title: { de: "Logic Deepening", en: "Logic Deepening", sq: "Thellimi i logjikës" }, desc: { de: "Algorithms & JS.", en: "Algorithms & JS.", sq: "Algoritmet dhe JS." }, icons: ['fa-solid fa-code', 'fa-solid fa-laptop-code'], long: { de: "In diesen Jahren ging es darum, die Logik hinter der Fassade zu verstehen. Algorithmen und Datenstrukturen.", en: "These years were about understanding the logic behind the facade. Algorithms and data structures.", sq: "Këto vite kishin të bënin me kuptimin e logjikës pas fasadës." } },
+            { id: 'r15', year: '2015-16', title: { de: "First Lines", en: "First Lines", sq: "Rreshtat e parë" }, desc: { de: "HTML & CSS Start.", en: "HTML & CSS start.", sq: "Fillimi me HTML/CSS." }, icons: ['fa-brands fa-html5', 'fa-brands fa-css3-alt'], long: { de: "Wo alles begann. Mit dem ersten 'Hello World' in HTML war meine Leidenschaft geweckt.", en: "Where it all began. With the first 'Hello World' in HTML, my passion was ignited.", sq: "Ku filloi gjithçka. Me 'Hello World' e parë në HTML, lindi pasioni im." } }
         ];
 
         function renderRoadmap(lang) {
@@ -177,10 +189,10 @@
                 list.innerHTML += `
                 <div class="container" onclick="openDetails('${y.id}')">
                     <div class="content">
-                        <span style="color:var(--accent-red); font-weight:800;">${y.year}</span>
+                        <span class="date">${y.year}</span>
                         <h3>${y.title[lang]}</h3>
                         <p>${y.desc[lang]}</p>
-                        <div class="hover-info">INFO</div>
+                        <div class="hover-info">${translations[lang].more_info}</div>
                     </div>
                 </div>`;
             });
@@ -190,6 +202,10 @@
             localStorage.setItem('preferredLang', lang);
             document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
             document.getElementById('btn-'+lang).classList.add('active');
+            document.querySelectorAll('[data-key]').forEach(el => {
+                const key = el.getAttribute('data-key');
+                if(translations[lang][key]) el.innerText = translations[lang][key];
+            });
             renderRoadmap(lang);
         }
 
@@ -206,9 +222,12 @@
 
         function closeDetails(e) { if(e.target.id === 'projectModal') e.target.style.display = 'none'; }
         
-        window.onload = () => setLanguage('de');
+        window.onload = () => {
+            const savedLang = localStorage.getItem('preferredLang') || 'de';
+            setLanguage(savedLang);
+        };
 
-        // Logo Animation Fix (Farbe)
+        // Logo Animation (Red Accent)
         const logoText = document.getElementById('logo-text');
         const phrases = ["T. MALIQI", "FULLSTACK", "REACT.JS", "AI DEV"];
         let pIdx = 0;
