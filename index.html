@@ -4,17 +4,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Trimlind Maliqi | Developer Portfolio</title>
-    
-    <link rel="icon" href="https://fav.farm/💻"> 
-    
+
+    <link rel="icon" href="https://fav.farm/💻">
+
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Fira+Code:wght@400;600&display=swap" rel="stylesheet">
-    
+
     <style>
         :root {
-            --bg-dark: #0f172a; /* Etwas tieferes Blau/Schwarz */
+            --bg-dark: #0f172a;
             --bg-dark-alt: #1e293b;
-            --accent-red: #f43f5e; /* Modernes Rose/Red */
+            --accent-red: #f43f5e;
             --accent-glow: rgba(244, 63, 94, 0.5);
             --text-light: #f1f5f9;
             --text-dim: #94a3b8;
@@ -23,7 +23,6 @@
             --grid-color: rgba(255, 255, 255, 0.05);
         }
 
-        /* Light Mode Variablen */
         body.light-mode {
             --bg-dark: #f8fafc;
             --bg-dark-alt: #ffffff;
@@ -37,18 +36,17 @@
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        
-        body { 
-            font-family: 'Inter', sans-serif; 
-            background-color: var(--bg-dark); 
-            color: var(--text-light); 
-            line-height: 1.6; 
-            overflow-x: hidden; 
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-dark);
+            color: var(--text-light);
+            line-height: 1.6;
+            overflow-x: hidden;
             transition: background 0.3s, color 0.3s;
             -webkit-tap-highlight-color: transparent;
         }
 
-        /* Modern Grid Background Pattern */
         .bg-grid {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background-image: linear-gradient(var(--grid-color) 1px, transparent 1px),
@@ -70,15 +68,27 @@
             z-index: 1000; border-bottom: 1px solid rgba(255,255,255,0.05);
         }
         body.light-mode nav { background: rgba(255, 255, 255, 0.7); border-bottom: 1px solid rgba(0,0,0,0.05); }
-        
+
         .logo { font-family: 'Fira Code', monospace; font-weight: 600; color: var(--white); text-decoration: none; display: flex; align-items: center; font-size: 0.9rem; }
         .logo-icon { color: var(--accent-red); font-weight: 800; }
         #logo-text { margin: 0 6px; transition: opacity 0.5s; color: var(--accent-red); font-weight: 700; text-shadow: 0 0 10px var(--accent-glow); }
 
+        /* Nav Links */
+        .nav-links {
+            display: flex; align-items: center; gap: 0.2rem;
+        }
+        .nav-link {
+            color: var(--text-dim); text-decoration: none; font-size: 0.82rem;
+            font-weight: 600; padding: 6px 12px; border-radius: 8px;
+            transition: 0.2s; letter-spacing: 0.3px;
+        }
+        .nav-link:hover { color: var(--text-light); background: rgba(255,255,255,0.06); }
+        body.light-mode .nav-link:hover { background: rgba(0,0,0,0.05); }
+
         .nav-right { display: flex; align-items: center; gap: 0.8rem; }
-        
+
         .theme-toggle, .lang-btn {
-            background: transparent; border: 1px solid var(--text-dim); color: var(--text-dim); 
+            background: transparent; border: 1px solid var(--text-dim); color: var(--text-dim);
             padding: 6px 10px; border-radius: 8px; cursor: pointer; display: flex; align-items: center; gap: 6px; font-size: 0.75rem; transition: 0.3s;
         }
         .theme-toggle:hover, .lang-btn:hover { border-color: var(--accent-red); color: var(--accent-red); }
@@ -87,33 +97,75 @@
 
         section { position: relative; z-index: 2; padding: 120px 7% 80px; min-height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; width: 100%; }
 
-        /* Hero Bereich mit "Decrypted" Effekt */
-        .hero-title { 
-            font-size: clamp(2.5rem, 10vw, 6.5rem); 
-            font-weight: 900; 
-            text-transform: uppercase; 
-            line-height: 1.1; 
+        /* Hero */
+        .hero-title {
+            font-size: clamp(2.5rem, 10vw, 6.5rem);
+            font-weight: 900;
+            text-transform: uppercase;
+            line-height: 1.1;
             text-align: center;
             width: 100%;
-            margin-bottom: 2rem;
+            margin-bottom: 1.2rem;
             letter-spacing: -2px;
         }
-        
-        /* Gradient Text */
+
+        /* Hero Tagline */
+        .hero-tagline {
+            font-size: clamp(0.9rem, 2vw, 1.1rem);
+            color: var(--text-dim);
+            text-align: center;
+            margin-bottom: 2.5rem;
+            font-weight: 400;
+            letter-spacing: 1px;
+        }
+        .hero-tagline span {
+            color: var(--accent-red);
+            font-weight: 600;
+        }
+
+        /* Scroll Indicator */
+        .scroll-indicator {
+            position: absolute;
+            bottom: 2.5rem;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+            color: var(--text-dim);
+            font-size: 0.75rem;
+            letter-spacing: 1px;
+            cursor: pointer;
+            animation: fadeInUp 1s ease 1.5s both;
+        }
+        .scroll-indicator i {
+            font-size: 1.1rem;
+            animation: bounce 2s ease-in-out infinite;
+        }
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(6px); }
+        }
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateX(-50%) translateY(10px); }
+            to { opacity: 1; transform: translateX(-50%) translateY(0); }
+        }
+
         .gradient-text {
             background: linear-gradient(135deg, var(--text-light) 30%, var(--text-dim) 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
-        
-        .outline-text { 
-            color: transparent; 
-            -webkit-text-stroke: 1px var(--text-dim); 
+
+        .outline-text {
+            color: transparent;
+            -webkit-text-stroke: 1px var(--text-dim);
             opacity: 0.5;
-            display: block; 
+            display: block;
         }
 
-        /* Terminal Window - Floating Animation */
+        /* Terminal Window */
         .terminal-window {
             background: #0d1117; border-radius: 12px; border: 1px solid #30363d;
             box-shadow: 0 20px 50px -10px rgba(0,0,0,0.5); max-width: 600px; width: 100%;
@@ -135,62 +187,169 @@
         .cursor { display: inline-block; width: 8px; height: 15px; background: var(--accent-red); animation: blink 1s infinite; }
         @keyframes blink { 50% { opacity: 0; } }
 
-        /* --- ROADMAP SPOTLIGHT STYLING --- */
-        .roadmap-container { width: 100%; max-width: 900px; margin: 0 auto; position: relative; }
-        .timeline { border-left: 2px solid rgba(255,255,255,0.1); padding-left: 30px; position: relative; }
-        body.light-mode .timeline { border-left: 2px solid rgba(0,0,0,0.1); }
-        
-        .container { 
-            position: relative; 
-            margin-bottom: 2rem; 
-            width: 100%; 
-            perspective: 1000px;
+        /* Section Header */
+        .section-title {
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 0.5rem;
+            text-align: center;
         }
-        
-        .timeline-dot { 
-            position: absolute; width: 16px; height: 16px; 
-            background: var(--bg-dark); border: 2px solid var(--accent-red); 
-            left: -39px; top: 24px; border-radius: 50%; 
-            z-index: 5; box-shadow: 0 0 10px var(--accent-glow);
-            transition: 0.3s;
+        .section-subtitle {
+            color: var(--text-dim);
+            font-size: 1rem;
+            margin-bottom: 3rem;
+            text-align: center;
         }
-        
-        .container:hover .timeline-dot { background: var(--accent-red); transform: scale(1.2); }
-        
-        /* Spotlight Card CSS */
-        .content { 
-            background: var(--card-bg); 
-            padding: 1.8rem; 
-            border-radius: 16px; 
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            transition: 0.2s; 
-            position: relative; 
-            overflow: hidden; 
-            text-align: left; 
+
+        /* Skills Section */
+        #skills { background: var(--bg-dark); }
+
+        .skills-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+            gap: 1rem;
+            width: 100%;
+            max-width: 800px;
+        }
+
+        .skill-card {
+            background: var(--card-bg);
+            border: 1px solid rgba(255,255,255,0.05);
+            border-radius: 14px;
+            padding: 1.4rem 1rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.6rem;
+            cursor: default;
+            transition: 0.25s;
+        }
+        .skill-card:hover {
+            transform: translateY(-4px);
+            border-color: var(--accent-red);
+            box-shadow: 0 8px 25px -8px var(--accent-glow);
+        }
+        .skill-card i {
+            font-size: 2rem;
+            color: var(--text-dim);
+            transition: 0.25s;
+        }
+        .skill-card:hover i { color: var(--accent-red); }
+        .skill-card span {
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--text-dim);
+            letter-spacing: 0.5px;
+        }
+
+        /* Projects Section */
+        #projects { background: var(--bg-dark-alt); border-top: 1px solid rgba(255,255,255,0.05); }
+        body.light-mode #projects { border-top: 1px solid rgba(0,0,0,0.05); }
+
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+            width: 100%;
+            max-width: 1000px;
+        }
+
+        .project-card {
+            background: var(--card-bg);
+            border: 1px solid rgba(255,255,255,0.05);
+            border-radius: 16px;
+            padding: 2rem;
             cursor: pointer;
+            transition: 0.25s;
+            position: relative;
+            overflow: hidden;
+            text-align: left;
         }
-        
-        /* Der Spotlight Effekt Layer */
-        .content::before {
+        .project-card::before {
             content: "";
             position: absolute;
             height: 100%; width: 100%;
             top: 0; left: 0;
-            background: radial-gradient(
-                800px circle at var(--mouse-x) var(--mouse-y), 
-                rgba(255, 255, 255, 0.06),
-                transparent 40%
-            );
+            background: radial-gradient(600px circle at var(--mouse-x) var(--mouse-y), rgba(244,63,94,0.06), transparent 40%);
             z-index: 1;
             opacity: 0;
             transition: opacity 0.5s;
             pointer-events: none;
         }
-        
+        .project-card:hover::before { opacity: 1; }
+        .project-card:hover {
+            transform: translateY(-4px);
+            border-color: rgba(255,255,255,0.1);
+            box-shadow: 0 12px 30px -10px rgba(0,0,0,0.5);
+        }
+        .project-card > * { position: relative; z-index: 2; }
+        .project-tag {
+            display: inline-block;
+            background: rgba(244, 63, 94, 0.1);
+            color: var(--accent-red);
+            padding: 3px 10px;
+            border-radius: 20px;
+            font-size: 0.72rem;
+            font-weight: 700;
+            margin-bottom: 0.8rem;
+            border: 1px solid rgba(244, 63, 94, 0.2);
+        }
+        .project-card h3 { font-size: 1.2rem; color: var(--white); margin-bottom: 0.5rem; }
+        .project-card p { font-size: 0.9rem; color: var(--text-dim); line-height: 1.6; margin-bottom: 1.2rem; }
+        .project-icons { display: flex; gap: 12px; font-size: 1.3rem; color: var(--text-dim); flex-wrap: wrap; }
+        .project-arrow {
+            position: absolute; bottom: 1.5rem; right: 1.5rem;
+            color: var(--text-dim); font-size: 0.9rem;
+            transition: 0.2s; z-index: 2;
+        }
+        .project-card:hover .project-arrow { color: var(--accent-red); transform: translate(3px, -3px); }
+
+        /* Roadmap */
+        .roadmap-container { width: 100%; max-width: 900px; margin: 0 auto; position: relative; }
+        .timeline { border-left: 2px solid rgba(255,255,255,0.1); padding-left: 30px; position: relative; }
+        body.light-mode .timeline { border-left: 2px solid rgba(0,0,0,0.1); }
+
+        .container {
+            position: relative;
+            margin-bottom: 2rem;
+            width: 100%;
+            perspective: 1000px;
+        }
+
+        .timeline-dot {
+            position: absolute; width: 16px; height: 16px;
+            background: var(--bg-dark); border: 2px solid var(--accent-red);
+            left: -39px; top: 24px; border-radius: 50%;
+            z-index: 5; box-shadow: 0 0 10px var(--accent-glow);
+            transition: 0.3s;
+        }
+        .container:hover .timeline-dot { background: var(--accent-red); transform: scale(1.2); }
+
+        .content {
+            background: var(--card-bg);
+            padding: 1.8rem;
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: 0.2s;
+            position: relative;
+            overflow: hidden;
+            text-align: left;
+            cursor: pointer;
+        }
+        .content::before {
+            content: "";
+            position: absolute;
+            height: 100%; width: 100%;
+            top: 0; left: 0;
+            background: radial-gradient(800px circle at var(--mouse-x) var(--mouse-y), rgba(255,255,255,0.06), transparent 40%);
+            z-index: 1;
+            opacity: 0;
+            transition: opacity 0.5s;
+            pointer-events: none;
+        }
         .content:hover::before { opacity: 1; }
         .content h3 { font-size: 1.25rem; margin-bottom: 0.5rem; color: var(--white); }
         .year-badge { display: inline-block; background: rgba(244, 63, 94, 0.1); color: var(--accent-red); padding: 4px 10px; border-radius: 20px; font-size: 0.75rem; font-weight: 800; margin-bottom: 10px; border: 1px solid rgba(244, 63, 94, 0.2); }
-
         .content:hover { transform: translateY(-3px); border-color: rgba(255,255,255,0.1); box-shadow: 0 10px 30px -10px rgba(0,0,0,0.5); }
 
         /* Scroll Animationen */
@@ -198,11 +357,11 @@
         .reveal.active { opacity: 1; transform: translateY(0); }
 
         /* Kontaktformular */
-        #contact { 
-            background: linear-gradient(180deg, var(--bg-dark) 0%, rgba(20, 33, 46, 1) 100%); 
-            border-top: 1px solid rgba(255,255,255,0.05); 
+        #contact {
+            background: linear-gradient(180deg, var(--bg-dark) 0%, rgba(20, 33, 46, 1) 100%);
+            border-top: 1px solid rgba(255,255,255,0.05);
         }
-        
+
         .contact-wrapper {
             background: var(--card-bg);
             padding: 3rem;
@@ -215,24 +374,24 @@
         }
 
         .contact-form { display: flex; flex-direction: column; gap: 1rem; position: relative; z-index: 2; }
-        
+
         .contact-form input, .contact-form textarea {
             background: rgba(0, 0, 0, 0.2); border: 1px solid rgba(255, 255, 255, 0.1);
             padding: 1.2rem; color: var(--text-light); border-radius: 8px; outline: none; font-size: 1rem;
             width: 100%; transition: 0.3s; font-family: 'Inter', sans-serif;
         }
-        
+
         .contact-form input:focus, .contact-form textarea:focus {
             border-color: var(--accent-red); background: rgba(0,0,0,0.3);
         }
-        
+
         body.light-mode .contact-form input, body.light-mode .contact-form textarea {
             background: rgba(255, 255, 255, 0.5); border: 1px solid rgba(0, 0, 0, 0.1); color: #1a2a3a;
         }
-        
-        .email-btn { 
-            background: var(--accent-red); color: white; padding: 1.2rem; border: none; 
-            font-weight: 800; cursor: pointer; border-radius: 8px; width: 100%; 
+
+        .email-btn {
+            background: var(--accent-red); color: white; padding: 1.2rem; border: none;
+            font-weight: 800; cursor: pointer; border-radius: 8px; width: 100%;
             transition: 0.3s; letter-spacing: 1px; margin-top: 10px;
             box-shadow: 0 4px 15px var(--accent-glow);
         }
@@ -241,21 +400,26 @@
         /* Modal */
         .modal { display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); backdrop-filter: blur(8px); align-items: center; justify-content: center; padding: 20px; opacity: 0; transition: opacity 0.3s; }
         .modal.show { opacity: 1; }
-        
-        .modal-content { 
-            background: #161b22; padding: 2.5rem; width: 100%; max-width: 550px; 
-            border-radius: 16px; border: 1px solid rgba(255,255,255,0.1); 
-            position: relative; text-align: left; 
+
+        .modal-content {
+            background: #161b22; padding: 2.5rem; width: 100%; max-width: 550px;
+            border-radius: 16px; border: 1px solid rgba(255,255,255,0.1);
+            position: relative; text-align: left;
             transform: scale(0.9); transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
             box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5);
         }
         .modal.show .modal-content { transform: scale(1); }
-        
+
         .close-modal { position: absolute; top: 1.2rem; right: 1.2rem; font-size: 1.5rem; color: var(--text-dim); cursor: pointer; transition: 0.3s; }
         .close-modal:hover { color: var(--accent-red); transform: rotate(90deg); }
 
         footer { z-index: 2; position: relative; padding: 3rem 5%; text-align: center; background: var(--bg-dark); font-size: 0.85rem; color: var(--text-dim); border-top: 1px solid rgba(255,255,255,0.05); }
 
+        @media (max-width: 768px) {
+            .nav-links { display: none; }
+            .projects-grid { grid-template-columns: 1fr; }
+            .skills-grid { grid-template-columns: repeat(auto-fill, minmax(90px, 1fr)); }
+        }
         @media (max-width: 400px) {
             .hero-title { font-size: 2.5rem; }
             .content { padding: 1.5rem; }
@@ -268,15 +432,22 @@
     <div id="particles-js"></div>
 
     <nav>
-        <a href="#" class="logo">
+        <a href="#home" class="logo">
             <span class="logo-icon">{</span> <span id="logo-text">T. MALIQI</span> <span class="logo-icon">}</span>
         </a>
+        <div class="nav-links">
+            <a href="#home" class="nav-link" data-key="nav_home">Home</a>
+            <a href="#skills" class="nav-link" data-key="nav_skills">Skills</a>
+            <a href="#projects" class="nav-link" data-key="nav_projects">Projekte</a>
+            <a href="#roadmap" class="nav-link" data-key="nav_roadmap">Roadmap</a>
+            <a href="#contact" class="nav-link" data-key="nav_contact">Kontakt</a>
+        </div>
         <div class="nav-right">
-            <button class="theme-toggle" onclick="toggleTheme()"><i class="fas fa-adjust"></i></button>
+            <button class="theme-toggle" onclick="toggleTheme()" aria-label="Theme wechseln"><i class="fas fa-adjust"></i></button>
             <div class="lang-switch" style="display:flex; gap:5px;">
-                <button class="lang-btn" id="btn-de" onclick="setLanguage('de')"><img src="https://flagcdn.com/w40/de.png"> DE</button>
-                <button class="lang-btn" id="btn-en" onclick="setLanguage('en')"><img src="https://flagcdn.com/w40/gb.png"> EN</button>
-                <button class="lang-btn" id="btn-sq" onclick="setLanguage('sq')"><img src="https://flagcdn.com/w40/al.png"> SQ</button>
+                <button class="lang-btn" id="btn-de" onclick="setLanguage('de')" aria-label="Deutsch"><img src="https://flagcdn.com/w40/de.png" alt="DE"> DE</button>
+                <button class="lang-btn" id="btn-en" onclick="setLanguage('en')" aria-label="English"><img src="https://flagcdn.com/w40/gb.png" alt="EN"> EN</button>
+                <button class="lang-btn" id="btn-sq" onclick="setLanguage('sq')" aria-label="Shqip"><img src="https://flagcdn.com/w40/al.png" alt="SQ"> SQ</button>
             </div>
         </div>
     </nav>
@@ -286,6 +457,7 @@
             <span class="outline-text">Trimlind</span>
             <span class="gradient-text" id="scramble-target">Maliqi</span>
         </h1>
+        <p class="hero-tagline" id="hero-tagline">Full-Stack Developer &middot; <span>React</span> &middot; <span>Node.js</span> &middot; <span>Cloud</span></p>
         <div class="terminal-window">
             <div class="terminal-header"><div class="dot red"></div><div class="dot yellow"></div><div class="dot green"></div></div>
             <div class="terminal-body">
@@ -296,17 +468,48 @@
                 <div style="margin-top: 5px;">> <span class="cursor"></span></div>
             </div>
         </div>
+        <div class="scroll-indicator" onclick="document.getElementById('skills').scrollIntoView({behavior:'smooth'})">
+            <span data-key="scroll_hint">Scroll</span>
+            <i class="fas fa-chevron-down"></i>
+        </div>
+    </section>
+
+    <section id="skills">
+        <h2 class="section-title reveal" data-key="skills_title">Skills</h2>
+        <p class="section-subtitle reveal" data-key="skills_subtitle">Technologien mit denen ich arbeite</p>
+        <div class="skills-grid">
+            <div class="skill-card reveal"><i class="fa-brands fa-react"></i><span>React</span></div>
+            <div class="skill-card reveal"><i class="fa-brands fa-node-js"></i><span>Node.js</span></div>
+            <div class="skill-card reveal"><i class="fa-brands fa-js"></i><span>JavaScript</span></div>
+            <div class="skill-card reveal"><i class="fa-brands fa-python"></i><span>Python</span></div>
+            <div class="skill-card reveal"><i class="fa-brands fa-docker"></i><span>Docker</span></div>
+            <div class="skill-card reveal"><i class="fa-brands fa-aws"></i><span>AWS</span></div>
+            <div class="skill-card reveal"><i class="fa-brands fa-git-alt"></i><span>Git</span></div>
+            <div class="skill-card reveal"><i class="fa-solid fa-database"></i><span>SQL / NoSQL</span></div>
+            <div class="skill-card reveal"><i class="fa-brands fa-html5"></i><span>HTML5</span></div>
+            <div class="skill-card reveal"><i class="fa-brands fa-css3-alt"></i><span>CSS3</span></div>
+            <div class="skill-card reveal"><i class="fa-solid fa-robot"></i><span>AI / LLMs</span></div>
+            <div class="skill-card reveal"><i class="fa-brands fa-linux"></i><span>Linux</span></div>
+        </div>
+    </section>
+
+    <section id="projects">
+        <h2 class="section-title reveal" data-key="projects_title">Projekte</h2>
+        <p class="section-subtitle reveal" data-key="projects_subtitle">Ausgewählte Arbeiten</p>
+        <div class="projects-grid" id="projects-list"></div>
     </section>
 
     <section id="roadmap">
-        <h2 class="reveal" style="font-size: 2.5rem; margin-bottom: 3rem; font-weight:800;" data-key="roadmap_title">Roadmap</h2>
+        <h2 class="section-title reveal" data-key="roadmap_title">Roadmap</h2>
+        <p class="section-subtitle reveal" data-key="roadmap_subtitle">Meine Entwicklung als Developer</p>
         <div class="roadmap-container">
             <div class="timeline" id="roadmap-list"></div>
         </div>
     </section>
 
     <section id="contact">
-        <h2 class="reveal" style="font-size: 2.5rem; margin-bottom: 2rem; font-weight:800;" data-key="nav_contact">Kontakt</h2>
+        <h2 class="section-title reveal" data-key="nav_contact">Kontakt</h2>
+        <p class="section-subtitle reveal" data-key="contact_subtitle">Schreib mir eine Nachricht</p>
         <div class="contact-wrapper reveal">
             <form action="https://formspree.io/f/xnjqdepv" method="POST" class="contact-form">
                 <input type="text" name="name" id="p_name" placeholder="Name" required>
@@ -330,7 +533,7 @@
 
     <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
     <script>
-        // 1. PARTICLES CONFIG (Subtiler)
+        // 1. PARTICLES CONFIG
         particlesJS('particles-js', {
             "particles": {
                 "number": { "value": 40 },
@@ -358,18 +561,87 @@
             { id: 'r19', year: '2019', title: { de: "The Start", en: "The Start", sq: "Fillimi" }, desc: { de: "Official Entry.", en: "Official Entry.", sq: "Fillimi zyrtar." }, icons: ['fa-solid fa-code', 'fa-solid fa-terminal'], long: { de: "Erste Schritte in der professionellen Softwareentwicklung.", en: "First steps in professional software development.", sq: "Hapat e parë në zhvillimin e softuerit." } }
         ];
 
+        const projects = [
+            {
+                id: 'p1',
+                tag: { de: "Web App", en: "Web App", sq: "Aplikacion Web" },
+                title: { de: "Developer Portfolio", en: "Developer Portfolio", sq: "Portfolio Developer" },
+                desc: { de: "Dieses Portfolio — gebaut mit reinem HTML, CSS & JS. Animationen, Mehrsprachigkeit und Dark Mode.", en: "This portfolio — built with pure HTML, CSS & JS. Animations, multilanguage and dark mode.", sq: "Ky portfolio — ndërtuar me HTML, CSS & JS." },
+                icons: ['fa-brands fa-html5', 'fa-brands fa-css3-alt', 'fa-brands fa-js'],
+                long: { de: "Ein vollständig selbst entwickeltes Portfolio. Features: Scramble-Text-Effekt, Spotlight-Karten, Particle-System, Dark/Light Mode, 3-sprachige UI (DE/EN/SQ) und ein animiertes Roadmap-Timeline.", en: "A fully self-developed portfolio. Features: scramble text effect, spotlight cards, particle system, dark/light mode, 3-language UI (DE/EN/SQ) and an animated roadmap timeline.", sq: "Një portfolio i zhvilluar plotësisht vetë." }
+            },
+            {
+                id: 'p2',
+                tag: { de: "SaaS Plattform", en: "SaaS Platform", sq: "Platformë SaaS" },
+                title: { de: "E-Commerce Backend", en: "E-Commerce Backend", sq: "Backend E-Commerce" },
+                desc: { de: "Hochperformantes Backend für Online-Shops mit REST API, Auth und Zahlungsintegration.", en: "High-performance backend for online shops with REST API, auth and payment integration.", sq: "Backend me performancë të lartë për dyqane online." },
+                icons: ['fa-brands fa-node-js', 'fa-solid fa-database', 'fa-solid fa-bolt'],
+                long: { de: "Entwicklung einer skalierbaren E-Commerce-Infrastruktur mit Node.js und PostgreSQL. Features: JWT-Auth, Stripe-Integration, Redis-Caching und Docker-Deployment.", en: "Development of a scalable e-commerce infrastructure with Node.js and PostgreSQL. Features: JWT auth, Stripe integration, Redis caching and Docker deployment.", sq: "Infrastrukturë e skaluar e-commerce me Node.js dhe PostgreSQL." }
+            },
+            {
+                id: 'p3',
+                tag: { de: "KI Projekt", en: "AI Project", sq: "Projekt AI" },
+                title: { de: "AI Dashboard", en: "AI Dashboard", sq: "Dashboard AI" },
+                desc: { de: "React-Dashboard zur Visualisierung und Steuerung von KI-Modellen und RAG-Pipelines.", en: "React dashboard for visualizing and controlling AI models and RAG pipelines.", sq: "Dashboard React për vizualizimin e modeleve AI." },
+                icons: ['fa-brands fa-react', 'fa-solid fa-robot', 'fa-brands fa-python'],
+                long: { de: "Ein modernes Dashboard zur Verwaltung von KI-Workflows. Echtzeit-Datenvisualisierung mit Chart.js, Integration von OpenAI und Anthropic APIs, Python-Backend mit FastAPI.", en: "A modern dashboard for managing AI workflows. Real-time data visualization with Chart.js, integration of OpenAI and Anthropic APIs, Python backend with FastAPI.", sq: "Dashboard modern për menaxhimin e rrjedhave të punës AI." }
+            }
+        ];
+
         const translations = {
-            de: { roadmap_title: "Roadmap", contact_btn: "NACHRICHT SENDEN", p_name: "Name", p_email: "Email", p_msg: "Deine Nachricht...", nav_contact: "Kontakt" },
-            en: { roadmap_title: "Roadmap", contact_btn: "SEND MESSAGE", p_name: "Name", p_email: "Email", p_msg: "Your message...", nav_contact: "Contact" },
-            sq: { roadmap_title: "Ecuria", contact_btn: "DËRGO MESAZH", p_name: "Emri", p_email: "Email", p_msg: "Mesazhi juaj...", nav_contact: "Kontakt" }
+            de: {
+                nav_home: "Home", nav_skills: "Skills", nav_projects: "Projekte", nav_roadmap: "Roadmap", nav_contact: "Kontakt",
+                roadmap_title: "Roadmap", roadmap_subtitle: "Meine Entwicklung als Developer",
+                skills_title: "Skills", skills_subtitle: "Technologien mit denen ich arbeite",
+                projects_title: "Projekte", projects_subtitle: "Ausgewählte Arbeiten",
+                contact_btn: "NACHRICHT SENDEN", contact_subtitle: "Schreib mir eine Nachricht",
+                p_name: "Name", p_email: "Email", p_msg: "Deine Nachricht...",
+                scroll_hint: "Scroll"
+            },
+            en: {
+                nav_home: "Home", nav_skills: "Skills", nav_projects: "Projects", nav_roadmap: "Roadmap", nav_contact: "Contact",
+                roadmap_title: "Roadmap", roadmap_subtitle: "My journey as a developer",
+                skills_title: "Skills", skills_subtitle: "Technologies I work with",
+                projects_title: "Projects", projects_subtitle: "Selected works",
+                contact_btn: "SEND MESSAGE", contact_subtitle: "Send me a message",
+                p_name: "Name", p_email: "Email", p_msg: "Your message...",
+                scroll_hint: "Scroll"
+            },
+            sq: {
+                nav_home: "Kryefaqja", nav_skills: "Aftësitë", nav_projects: "Projektet", nav_roadmap: "Ecuria", nav_contact: "Kontakt",
+                roadmap_title: "Ecuria", roadmap_subtitle: "Udhëtimi im si developer",
+                skills_title: "Aftësitë", skills_subtitle: "Teknologjitë që përdor",
+                projects_title: "Projektet", projects_subtitle: "Punime të zgjedhura",
+                contact_btn: "DËRGO MESAZH", contact_subtitle: "Më dërgo një mesazh",
+                p_name: "Emri", p_email: "Email", p_msg: "Mesazhi juaj...",
+                scroll_hint: "Scroll"
+            }
         };
 
-        // 3. RENDER ROADMAP WITH SPOTLIGHT LOGIC
+        // 3. RENDER PROJECTS
+        function renderProjects(lang) {
+            const list = document.getElementById('projects-list');
+            list.innerHTML = '';
+            projects.forEach((p, index) => {
+                const delay = index * 120;
+                const iconsHtml = p.icons.map(i => `<i class="${i}"></i>`).join('');
+                list.innerHTML += `
+                <div class="project-card reveal spotlight-project" style="transition-delay: ${delay}ms" onclick="openProjectDetails('${p.id}')">
+                    <span class="project-tag">${p.tag[lang]}</span>
+                    <h3>${p.title[lang]}</h3>
+                    <p>${p.desc[lang]}</p>
+                    <div class="project-icons">${iconsHtml}</div>
+                    <i class="fas fa-arrow-up-right project-arrow"></i>
+                </div>`;
+            });
+            initProjectSpotlight();
+        }
+
+        // 4. RENDER ROADMAP
         function renderRoadmap(lang) {
             const list = document.getElementById('roadmap-list');
             list.innerHTML = '';
             years.forEach((y, index) => {
-                // Verzögerung für Staggered Animation
                 const delay = index * 100;
                 list.innerHTML += `
                 <div class="container reveal" style="transition-delay: ${delay}ms" onclick="openDetails('${y.id}')">
@@ -381,71 +653,64 @@
                     </div>
                 </div>`;
             });
-            
-            // Re-Initialize Spotlight Listeners after render
             initSpotlight();
-            // Re-Initialize Scroll Observer
             initObserver();
         }
 
-        // 4. SPOTLIGHT EFFECT (ReactBits Style)
+        // 5. SPOTLIGHT EFFECTS
         function initSpotlight() {
             document.querySelectorAll('.spotlight-card').forEach(card => {
                 card.addEventListener('mousemove', e => {
                     const rect = card.getBoundingClientRect();
-                    const x = e.clientX - rect.left;
-                    const y = e.clientY - rect.top;
-                    card.style.setProperty('--mouse-x', `${x}px`);
-                    card.style.setProperty('--mouse-y', `${y}px`);
+                    card.style.setProperty('--mouse-x', `${e.clientX - rect.left}px`);
+                    card.style.setProperty('--mouse-y', `${e.clientY - rect.top}px`);
                 });
             });
         }
 
-        // 5. SCRAMBLE TEXT EFFECT (Decrypted Text)
+        function initProjectSpotlight() {
+            document.querySelectorAll('.spotlight-project').forEach(card => {
+                card.addEventListener('mousemove', e => {
+                    const rect = card.getBoundingClientRect();
+                    card.style.setProperty('--mouse-x', `${e.clientX - rect.left}px`);
+                    card.style.setProperty('--mouse-y', `${e.clientY - rect.top}px`);
+                });
+            });
+        }
+
+        // 6. SCRAMBLE TEXT
         function scrambleText(elementId, finalSubText) {
             const element = document.getElementById(elementId);
             const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%&";
             let iterations = 0;
             const finalText = finalSubText || element.innerText;
-            
             const interval = setInterval(() => {
-                element.innerText = finalText
-                    .split("")
-                    .map((letter, index) => {
-                        if(index < iterations) {
-                            return finalText[index];
-                        }
-                        return chars[Math.floor(Math.random() * chars.length)];
-                    })
-                    .join("");
-                
+                element.innerText = finalText.split("").map((letter, index) => {
+                    if(index < iterations) return finalText[index];
+                    return chars[Math.floor(Math.random() * chars.length)];
+                }).join("");
                 if(iterations >= finalText.length) clearInterval(interval);
                 iterations += 1/3;
             }, 30);
         }
 
-        // 6. SCROLL ANIMATION (Intersection Observer)
+        // 7. SCROLL ANIMATION
         function initObserver() {
             const observer = new IntersectionObserver((entries) => {
                 entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        entry.target.classList.add('active');
-                    }
+                    if (entry.isIntersecting) entry.target.classList.add('active');
                 });
             }, { threshold: 0.1 });
-
             document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
         }
 
-        // 7. CORE FUNCTIONS
+        // 8. CORE FUNCTIONS
         function toggleTheme() { document.body.classList.toggle('light-mode'); }
 
         function setLanguage(lang) {
             localStorage.setItem('preferredLang', lang);
             document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
             document.getElementById('btn-'+lang).classList.add('active');
-            
-            // Update Text
             document.querySelectorAll('[data-key]').forEach(el => {
                 const key = el.getAttribute('data-key');
                 if(translations[lang][key]) el.innerText = translations[lang][key];
@@ -453,7 +718,7 @@
             document.getElementById('p_name').placeholder = translations[lang].p_name;
             document.getElementById('p_email').placeholder = translations[lang].p_email;
             document.getElementById('p_msg').placeholder = translations[lang].p_msg;
-            
+            renderProjects(lang);
             renderRoadmap(lang);
         }
 
@@ -465,7 +730,19 @@
             const iconContainer = document.getElementById('modalIcons');
             iconContainer.innerHTML = '';
             item.icons.forEach(i => { iconContainer.innerHTML += `<i class="${i}"></i>`; });
-            
+            const modal = document.getElementById('projectModal');
+            modal.style.display = 'flex';
+            setTimeout(() => modal.classList.add('show'), 10);
+        }
+
+        function openProjectDetails(id) {
+            const lang = localStorage.getItem('preferredLang') || 'de';
+            const item = projects.find(p => p.id === id);
+            document.getElementById('modalTitle').innerText = item.title[lang];
+            document.getElementById('modalBody').innerText = item.long[lang];
+            const iconContainer = document.getElementById('modalIcons');
+            iconContainer.innerHTML = '';
+            item.icons.forEach(i => { iconContainer.innerHTML += `<i class="${i}"></i>`; });
             const modal = document.getElementById('projectModal');
             modal.style.display = 'flex';
             setTimeout(() => modal.classList.add('show'), 10);
@@ -479,24 +756,22 @@
         function closeDetails(e) { if(e.target.id === 'projectModal') closeModalFunc(); }
         document.addEventListener('keydown', e => { if(e.key === 'Escape') closeModalFunc(); });
 
-        // 8. INIT
+        // 9. INIT
         window.onload = () => {
             const savedLang = localStorage.getItem('preferredLang') || 'de';
             setLanguage(savedLang);
-            
-            // Start Hero Scramble
+            initObserver();
             setTimeout(() => scrambleText("scramble-target", "Maliqi"), 500);
 
-            // Navbar Text Animation loop
             const logoText = document.getElementById('logo-text');
             const phrases = ["T. MALIQI", "FULLSTACK", "REACT.JS"];
             let pIdx = 0;
             setInterval(() => {
                 logoText.style.opacity = 0;
-                setTimeout(() => { 
-                    pIdx = (pIdx+1)%phrases.length; 
-                    logoText.innerText = phrases[pIdx]; 
-                    logoText.style.opacity = 1; 
+                setTimeout(() => {
+                    pIdx = (pIdx+1)%phrases.length;
+                    logoText.innerText = phrases[pIdx];
+                    logoText.style.opacity = 1;
                 }, 500);
             }, 4000);
         };
