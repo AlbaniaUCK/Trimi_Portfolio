@@ -1,79 +1,125 @@
 <!DOCTYPE html>
+<!-- Sprachattribut: Standard ist Deutsch (wird per JS dynamisch geändert) -->
 <html lang="de">
 <head>
+    <!-- Zeichenkodierung: UTF-8 für Sonderzeichen (ä, ö, ü, ë usw.) -->
     <meta charset="UTF-8">
+    <!-- Viewport: Verhindert horizontales Zoomen auf Mobilgeräten -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Trimlind Maliqi | Developer Portfolio</title>
 
+    <!-- Favicon: Laptop-Emoji via fav.farm (kein eigenes Icon nötig) -->
     <link rel="icon" href="https://fav.farm/💻">
 
+    <!-- Font Awesome 6: Ikonenbibliothek für alle Icons (React, Node, Docker, etc.) -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <!-- Google Fonts: Inter (UI-Text) + Fira Code (Terminal/Logo-Schrift) -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Fira+Code:wght@400;600&display=swap" rel="stylesheet">
 
     <style>
+        /* ============================================================
+           CSS CUSTOM PROPERTIES (Design-Token)
+           Alle Farben und Werte zentral definiert – bei Änderungen
+           muss nur dieser Block angepasst werden.
+        ============================================================ */
         :root {
-            --bg-dark: #0f172a;
-            --bg-dark-alt: #1e293b;
-            --accent-red: #f43f5e;
-            --accent-glow: rgba(244, 63, 94, 0.5);
-            --text-light: #f1f5f9;
-            --text-dim: #94a3b8;
-            --white: #ffffff;
-            --card-bg: rgba(30, 41, 59, 0.7);
-            --grid-color: rgba(255, 255, 255, 0.05);
+            --bg-dark: #0f172a;           /* Haupt-Hintergrundfarbe (tiefes Dunkelblau) */
+            --bg-dark-alt: #1e293b;       /* Leicht hellerer Hintergrund (alternativ) */
+            --accent-red: #f43f5e;        /* Akzentfarbe: Rose/Rot für Highlights */
+            --accent-glow: rgba(244, 63, 94, 0.5); /* Glow-Effekt-Farbe (halbtransparent) */
+            --text-light: #f1f5f9;        /* Heller Fließtext */
+            --text-dim: #94a3b8;          /* Gedimmter Text (Labels, Beschreibungen) */
+            --white: #ffffff;             /* Reinweiß (Überschriften, Logo) */
+            --card-bg: rgba(30, 41, 59, 0.7); /* Glassmorphism-Kartenhintergrund */
+            --grid-color: rgba(255, 255, 255, 0.05); /* Gitterlinien-Farbe */
         }
 
+        /* ============================================================
+           LIGHT MODE OVERRIDES
+           Überschreibt alle Custom Properties wenn body.light-mode gesetzt ist.
+           Wird per toggleTheme() JavaScript-Funktion aktiviert.
+        ============================================================ */
         body.light-mode {
             --bg-dark: #f8fafc;
             --bg-dark-alt: #ffffff;
-            --accent-red: #e11d48;
+            --accent-red: #e11d48;        /* Etwas dunkleres Rot für besseren Kontrast */
             --accent-glow: rgba(225, 29, 72, 0.3);
-            --text-light: #0f172a;
+            --text-light: #0f172a;        /* Im Light Mode: dunkler Text */
             --text-dim: #64748b;
-            --white: #000000;
+            --white: #000000;             /* Im Light Mode: Schwarz statt Weiß */
             --card-bg: rgba(255, 255, 255, 0.8);
             --grid-color: rgba(0, 0, 0, 0.05);
         }
 
+        /* ============================================================
+           CSS RESET
+           Entfernt Browser-Standardabstände, konsistentes Box-Sizing.
+        ============================================================ */
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
+        /* ============================================================
+           BODY – Basis-Layout
+           overflow-x: hidden verhindert horizontalen Scrollbalken.
+           -webkit-tap-highlight-color entfernt blaues Tap-Highlight auf iOS.
+        ============================================================ */
         body {
             font-family: 'Inter', sans-serif;
             background-color: var(--bg-dark);
             color: var(--text-light);
             line-height: 1.6;
             overflow-x: hidden;
-            transition: background 0.3s, color 0.3s;
+            transition: background 0.3s, color 0.3s; /* Weicher Übergang beim Theme-Wechsel */
             -webkit-tap-highlight-color: transparent;
         }
 
+        /* ============================================================
+           HINTERGRUND-GITTER
+           Fixiertes, subtiles Raster-Pattern über die gesamte Seite.
+           mask-image blendet die Ränder aus, sodass das Grid in der
+           Mitte sichtbar ist und nach außen ausblendet.
+        ============================================================ */
         .bg-grid {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background-image: linear-gradient(var(--grid-color) 1px, transparent 1px),
             linear-gradient(90deg, var(--grid-color) 1px, transparent 1px);
-            background-size: 50px 50px;
+            background-size: 50px 50px; /* Gitterzellen-Größe */
             z-index: 0;
-            pointer-events: none;
+            pointer-events: none; /* Kein Mausklick-Blocking */
             mask-image: radial-gradient(circle at center, black 40%, transparent 100%);
             -webkit-mask-image: radial-gradient(circle at center, black 40%, transparent 100%);
         }
 
+        /* ============================================================
+           PARTICLES.JS CONTAINER
+           Fixierter Layer für die animierten Partikel.
+           pointer-events: none → Partikel blockieren keine Klicks.
+           opacity: 0.6 → leicht transparent für subtilen Effekt.
+        ============================================================ */
         #particles-js { position: fixed; width: 100%; height: 100%; z-index: 1; top: 0; left: 0; pointer-events: none; opacity: 0.6; }
 
-        /* Navigation */
+        /* ============================================================
+           NAVIGATION
+           Fixiert am oberen Rand. backdrop-filter: blur erzeugt den
+           Glasmorphism-Effekt (Hintergrund verschwimmt hinter der Nav).
+           z-index: 1000 → immer über allem anderen.
+        ============================================================ */
         nav {
             display: flex; justify-content: space-between; align-items: center;
             padding: 1rem 5%; position: fixed; width: 100%;
-            background: rgba(15, 23, 42, 0.7); backdrop-filter: blur(12px);
+            background: rgba(15, 23, 42, 0.7); /* Halbtransparenter Hintergrund */
+            backdrop-filter: blur(12px);        /* Blur-Effekt hinter der Nav */
             z-index: 1000; border-bottom: 1px solid rgba(255,255,255,0.05);
         }
+        /* Light-Mode: weißer Glasmorphism statt dunkel */
         body.light-mode nav { background: rgba(255, 255, 255, 0.7); border-bottom: 1px solid rgba(0,0,0,0.05); }
 
+        /* Logo-Link: Fira Code Monospace, Klammern in Akzentfarbe */
         .logo { font-family: 'Fira Code', monospace; font-weight: 600; color: var(--white); text-decoration: none; display: flex; align-items: center; font-size: 0.9rem; }
         .logo-icon { color: var(--accent-red); font-weight: 800; }
+        /* #logo-text rotiert per JS durch "T. MALIQI" → "FULLSTACK" → "REACT.JS" */
         #logo-text { margin: 0 6px; transition: opacity 0.5s; color: var(--accent-red); font-weight: 700; text-shadow: 0 0 10px var(--accent-glow); }
 
-        /* Nav Links */
+        /* Navigationslinks in der Mitte der Nav (auf Mobile versteckt) */
         .nav-links {
             display: flex; align-items: center; gap: 0.2rem;
         }
@@ -82,22 +128,36 @@
             font-weight: 600; padding: 6px 12px; border-radius: 8px;
             transition: 0.2s; letter-spacing: 0.3px;
         }
+        /* Hover: heller + leichter Hintergrund */
         .nav-link:hover { color: var(--text-light); background: rgba(255,255,255,0.06); }
         body.light-mode .nav-link:hover { background: rgba(0,0,0,0.05); }
 
+        /* Rechte Seite der Nav: Theme-Toggle + Sprachbuttons */
         .nav-right { display: flex; align-items: center; gap: 0.8rem; }
 
+        /* Theme-Toggle-Button und Sprachbuttons: einheitliches Outline-Design */
         .theme-toggle, .lang-btn {
             background: transparent; border: 1px solid var(--text-dim); color: var(--text-dim);
             padding: 6px 10px; border-radius: 8px; cursor: pointer; display: flex; align-items: center; gap: 6px; font-size: 0.75rem; transition: 0.3s;
         }
         .theme-toggle:hover, .lang-btn:hover { border-color: var(--accent-red); color: var(--accent-red); }
+        /* Aktiver Sprachbutton: gefüllt mit Akzentfarbe + Glow */
         .lang-btn.active { background: var(--accent-red); color: white; border-color: var(--accent-red); box-shadow: 0 0 15px var(--accent-glow); }
-        .lang-btn img { width: 14px; border-radius: 2px; }
+        .lang-btn img { width: 14px; border-radius: 2px; } /* Flaggen-Icon */
 
+        /* ============================================================
+           SECTIONS – Basis-Styling für alle Sektionen
+           min-height: 100vh → jede Sektion füllt mindestens den Viewport.
+           padding-top: 120px → Abstand zur fixierten Nav.
+           z-index: 2 → über dem Hintergrund-Grid und Partikeln.
+        ============================================================ */
         section { position: relative; z-index: 2; padding: 120px 7% 80px; min-height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; width: 100%; }
 
-        /* Hero */
+        /* ============================================================
+           HERO – Großer Name im Hero-Bereich
+           clamp(): responsiver Font-Size (min 2.5rem, ideal 10vw, max 6.5rem).
+           letter-spacing: -2px → enge Buchstabenabstand für fetten Look.
+        ============================================================ */
         .hero-title {
             font-size: clamp(2.5rem, 10vw, 6.5rem);
             font-weight: 900;
@@ -109,7 +169,11 @@
             letter-spacing: -2px;
         }
 
-        /* Hero Tagline */
+        /* ============================================================
+           HERO TAGLINE
+           Kurzzeile unter dem Namen: "Full-Stack · React · Node.js · Cloud"
+           <span>-Tags darin werden in Akzentfarbe dargestellt.
+        ============================================================ */
         .hero-tagline {
             font-size: clamp(0.9rem, 2vw, 1.1rem);
             color: var(--text-dim);
@@ -119,16 +183,22 @@
             letter-spacing: 1px;
         }
         .hero-tagline span {
-            color: var(--accent-red);
+            color: var(--accent-red); /* Technologienamen rot hervorheben */
             font-weight: 600;
         }
 
-        /* Scroll Indicator */
+        /* ============================================================
+           SCROLL-INDIKATOR
+           Absolut positioniert unten-mittig im Hero.
+           fadeInUp: erscheint erst nach 1.5s (wenn Seite geladen ist).
+           bounce: Pfeil wippt auf und ab als visuelle Einladung zum Scrollen.
+           Klick scrollt smooth zur Skills-Section.
+        ============================================================ */
         .scroll-indicator {
             position: absolute;
             bottom: 2.5rem;
             left: 50%;
-            transform: translateX(-50%);
+            transform: translateX(-50%); /* Horizontale Zentrierung */
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -137,57 +207,78 @@
             font-size: 0.75rem;
             letter-spacing: 1px;
             cursor: pointer;
-            animation: fadeInUp 1s ease 1.5s both;
+            animation: fadeInUp 1s ease 1.5s both; /* Verzögert einblenden */
         }
         .scroll-indicator i {
             font-size: 1.1rem;
-            animation: bounce 2s ease-in-out infinite;
+            animation: bounce 2s ease-in-out infinite; /* Dauerhaftes Wippen */
         }
+        /* Pfeil wippt 6px nach unten und wieder zurück */
         @keyframes bounce {
             0%, 100% { transform: translateY(0); }
             50% { transform: translateY(6px); }
         }
+        /* Slide-in von unten mit gleichzeitigem Einblenden */
         @keyframes fadeInUp {
             from { opacity: 0; transform: translateX(-50%) translateY(10px); }
             to { opacity: 1; transform: translateX(-50%) translateY(0); }
         }
 
+        /* ============================================================
+           TEXT-EFFEKTE
+           .gradient-text: Name "Maliqi" mit Farbverlauf (hell → gedimmt).
+             Trick: background-clip auf Text + transparente Textfarbe.
+           .outline-text: "Trimlind" nur als Kontur, halb transparent.
+        ============================================================ */
         .gradient-text {
             background: linear-gradient(135deg, var(--text-light) 30%, var(--text-dim) 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
-
         .outline-text {
             color: transparent;
-            -webkit-text-stroke: 1px var(--text-dim);
+            -webkit-text-stroke: 1px var(--text-dim); /* Nur Umrisslinie */
             opacity: 0.5;
             display: block;
         }
 
-        /* Terminal Window */
+        /* ============================================================
+           TERMINAL-FENSTER (Hero)
+           Simuliert ein macOS-Terminal mit roten/gelben/grünen Dots.
+           float-Animation: schwebt sanft auf und ab (6s Loop).
+           font-family: Fira Code → Monospace-Look.
+        ============================================================ */
         .terminal-window {
-            background: #0d1117; border-radius: 12px; border: 1px solid #30363d;
+            background: #0d1117; /* GitHub-Dark-Farbe */
+            border-radius: 12px; border: 1px solid #30363d;
             box-shadow: 0 20px 50px -10px rgba(0,0,0,0.5); max-width: 600px; width: 100%;
             font-family: 'Fira Code', monospace; overflow: hidden;
             animation: float 6s ease-in-out infinite;
             transform: translateY(0);
         }
-
+        /* Sanftes Schweben: 15px nach oben und wieder zurück */
         @keyframes float {
             0% { transform: translateY(0px); }
             50% { transform: translateY(-15px); }
             100% { transform: translateY(0px); }
         }
 
+        /* Terminal-Titelleiste mit den drei Ampel-Dots */
         .terminal-header { background: #161b22; padding: 12px 18px; display: flex; gap: 8px; border-bottom: 1px solid #30363d; }
         .dot { width: 12px; height: 12px; border-radius: 50%; }
+        /* macOS-Ampelfarben */
         .red { background: #ff5f56; } .yellow { background: #ffbd2e; } .green { background: #27c93f; }
+        /* Terminal-Inhalt: heller Text auf dunklem Hintergrund */
         .terminal-body { padding: 20px; font-size: 0.9rem; color: #c9d1d9; text-align: left; line-height: 1.8; }
+        /* Blinkender Cursor am Ende der letzten Zeile */
         .cursor { display: inline-block; width: 8px; height: 15px; background: var(--accent-red); animation: blink 1s infinite; }
-        @keyframes blink { 50% { opacity: 0; } }
+        @keyframes blink { 50% { opacity: 0; } } /* Alle 0.5s ein-/ausblenden */
 
-        /* Section Header */
+        /* ============================================================
+           SECTION-HEADER (wiederverwendbar)
+           .section-title: Großer Titel (2.5rem, fett)
+           .section-subtitle: Gedimmter Untertitel darunter
+        ============================================================ */
         .section-title {
             font-size: 2.5rem;
             font-weight: 800;
@@ -201,7 +292,11 @@
             text-align: center;
         }
 
-        /* Skills Section */
+        /* ============================================================
+           SKILLS-SECTION
+           Responsive Grid: mindestens 110px breite Spalten, so viele
+           wie reinpassen (auto-fill). Auf Mobile: 90px Mindestbreite.
+        ============================================================ */
         #skills { background: var(--bg-dark); }
 
         .skills-grid {
@@ -212,6 +307,7 @@
             max-width: 800px;
         }
 
+        /* Einzelne Skill-Karte: Icon oben, Bezeichnung unten */
         .skill-card {
             background: var(--card-bg);
             border: 1px solid rgba(255,255,255,0.05);
@@ -224,6 +320,7 @@
             cursor: default;
             transition: 0.25s;
         }
+        /* Hover: 4px nach oben, roter Rahmen + Glow-Schatten */
         .skill-card:hover {
             transform: translateY(-4px);
             border-color: var(--accent-red);
@@ -234,6 +331,7 @@
             color: var(--text-dim);
             transition: 0.25s;
         }
+        /* Hover: Icon wechselt auf Akzentfarbe */
         .skill-card:hover i { color: var(--accent-red); }
         .skill-card span {
             font-size: 0.75rem;
@@ -242,7 +340,11 @@
             letter-spacing: 0.5px;
         }
 
-        /* Projects Section */
+        /* ============================================================
+           PROJECTS-SECTION
+           Abwechselnder Hintergrund (--bg-dark-alt) zur visuellen Trennung.
+           Grid: mindestens 300px breite Karten, auf Mobile 1 Spalte.
+        ============================================================ */
         #projects { background: var(--bg-dark-alt); border-top: 1px solid rgba(255,255,255,0.05); }
         body.light-mode #projects { border-top: 1px solid rgba(0,0,0,0.05); }
 
@@ -254,6 +356,7 @@
             max-width: 1000px;
         }
 
+        /* Projekt-Karte: clickbar, mit Spotlight-Effekt (::before-Pseudo-Element) */
         .project-card {
             background: var(--card-bg);
             border: 1px solid rgba(255,255,255,0.05);
@@ -261,10 +364,11 @@
             padding: 2rem;
             cursor: pointer;
             transition: 0.25s;
-            position: relative;
-            overflow: hidden;
+            position: relative; /* Nötig für ::before und project-arrow */
+            overflow: hidden;   /* Spotlight soll nicht über Rahmen hinaus leuchten */
             text-align: left;
         }
+        /* Spotlight-Layer: radiales Gradient folgt der Maus (via CSS-Variable) */
         .project-card::before {
             content: "";
             position: absolute;
@@ -272,17 +376,21 @@
             top: 0; left: 0;
             background: radial-gradient(600px circle at var(--mouse-x) var(--mouse-y), rgba(244,63,94,0.06), transparent 40%);
             z-index: 1;
-            opacity: 0;
+            opacity: 0;         /* Standardmäßig unsichtbar */
             transition: opacity 0.5s;
             pointer-events: none;
         }
+        /* Spotlight nur bei Hover sichtbar */
         .project-card:hover::before { opacity: 1; }
         .project-card:hover {
             transform: translateY(-4px);
             border-color: rgba(255,255,255,0.1);
             box-shadow: 0 12px 30px -10px rgba(0,0,0,0.5);
         }
+        /* Alle direkten Kinder über dem Spotlight-Layer */
         .project-card > * { position: relative; z-index: 2; }
+
+        /* Kleines rotes Badge oben (z.B. "Web App", "SaaS Plattform") */
         .project-tag {
             display: inline-block;
             background: rgba(244, 63, 94, 0.1);
@@ -296,35 +404,48 @@
         }
         .project-card h3 { font-size: 1.2rem; color: var(--white); margin-bottom: 0.5rem; }
         .project-card p { font-size: 0.9rem; color: var(--text-dim); line-height: 1.6; margin-bottom: 1.2rem; }
+        /* Zeile mit Tech-Icons (React, Node, etc.) unten in der Karte */
         .project-icons { display: flex; gap: 12px; font-size: 1.3rem; color: var(--text-dim); flex-wrap: wrap; }
+        /* Pfeil-Icon unten rechts – zeigt Klickbarkeit an */
         .project-arrow {
             position: absolute; bottom: 1.5rem; right: 1.5rem;
             color: var(--text-dim); font-size: 0.9rem;
             transition: 0.2s; z-index: 2;
         }
+        /* Hover: Pfeil bewegt sich diagonal nach rechts-oben + wird rot */
         .project-card:hover .project-arrow { color: var(--accent-red); transform: translate(3px, -3px); }
 
-        /* Roadmap */
+        /* ============================================================
+           ROADMAP / TIMELINE
+           Linke Borderlinie = Timeline-Strich.
+           .timeline-dot = Kreis-Punkt auf der Linie (absolut positioniert).
+           .content = die eigentliche Karte rechts neben dem Punkt.
+        ============================================================ */
         .roadmap-container { width: 100%; max-width: 900px; margin: 0 auto; position: relative; }
         .timeline { border-left: 2px solid rgba(255,255,255,0.1); padding-left: 30px; position: relative; }
         body.light-mode .timeline { border-left: 2px solid rgba(0,0,0,0.1); }
 
+        /* Wrapper-Div für Dot + Karte */
         .container {
             position: relative;
             margin-bottom: 2rem;
             width: 100%;
-            perspective: 1000px;
+            perspective: 1000px; /* Vorbereitung für mögliche 3D-Effekte */
         }
 
+        /* Kreis-Punkt auf der Timeline-Linie */
         .timeline-dot {
             position: absolute; width: 16px; height: 16px;
             background: var(--bg-dark); border: 2px solid var(--accent-red);
-            left: -39px; top: 24px; border-radius: 50%;
+            left: -39px; top: 24px; /* Ausgerichtet auf die Border-Left der .timeline */
+            border-radius: 50%;
             z-index: 5; box-shadow: 0 0 10px var(--accent-glow);
             transition: 0.3s;
         }
+        /* Hover: Punkt füllt sich mit Akzentfarbe und wächst leicht */
         .container:hover .timeline-dot { background: var(--accent-red); transform: scale(1.2); }
 
+        /* Roadmap-Inhaltskarte mit Spotlight-Effekt (identisch zu project-card) */
         .content {
             background: var(--card-bg);
             padding: 1.8rem;
@@ -336,6 +457,7 @@
             text-align: left;
             cursor: pointer;
         }
+        /* Spotlight-Layer für Roadmap-Karten (weiß statt rot) */
         .content::before {
             content: "";
             position: absolute;
@@ -349,19 +471,30 @@
         }
         .content:hover::before { opacity: 1; }
         .content h3 { font-size: 1.25rem; margin-bottom: 0.5rem; color: var(--white); }
+        /* Jahres-Badge (z.B. "2024") – identisches Design wie project-tag */
         .year-badge { display: inline-block; background: rgba(244, 63, 94, 0.1); color: var(--accent-red); padding: 4px 10px; border-radius: 20px; font-size: 0.75rem; font-weight: 800; margin-bottom: 10px; border: 1px solid rgba(244, 63, 94, 0.2); }
         .content:hover { transform: translateY(-3px); border-color: rgba(255,255,255,0.1); box-shadow: 0 10px 30px -10px rgba(0,0,0,0.5); }
 
-        /* Scroll Animationen */
+        /* ============================================================
+           SCROLL-REVEAL ANIMATION
+           Elemente mit .reveal starten unsichtbar (opacity: 0) und
+           verschoben (translateY: 30px). Sobald sie in den Viewport
+           scrollen, fügt der IntersectionObserver .active hinzu →
+           sanfter Einblend-Effekt von unten.
+        ============================================================ */
         .reveal { opacity: 0; transform: translateY(30px); transition: all 0.8s ease-out; }
         .reveal.active { opacity: 1; transform: translateY(0); }
 
-        /* Kontaktformular */
+        /* ============================================================
+           KONTAKT-SECTION
+           Leichter Verlauf nach unten für visuellen Abschluss der Seite.
+        ============================================================ */
         #contact {
             background: linear-gradient(180deg, var(--bg-dark) 0%, rgba(20, 33, 46, 1) 100%);
             border-top: 1px solid rgba(255,255,255,0.05);
         }
 
+        /* Formular-Container: Glassmorphism-Karte mit Shadow */
         .contact-wrapper {
             background: var(--card-bg);
             padding: 3rem;
@@ -375,66 +508,100 @@
 
         .contact-form { display: flex; flex-direction: column; gap: 1rem; position: relative; z-index: 2; }
 
+        /* Input-Felder: transparenter Hintergrund, subtile Border */
         .contact-form input, .contact-form textarea {
             background: rgba(0, 0, 0, 0.2); border: 1px solid rgba(255, 255, 255, 0.1);
             padding: 1.2rem; color: var(--text-light); border-radius: 8px; outline: none; font-size: 1rem;
             width: 100%; transition: 0.3s; font-family: 'Inter', sans-serif;
         }
-
+        /* Fokus: rote Border als Highlight */
         .contact-form input:focus, .contact-form textarea:focus {
             border-color: var(--accent-red); background: rgba(0,0,0,0.3);
         }
-
+        /* Light-Mode: helle Inputs */
         body.light-mode .contact-form input, body.light-mode .contact-form textarea {
             background: rgba(255, 255, 255, 0.5); border: 1px solid rgba(0, 0, 0, 0.1); color: #1a2a3a;
         }
 
+        /* Submit-Button: voller roter Hintergrund mit Glow-Shadow */
         .email-btn {
             background: var(--accent-red); color: white; padding: 1.2rem; border: none;
             font-weight: 800; cursor: pointer; border-radius: 8px; width: 100%;
             transition: 0.3s; letter-spacing: 1px; margin-top: 10px;
             box-shadow: 0 4px 15px var(--accent-glow);
         }
+        /* Hover: leicht anheben + stärkerer Glow */
         .email-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 20px var(--accent-glow); }
 
-        /* Modal */
+        /* ============================================================
+           MODAL (Detail-Overlay)
+           Wird für Roadmap-Einträge UND Projekt-Karten verwendet.
+           display: none → flex beim Öffnen (via JS).
+           opacity-Transition + scale-Transition = weicher Pop-in Effekt.
+           backdrop-filter: blur(8px) → Hintergrund verschwimmt.
+        ============================================================ */
         .modal { display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); backdrop-filter: blur(8px); align-items: center; justify-content: center; padding: 20px; opacity: 0; transition: opacity 0.3s; }
-        .modal.show { opacity: 1; }
+        .modal.show { opacity: 1; } /* Klasse wird per JS gesetzt */
 
+        /* Modal-Inhalt: startet bei scale(0.9), federt auf scale(1) */
         .modal-content {
             background: #161b22; padding: 2.5rem; width: 100%; max-width: 550px;
             border-radius: 16px; border: 1px solid rgba(255,255,255,0.1);
             position: relative; text-align: left;
-            transform: scale(0.9); transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            transform: scale(0.9); transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1); /* Federnde Kurve */
             box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5);
         }
         .modal.show .modal-content { transform: scale(1); }
 
+        /* Schließen-Button oben rechts (×) – dreht sich beim Hover */
         .close-modal { position: absolute; top: 1.2rem; right: 1.2rem; font-size: 1.5rem; color: var(--text-dim); cursor: pointer; transition: 0.3s; }
         .close-modal:hover { color: var(--accent-red); transform: rotate(90deg); }
 
+        /* ============================================================
+           FOOTER
+           Einfacher zentrierter Abschluss der Seite.
+        ============================================================ */
         footer { z-index: 2; position: relative; padding: 3rem 5%; text-align: center; background: var(--bg-dark); font-size: 0.85rem; color: var(--text-dim); border-top: 1px solid rgba(255,255,255,0.05); }
 
+        /* ============================================================
+           RESPONSIVE BREAKPOINTS
+           768px: Nav-Links verstecken, Projekte-Grid auf 1 Spalte.
+           400px: Hero-Titel fix auf 2.5rem, Karten kompakter.
+        ============================================================ */
         @media (max-width: 768px) {
-            .nav-links { display: none; }
-            .projects-grid { grid-template-columns: 1fr; }
-            .skills-grid { grid-template-columns: repeat(auto-fill, minmax(90px, 1fr)); }
+            .nav-links { display: none; } /* Navigationslinks auf kleinen Screens ausblenden */
+            .projects-grid { grid-template-columns: 1fr; } /* 1 Spalte statt mehrere */
+            .skills-grid { grid-template-columns: repeat(auto-fill, minmax(90px, 1fr)); } /* Kleinere Skill-Karten */
         }
         @media (max-width: 400px) {
-            .hero-title { font-size: 2.5rem; }
-            .content { padding: 1.5rem; }
+            .hero-title { font-size: 2.5rem; } /* clamp-Minimum fix setzen */
+            .content { padding: 1.5rem; }     /* Roadmap-Karten kompakter */
         }
     </style>
 </head>
 <body>
 
+    <!-- Hintergrund-Ebene 1: Subtiles Raster-Grid (CSS-only) -->
     <div class="bg-grid"></div>
+
+    <!-- Hintergrund-Ebene 2: Animierte Partikel (particles.js Library) -->
     <div id="particles-js"></div>
 
+    <!-- ============================================================
+         NAVIGATION (fixiert, Glassmorphism)
+         Logo links | Nav-Links Mitte | Theme+Sprache rechts
+    ============================================================ -->
     <nav>
+        <!-- Logo: klickbar, scrollt zurück zum Hero -->
         <a href="#home" class="logo">
-            <span class="logo-icon">{</span> <span id="logo-text">T. MALIQI</span> <span class="logo-icon">}</span>
+            <span class="logo-icon">{</span>
+            <!-- #logo-text rotiert per JS: T. MALIQI → FULLSTACK → REACT.JS -->
+            <span id="logo-text">T. MALIQI</span>
+            <span class="logo-icon">}</span>
         </a>
+
+        <!-- Anchor-Links zu den Sektionen (auf Mobile ausgeblendet) -->
+        <!-- data-key: Schlüssel für Mehrsprachigkeits-System (translations-Objekt) -->
         <div class="nav-links">
             <a href="#home" class="nav-link" data-key="nav_home">Home</a>
             <a href="#skills" class="nav-link" data-key="nav_skills">Skills</a>
@@ -442,42 +609,85 @@
             <a href="#roadmap" class="nav-link" data-key="nav_roadmap">Roadmap</a>
             <a href="#contact" class="nav-link" data-key="nav_contact">Kontakt</a>
         </div>
+
         <div class="nav-right">
-            <button class="theme-toggle" onclick="toggleTheme()" aria-label="Theme wechseln"><i class="fas fa-adjust"></i></button>
+            <!-- Theme-Toggle: Wechsel zwischen Dark und Light Mode -->
+            <button class="theme-toggle" onclick="toggleTheme()" aria-label="Theme wechseln">
+                <i class="fas fa-adjust"></i>
+            </button>
+            <!-- Sprachumschalter: DE / EN / SQ (Albanisch) -->
             <div class="lang-switch" style="display:flex; gap:5px;">
-                <button class="lang-btn" id="btn-de" onclick="setLanguage('de')" aria-label="Deutsch"><img src="https://flagcdn.com/w40/de.png" alt="DE"> DE</button>
-                <button class="lang-btn" id="btn-en" onclick="setLanguage('en')" aria-label="English"><img src="https://flagcdn.com/w40/gb.png" alt="EN"> EN</button>
-                <button class="lang-btn" id="btn-sq" onclick="setLanguage('sq')" aria-label="Shqip"><img src="https://flagcdn.com/w40/al.png" alt="SQ"> SQ</button>
+                <button class="lang-btn" id="btn-de" onclick="setLanguage('de')" aria-label="Deutsch">
+                    <img src="https://flagcdn.com/w40/de.png" alt="DE"> DE
+                </button>
+                <button class="lang-btn" id="btn-en" onclick="setLanguage('en')" aria-label="English">
+                    <img src="https://flagcdn.com/w40/gb.png" alt="EN"> EN
+                </button>
+                <button class="lang-btn" id="btn-sq" onclick="setLanguage('sq')" aria-label="Shqip">
+                    <img src="https://flagcdn.com/w40/al.png" alt="SQ"> SQ
+                </button>
             </div>
         </div>
     </nav>
 
+    <!-- ============================================================
+         HERO-SECTION (#home)
+         Startseite: Name + Tagline + Terminal-Fenster + Scroll-Pfeil
+    ============================================================ -->
     <section id="home">
+
+        <!-- Großer Name: "Trimlind" als Outline, "Maliqi" als Gradient -->
         <h1 class="hero-title">
             <span class="outline-text">Trimlind</span>
+            <!-- id="scramble-target": Scramble-Texteffekt startet hier beim Laden -->
             <span class="gradient-text" id="scramble-target">Maliqi</span>
         </h1>
-        <p class="hero-tagline" id="hero-tagline">Full-Stack Developer &middot; <span>React</span> &middot; <span>Node.js</span> &middot; <span>Cloud</span></p>
+
+        <!-- Tagline: Kurzbeschreibung mit roten Technologie-Highlights -->
+        <!-- &middot; = typografischer Mittelpunkt als Trenner -->
+        <p class="hero-tagline" id="hero-tagline">
+            Full-Stack Developer &middot; <span>React</span> &middot; <span>Node.js</span> &middot; <span>Cloud</span>
+        </p>
+
+        <!-- Terminal-Fenster: dekoratives UI-Element, schwebt animiert -->
         <div class="terminal-window">
-            <div class="terminal-header"><div class="dot red"></div><div class="dot yellow"></div><div class="dot green"></div></div>
+            <!-- Titelleiste mit macOS-Ampel-Dots -->
+            <div class="terminal-header">
+                <div class="dot red"></div>
+                <div class="dot yellow"></div>
+                <div class="dot green"></div>
+            </div>
+            <!-- Terminal-Ausgabe: simulierte CLI-Befehle -->
             <div class="terminal-body">
                 <div><span style="color:var(--accent-red)">user@portfolio</span>:~$ init profile</div>
                 <div style="margin-top: 5px;">> Loading modules...</div>
                 <div style="color: #7ee787; margin-top: 5px;">> [SUCCESS] Full-Stack Developer loaded.</div>
                 <div style="color: #7ee787; margin-top: 5px;">> [SUCCESS] Creative Mindset active.</div>
+                <!-- Blinkender Cursor am Ende -->
                 <div style="margin-top: 5px;">> <span class="cursor"></span></div>
             </div>
         </div>
+
+        <!-- Scroll-Indikator: absolut positioniert unten, scrollt zu #skills -->
         <div class="scroll-indicator" onclick="document.getElementById('skills').scrollIntoView({behavior:'smooth'})">
             <span data-key="scroll_hint">Scroll</span>
-            <i class="fas fa-chevron-down"></i>
+            <i class="fas fa-chevron-down"></i> <!-- Wippender Pfeil nach unten -->
         </div>
     </section>
 
+    <!-- ============================================================
+         SKILLS-SECTION (#skills)
+         Grid mit 12 Technologie-Karten (Icon + Bezeichnung).
+         Karten sind statisch im HTML – kein JS-Rendering.
+    ============================================================ -->
     <section id="skills">
+        <!-- data-key: wird von setLanguage() mit der richtigen Übersetzung befüllt -->
         <h2 class="section-title reveal" data-key="skills_title">Skills</h2>
         <p class="section-subtitle reveal" data-key="skills_subtitle">Technologien mit denen ich arbeite</p>
+
         <div class="skills-grid">
+            <!-- Jede Karte: Font-Awesome-Icon + Text-Label -->
+            <!-- reveal-Klasse: Einblend-Animation beim Einscrollen -->
             <div class="skill-card reveal"><i class="fa-brands fa-react"></i><span>React</span></div>
             <div class="skill-card reveal"><i class="fa-brands fa-node-js"></i><span>Node.js</span></div>
             <div class="skill-card reveal"><i class="fa-brands fa-js"></i><span>JavaScript</span></div>
@@ -493,55 +703,103 @@
         </div>
     </section>
 
+    <!-- ============================================================
+         PROJEKTE-SECTION (#projects)
+         Karten werden per JS (renderProjects) dynamisch aus dem
+         projects-Array gerendert → einfach erweiterbar.
+    ============================================================ -->
     <section id="projects">
         <h2 class="section-title reveal" data-key="projects_title">Projekte</h2>
         <p class="section-subtitle reveal" data-key="projects_subtitle">Ausgewählte Arbeiten</p>
+        <!-- Leerer Container – wird von renderProjects(lang) befüllt -->
         <div class="projects-grid" id="projects-list"></div>
     </section>
 
+    <!-- ============================================================
+         ROADMAP-SECTION (#roadmap)
+         Zeitstrahl-Timeline von 2019 bis 2026.
+         Wird per JS (renderRoadmap) dynamisch aus dem years-Array gerendert.
+    ============================================================ -->
     <section id="roadmap">
         <h2 class="section-title reveal" data-key="roadmap_title">Roadmap</h2>
         <p class="section-subtitle reveal" data-key="roadmap_subtitle">Meine Entwicklung als Developer</p>
         <div class="roadmap-container">
+            <!-- Leerer Container – wird von renderRoadmap(lang) befüllt -->
+            <!-- Die linke Border dieser div ist der vertikale Timeline-Strich -->
             <div class="timeline" id="roadmap-list"></div>
         </div>
     </section>
 
+    <!-- ============================================================
+         KONTAKT-SECTION (#contact)
+         Formular via Formspree (externer Dienst) – kein eigenes Backend nötig.
+         id="p_name", "p_email", "p_msg": werden von setLanguage() für
+         Placeholder-Texte angesprochen.
+    ============================================================ -->
     <section id="contact">
         <h2 class="section-title reveal" data-key="nav_contact">Kontakt</h2>
         <p class="section-subtitle reveal" data-key="contact_subtitle">Schreib mir eine Nachricht</p>
         <div class="contact-wrapper reveal">
+            <!-- action="https://formspree.io/...": Formular-Daten gehen an Formspree -->
             <form action="https://formspree.io/f/xnjqdepv" method="POST" class="contact-form">
                 <input type="text" name="name" id="p_name" placeholder="Name" required>
                 <input type="email" name="email" id="p_email" placeholder="Email" required>
                 <textarea name="message" id="p_msg" rows="5" placeholder="Nachricht" required></textarea>
+                <!-- data-key: Buttontext wird übersetzt (z.B. "SEND MESSAGE" auf EN) -->
                 <button type="submit" class="email-btn" data-key="contact_btn">NACHRICHT SENDEN</button>
             </form>
         </div>
     </section>
 
+    <!-- ============================================================
+         MODAL / DETAIL-OVERLAY (#projectModal)
+         Wird von openDetails() (Roadmap) und openProjectDetails() (Projekte)
+         befüllt und angezeigt. Schließt per:
+           - Klick auf Backdrop (closeDetails)
+           - Klick auf × (closeModalFunc)
+           - Escape-Taste (keydown-Listener)
+         Inhalte (Titel, Text, Icons) werden dynamisch per JS gesetzt.
+    ============================================================ -->
     <div id="projectModal" class="modal" onclick="closeDetails(event)">
+        <!-- event.stopPropagation() verhindert, dass Klick im Content das Modal schließt -->
         <div class="modal-content" onclick="event.stopPropagation()">
+            <!-- Schließen-Button – dreht sich beim Hover um 90° -->
             <span class="close-modal" onclick="closeModalFunc()">&times;</span>
+            <!-- Dynamisch befüllt per JS -->
             <h2 id="modalTitle" style="font-size: 1.8rem; color: var(--accent-red); margin-bottom: 1rem; font-weight:700;"></h2>
             <p id="modalBody" style="line-height: 1.7; font-size: 1rem; color: var(--text-light);"></p>
+            <!-- Icon-Zeile: Font-Awesome-Icons des jeweiligen Eintrags -->
             <div id="modalIcons" style="display: flex; gap: 20px; font-size: 2.5rem; color: var(--text-dim); margin-top: 2rem; flex-wrap: wrap;"></div>
         </div>
     </div>
 
+    <!-- Footer: Copyright-Zeile -->
     <footer>&copy; 2026 Trimlind Maliqi | Built with code & passion ❤️</footer>
 
+    <!-- particles.js: externe Library für den Partikeleffekt im Hintergrund -->
     <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
     <script>
-        // 1. PARTICLES CONFIG
+
+        /* ============================================================
+           1. PARTICLES.JS KONFIGURATION
+           Erstellt 40 kleine Punkte, die sich langsam bewegen.
+           Bei Hover werden benachbarte Punkte mit einer Linie verbunden ("grab").
+           opacity/speed niedrig gehalten → subtiler, nicht ablenkender Effekt.
+        ============================================================ */
         particlesJS('particles-js', {
             "particles": {
-                "number": { "value": 40 },
-                "color": { "value": "#64748b" },
-                "opacity": { "value": 0.3 },
-                "size": { "value": 3 },
-                "line_linked": { "enable": true, "distance": 150, "color": "#64748b", "opacity": 0.1, "width": 1 },
-                "move": { "enable": true, "speed": 0.8 }
+                "number": { "value": 40 },          // Anzahl der Partikel
+                "color": { "value": "#64748b" },     // Grau-Blau
+                "opacity": { "value": 0.3 },         // Halbtransparent
+                "size": { "value": 3 },              // Kleine Punkte
+                "line_linked": {
+                    "enable": true,
+                    "distance": 150,                 // Maximale Verbindungsdistanz
+                    "color": "#64748b",
+                    "opacity": 0.1,
+                    "width": 1
+                },
+                "move": { "enable": true, "speed": 0.8 } // Langsame Bewegung
             },
             "interactivity": {
                 "detect_on": "canvas",
@@ -550,7 +808,12 @@
             }
         });
 
-        // 2. DATA
+        /* ============================================================
+           2. DATEN – ROADMAP
+           Array aus Objekten, jedes Objekt = 1 Jahr auf der Timeline.
+           Felder: id (eindeutig), year, title/desc/long (je Sprache), icons (FA-Klassen).
+           "long" = ausführlicher Text der im Modal angezeigt wird.
+        ============================================================ */
         const years = [
             { id: 'r26', year: '2026', title: { de: "Next Horizon", en: "Next Horizon", sq: "Horizonti i ardhshëm" }, desc: { de: "Web3 & Cloud Scaling.", en: "Web3 & Cloud Scaling.", sq: "Web3 & Skalimi." }, icons: ['fa-brands fa-ethereum', 'fa-solid fa-cloud'], long: { de: "Die Vision für 2026 ist die vollständige Dezentralisierung. Ich plane die Integration von Smart Contracts in Unternehmensprozesse und den Aufbau von hochskalierbaren Edge-Computing Architekturen.", en: "The vision for 2026 is full decentralization. Planning smart contract integration and scalable edge computing architectures.", sq: "Vizioni për vitin 2026 është deçentralizimi i plotë." } },
             { id: 'r25', year: '2025', title: { de: "AI & Scalability", en: "AI & Scalability", sq: "AI dhe Skalueshmëria" }, desc: { de: "KI-Workflows.", en: "AI workflows.", sq: "Proceset AI." }, icons: ['fa-solid fa-robot', 'fa-solid fa-brain'], long: { de: "Zentrierung auf KI-Modelle und RAG-Systeme zur effizienten Datenverarbeitung.", en: "Focusing on AI models and RAG systems.", sq: "Fokusi në modelet AI dhe sistemet RAG." } },
@@ -561,6 +824,12 @@
             { id: 'r19', year: '2019', title: { de: "The Start", en: "The Start", sq: "Fillimi" }, desc: { de: "Official Entry.", en: "Official Entry.", sq: "Fillimi zyrtar." }, icons: ['fa-solid fa-code', 'fa-solid fa-terminal'], long: { de: "Erste Schritte in der professionellen Softwareentwicklung.", en: "First steps in professional software development.", sq: "Hapat e parë në zhvillimin e softuerit." } }
         ];
 
+        /* ============================================================
+           2b. DATEN – PROJEKTE
+           Gleiche Struktur wie years, aber für Projekt-Karten.
+           tag = kleine Kategorie-Badge oben in der Karte.
+           Neue Projekte: einfach ein weiteres Objekt hinzufügen.
+        ============================================================ */
         const projects = [
             {
                 id: 'p1',
@@ -588,6 +857,12 @@
             }
         ];
 
+        /* ============================================================
+           3. ÜBERSETZUNGEN (i18n)
+           Flat-Map: Schlüssel → übersetzter Text.
+           data-key-Attribute im HTML werden von setLanguage() abgeglichen.
+           Neue Texte: Schlüssel in alle drei Sprachen eintragen.
+        ============================================================ */
         const translations = {
             de: {
                 nav_home: "Home", nav_skills: "Skills", nav_projects: "Projekte", nav_roadmap: "Roadmap", nav_contact: "Kontakt",
@@ -618,13 +893,20 @@
             }
         };
 
-        // 3. RENDER PROJECTS
+        /* ============================================================
+           4. RENDER PROJECTS
+           Iteriert über das projects-Array und erstellt für jedes Projekt
+           eine HTML-Karte mit staggered Animation (jede Karte 120ms später).
+           Danach: Spotlight-Listener und Scroll-Observer neu initialisieren.
+        ============================================================ */
         function renderProjects(lang) {
             const list = document.getElementById('projects-list');
-            list.innerHTML = '';
+            list.innerHTML = ''; // Alten Inhalt leeren (z.B. bei Sprachwechsel)
+
             projects.forEach((p, index) => {
-                const delay = index * 120;
+                const delay = index * 120; // Gestaffelte Einblend-Verzögerung in ms
                 const iconsHtml = p.icons.map(i => `<i class="${i}"></i>`).join('');
+
                 list.innerHTML += `
                 <div class="project-card reveal spotlight-project" style="transition-delay: ${delay}ms" onclick="openProjectDetails('${p.id}')">
                     <span class="project-tag">${p.tag[lang]}</span>
@@ -634,15 +916,22 @@
                     <i class="fas fa-arrow-up-right project-arrow"></i>
                 </div>`;
             });
-            initProjectSpotlight();
+
+            initProjectSpotlight(); // Maus-Tracking für neue Karten registrieren
         }
 
-        // 4. RENDER ROADMAP
+        /* ============================================================
+           5. RENDER ROADMAP
+           Identisches Prinzip wie renderProjects, aber für die Timeline.
+           Jeder Eintrag bekommt einen .timeline-dot und eine .content-Karte.
+           Nach dem Rendern: Spotlight + Observer neu starten.
+        ============================================================ */
         function renderRoadmap(lang) {
             const list = document.getElementById('roadmap-list');
             list.innerHTML = '';
+
             years.forEach((y, index) => {
-                const delay = index * 100;
+                const delay = index * 100; // 100ms gestaffelt
                 list.innerHTML += `
                 <div class="container reveal" style="transition-delay: ${delay}ms" onclick="openDetails('${y.id}')">
                     <div class="timeline-dot"></div>
@@ -653,15 +942,23 @@
                     </div>
                 </div>`;
             });
-            initSpotlight();
-            initObserver();
+
+            initSpotlight();  // Spotlight für neue .spotlight-card Elemente
+            initObserver();   // IntersectionObserver für neue .reveal Elemente
         }
 
-        // 5. SPOTLIGHT EFFECTS
+        /* ============================================================
+           6. SPOTLIGHT EFFEKTE
+           initSpotlight(): für Roadmap-Karten (.spotlight-card)
+           initProjectSpotlight(): für Projekt-Karten (.spotlight-project)
+           Beide funktionieren gleich: mousemove setzt CSS-Variablen
+           --mouse-x und --mouse-y → das ::before-Pseudo-Element
+           positioniert seinen Gradienten an der Mausposition.
+        ============================================================ */
         function initSpotlight() {
             document.querySelectorAll('.spotlight-card').forEach(card => {
                 card.addEventListener('mousemove', e => {
-                    const rect = card.getBoundingClientRect();
+                    const rect = card.getBoundingClientRect(); // Position der Karte im Viewport
                     card.style.setProperty('--mouse-x', `${e.clientX - rect.left}px`);
                     card.style.setProperty('--mouse-y', `${e.clientY - rect.top}px`);
                 });
@@ -678,71 +975,124 @@
             });
         }
 
-        // 6. SCRAMBLE TEXT
+        /* ============================================================
+           7. SCRAMBLE TEXT EFFEKT ("Decrypted Text")
+           Animiert den Hero-Namen: zuerst zufällige Zeichen, dann
+           werden Buchstabe für Buchstabe die echten Zeichen aufgedeckt.
+           iterations steigt um 1/3 pro Frame (30ms) → weiche Enthüllung.
+        ============================================================ */
         function scrambleText(elementId, finalSubText) {
             const element = document.getElementById(elementId);
-            const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%&";
+            const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%&"; // Zufallszeichen-Pool
             let iterations = 0;
             const finalText = finalSubText || element.innerText;
+
             const interval = setInterval(() => {
                 element.innerText = finalText.split("").map((letter, index) => {
-                    if(index < iterations) return finalText[index];
-                    return chars[Math.floor(Math.random() * chars.length)];
+                    if(index < iterations) return finalText[index]; // Bereits enthüllte Zeichen
+                    return chars[Math.floor(Math.random() * chars.length)]; // Noch zufällig
                 }).join("");
-                if(iterations >= finalText.length) clearInterval(interval);
-                iterations += 1/3;
-            }, 30);
+
+                if(iterations >= finalText.length) clearInterval(interval); // Fertig
+                iterations += 1/3; // Langsame, fließende Enthüllung
+            }, 30); // Alle 30ms = ~33fps
         }
 
-        // 7. SCROLL ANIMATION
+        /* ============================================================
+           8. INTERSECTION OBSERVER (Scroll-Reveal)
+           Beobachtet alle .reveal-Elemente. Sobald 10% eines Elements
+           im Viewport sichtbar ist → .active hinzufügen → CSS-Animation.
+           Wird nach jedem Render neu aufgerufen (da neue Elemente entstehen).
+        ============================================================ */
         function initObserver() {
             const observer = new IntersectionObserver((entries) => {
                 entries.forEach(entry => {
                     if (entry.isIntersecting) entry.target.classList.add('active');
                 });
-            }, { threshold: 0.1 });
+            }, { threshold: 0.1 }); // 10% Sichtbarkeit reicht zum Triggern
+
             document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
         }
 
-        // 8. CORE FUNCTIONS
-        function toggleTheme() { document.body.classList.toggle('light-mode'); }
+        /* ============================================================
+           9. CORE FUNCTIONS
+
+           toggleTheme(): Schaltet body.light-mode ein/aus.
+             Alle CSS-Variablen wechseln automatisch via :root vs body.light-mode.
+
+           setLanguage(lang): Haupt-Lokalisierungsfunktion.
+             - Speichert Sprache in localStorage (bleibt nach Reload erhalten)
+             - Markiert den aktiven Sprach-Button
+             - Übersetzt alle data-key Elemente
+             - Setzt Placeholder-Texte der Formularfelder
+             - Re-rendert Projekte und Roadmap in der neuen Sprache
+        ============================================================ */
+        function toggleTheme() {
+            document.body.classList.toggle('light-mode');
+        }
 
         function setLanguage(lang) {
-            localStorage.setItem('preferredLang', lang);
+            localStorage.setItem('preferredLang', lang); // Persistieren
+
+            // Alle Sprach-Buttons zurücksetzen, aktiven hervorheben
             document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
             document.getElementById('btn-'+lang).classList.add('active');
+
+            // Alle Elemente mit data-key übersetzen
             document.querySelectorAll('[data-key]').forEach(el => {
                 const key = el.getAttribute('data-key');
                 if(translations[lang][key]) el.innerText = translations[lang][key];
             });
+
+            // Placeholder-Texte separat setzen (nicht via innerText)
             document.getElementById('p_name').placeholder = translations[lang].p_name;
             document.getElementById('p_email').placeholder = translations[lang].p_email;
             document.getElementById('p_msg').placeholder = translations[lang].p_msg;
+
+            // Dynamisch gerenderte Bereiche neu aufbauen
             renderProjects(lang);
             renderRoadmap(lang);
         }
 
+        /* ============================================================
+           10. MODAL-FUNKTIONEN
+
+           openDetails(id): Öffnet Modal für einen Roadmap-Eintrag.
+           openProjectDetails(id): Öffnet Modal für eine Projekt-Karte.
+           Beide suchen das passende Objekt per .find() und füllen
+           #modalTitle, #modalBody und #modalIcons dynamisch.
+
+           closeModalFunc(): Entfernt .show → CSS-Transition → display:none.
+           closeDetails(e): Schließt bei Klick auf den Backdrop.
+           keydown 'Escape': Globaler Schließen-Shortcut.
+        ============================================================ */
         function openDetails(id) {
             const lang = localStorage.getItem('preferredLang') || 'de';
-            const item = years.find(y => y.id === id);
+            const item = years.find(y => y.id === id); // Passendes Jahr-Objekt finden
+
             document.getElementById('modalTitle').innerText = item.title[lang];
             document.getElementById('modalBody').innerText = item.long[lang];
+
             const iconContainer = document.getElementById('modalIcons');
             iconContainer.innerHTML = '';
             item.icons.forEach(i => { iconContainer.innerHTML += `<i class="${i}"></i>`; });
+
             const modal = document.getElementById('projectModal');
             modal.style.display = 'flex';
-            setTimeout(() => modal.classList.add('show'), 10);
+            setTimeout(() => modal.classList.add('show'), 10); // Kurze Verzögerung für CSS-Transition
         }
 
         function openProjectDetails(id) {
             const lang = localStorage.getItem('preferredLang') || 'de';
-            const item = projects.find(p => p.id === id);
+            const item = projects.find(p => p.id === id); // Passendes Projekt-Objekt finden
+
             document.getElementById('modalTitle').innerText = item.title[lang];
             document.getElementById('modalBody').innerText = item.long[lang];
+
             const iconContainer = document.getElementById('modalIcons');
             iconContainer.innerHTML = '';
             item.icons.forEach(i => { iconContainer.innerHTML += `<i class="${i}"></i>`; });
+
             const modal = document.getElementById('projectModal');
             modal.style.display = 'flex';
             setTimeout(() => modal.classList.add('show'), 10);
@@ -750,30 +1100,43 @@
 
         function closeModalFunc() {
             const modal = document.getElementById('projectModal');
-            modal.classList.remove('show');
-            setTimeout(() => modal.style.display = 'none', 300);
+            modal.classList.remove('show'); // Trigger CSS-Fade-out
+            setTimeout(() => modal.style.display = 'none', 300); // Nach Transition verstecken
         }
+        // Klick auf Backdrop (nicht auf modal-content) schließt Modal
         function closeDetails(e) { if(e.target.id === 'projectModal') closeModalFunc(); }
+        // Escape-Taste als globaler Schließen-Shortcut
         document.addEventListener('keydown', e => { if(e.key === 'Escape') closeModalFunc(); });
 
-        // 9. INIT
+        /* ============================================================
+           11. INITIALISIERUNG (window.onload)
+           Läuft sobald die gesamte Seite geladen ist:
+           1. Gespeicherte Sprache laden (oder 'de' als Default)
+           2. setLanguage → rendert alles + setzt aktiven Button
+           3. initObserver → startet Scroll-Animationen
+           4. Scramble-Effekt auf "Maliqi" nach 500ms Verzögerung
+           5. Logo-Text-Rotation: alle 4s wechselt der Text mit Fade
+        ============================================================ */
         window.onload = () => {
             const savedLang = localStorage.getItem('preferredLang') || 'de';
             setLanguage(savedLang);
             initObserver();
+
+            // Scramble-Effekt: startet 500ms nach Seitenload für dramatischen Einstieg
             setTimeout(() => scrambleText("scramble-target", "Maliqi"), 500);
 
+            // Logo rotiert durch 3 Phrasen mit Fade-Out/In (alle 4s)
             const logoText = document.getElementById('logo-text');
             const phrases = ["T. MALIQI", "FULLSTACK", "REACT.JS"];
             let pIdx = 0;
             setInterval(() => {
-                logoText.style.opacity = 0;
+                logoText.style.opacity = 0;          // Fade-Out
                 setTimeout(() => {
-                    pIdx = (pIdx+1)%phrases.length;
+                    pIdx = (pIdx+1) % phrases.length; // Nächste Phrase (zyklisch)
                     logoText.innerText = phrases[pIdx];
-                    logoText.style.opacity = 1;
-                }, 500);
-            }, 4000);
+                    logoText.style.opacity = 1;       // Fade-In
+                }, 500); // 500ms = Dauer der opacity-Transition
+            }, 4000); // Alle 4 Sekunden wechseln
         };
     </script>
 </body>
