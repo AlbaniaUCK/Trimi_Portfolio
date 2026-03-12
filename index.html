@@ -577,9 +577,133 @@
             .hero-title { font-size: 2.5rem; } /* clamp-Minimum fix setzen */
             .content { padding: 1.5rem; }     /* Roadmap-Karten kompakter */
         }
+
+        /* ============================================================
+           PAGE LOADER
+           Vollbild-Overlay das beim ersten Laden erscheint.
+           slide-out: schiebt das Overlay nach oben aus dem Viewport.
+        ============================================================ */
+        #page-loader {
+            position: fixed;
+            inset: 0;
+            background: #080d18;
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.9s cubic-bezier(0.76, 0, 0.24, 1);
+        }
+        #page-loader.slide-out {
+            transform: translateY(-100%); /* Schiebt komplett nach oben raus */
+        }
+
+        /* Terminal-Fenster im Loader (gleicher Style wie Hero-Terminal) */
+        .loader-terminal {
+            background: #0d1117;
+            border: 1px solid #30363d;
+            border-radius: 12px;
+            width: min(520px, 90vw);
+            overflow: hidden;
+            box-shadow: 0 30px 60px rgba(0,0,0,0.6);
+        }
+        .loader-terminal-header {
+            background: #161b22;
+            padding: 12px 18px;
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            border-bottom: 1px solid #30363d;
+        }
+        /* Dateiname rechts in der Titelleiste */
+        .loader-terminal-title {
+            margin-left: auto;
+            font-family: 'Fira Code', monospace;
+            font-size: 0.72rem;
+            color: #484f58;
+        }
+        .loader-terminal-body {
+            padding: 24px;
+            font-family: 'Fira Code', monospace;
+            font-size: 0.88rem;
+            color: #c9d1d9;
+            min-height: 160px;
+            line-height: 2;
+        }
+
+        /* Jede Terminal-Zeile: startet unsichtbar, blendet sanft ein */
+        .loader-line {
+            opacity: 0;
+            transform: translateY(5px);
+            transition: opacity 0.35s ease, transform 0.35s ease;
+        }
+        .loader-line.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Roter Fortschrittsbalken am unteren Rand des Terminals */
+        .loader-progress-bar {
+            height: 3px;
+            background: #21262d;
+            overflow: hidden;
+        }
+        .loader-progress-fill {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, #f43f5e, #fb7185);
+            transition: width 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 0 10px rgba(244, 63, 94, 0.7);
+        }
+
+        /* Skip-Button unten rechts – dezent, aber immer erreichbar */
+        #loader-skip {
+            position: absolute;
+            bottom: 2rem;
+            right: 2rem;
+            background: transparent;
+            border: 1px solid rgba(255,255,255,0.12);
+            color: rgba(255,255,255,0.35);
+            padding: 6px 16px;
+            border-radius: 6px;
+            font-family: 'Fira Code', monospace;
+            font-size: 0.75rem;
+            cursor: pointer;
+            transition: 0.25s;
+            letter-spacing: 1px;
+        }
+        #loader-skip:hover {
+            border-color: #f43f5e;
+            color: #f43f5e;
+        }
     </style>
 </head>
 <body>
+
+    <!-- ============================================================
+         PAGE LOADER OVERLAY
+         Erscheint beim Seitenaufruf, läuft die Bootsequenz ab
+         und wird dann per slide-out nach oben weggescrollt.
+    ============================================================ -->
+    <div id="page-loader">
+        <div class="loader-terminal">
+            <!-- Titelleiste mit Ampel-Dots und Dateinamen -->
+            <div class="loader-terminal-header">
+                <div class="dot red"></div>
+                <div class="dot yellow"></div>
+                <div class="dot green"></div>
+                <span class="loader-terminal-title">portfolio.init</span>
+            </div>
+            <!-- Terminal-Zeilen werden per JS eingefügt -->
+            <div class="loader-terminal-body" id="loader-body"></div>
+            <!-- Roter Fortschrittsbalken -->
+            <div class="loader-progress-bar">
+                <div class="loader-progress-fill" id="loader-progress"></div>
+            </div>
+        </div>
+        <!-- Skip-Button: überspringt die Animation sofort -->
+        <button id="loader-skip" onclick="dismissLoader()">SKIP &rarr;</button>
+    </div>
 
     <!-- Hintergrund-Ebene 1: Subtiles Raster-Grid (CSS-only) -->
     <div class="bg-grid"></div>
@@ -1109,7 +1233,68 @@
         document.addEventListener('keydown', e => { if(e.key === 'Escape') closeModalFunc(); });
 
         /* ============================================================
-           11. INITIALISIERUNG (window.onload)
+           11. PAGE LOADER ANIMATION
+           runLoader(): tippt Terminal-Zeilen nacheinander ein,
+             füllt den Fortschrittsbalken und ruft dann onComplete auf.
+           dismissLoader(): schiebt das Overlay nach oben raus (slide-out).
+             Kann auch vom SKIP-Button aufgerufen werden.
+        ============================================================ */
+
+        // Boot-Zeilen mit individuellem Delay (ms) und optionaler Farbe
+        const loaderLines = [
+            { text: '> system.boot()',                        color: null,       delay: 150  },
+            { text: '> Loading Trimlind Maliqi...',           color: null,       delay: 700  },
+            { text: '> Compiling assets...',                  color: null,       delay: 1200 },
+            { text: '> [████████████████████] 100%',          color: '#7ee787',  delay: 1800 },
+            { text: '> [SUCCESS] Portfolio ready.',           color: '#7ee787',  delay: 2250 },
+        ];
+
+        let loaderDone = false; // Verhindert doppeltes Auslösen
+
+        function runLoader(onComplete) {
+            document.body.style.overflow = 'hidden'; // Kein Scrollen während Loader läuft
+            const body = document.getElementById('loader-body');
+            const progress = document.getElementById('loader-progress');
+
+            // Zeilen nacheinander einblenden
+            loaderLines.forEach(line => {
+                setTimeout(() => {
+                    const el = document.createElement('div');
+                    el.className = 'loader-line';
+                    el.innerText = line.text;
+                    if (line.color) el.style.color = line.color;
+                    body.appendChild(el);
+                    // Zwei rAF-Frames warten damit der Browser die opacity:0 Startposition rendert
+                    requestAnimationFrame(() => requestAnimationFrame(() => el.classList.add('visible')));
+                }, line.delay);
+            });
+
+            // Fortschrittsbalken in 3 Stufen füllen
+            setTimeout(() => { progress.style.width = '35%'; }, 500);
+            setTimeout(() => { progress.style.width = '70%'; }, 1100);
+            setTimeout(() => { progress.style.width = '100%'; }, 1700);
+
+            // Nach letzter Zeile: Overlay wegsliden und Hauptseite starten
+            setTimeout(() => dismissLoader(onComplete), 2900);
+        }
+
+        function dismissLoader(onComplete) {
+            if (loaderDone) return; // Nur einmal ausführen (SKIP oder automatisch)
+            loaderDone = true;
+
+            const loader = document.getElementById('page-loader');
+            loader.classList.add('slide-out'); // CSS-Transition: nach oben raus
+            document.body.style.overflow = '';  // Scrollen wieder erlauben
+
+            // Nach Abschluss der Slide-Transition: Loader aus dem DOM entfernen
+            setTimeout(() => {
+                loader.style.display = 'none';
+                if (typeof onComplete === 'function') onComplete();
+            }, 900); // 900ms = Transition-Dauer
+        }
+
+        /* ============================================================
+           12. INITIALISIERUNG (window.onload)
            Läuft sobald die gesamte Seite geladen ist:
            1. Gespeicherte Sprache laden (oder 'de' als Default)
            2. setLanguage → rendert alles + setzt aktiven Button
@@ -1118,25 +1303,30 @@
            5. Logo-Text-Rotation: alle 4s wechselt der Text mit Fade
         ============================================================ */
         window.onload = () => {
+            // Seite im Hintergrund vorbereiten während der Loader läuft
             const savedLang = localStorage.getItem('preferredLang') || 'de';
             setLanguage(savedLang);
-            initObserver();
 
-            // Scramble-Effekt: startet 500ms nach Seitenload für dramatischen Einstieg
-            setTimeout(() => scrambleText("scramble-target", "Maliqi"), 500);
+            // Loader starten – Hauptseiten-Initialisierung als Callback
+            runLoader(() => {
+                initObserver();
 
-            // Logo rotiert durch 3 Phrasen mit Fade-Out/In (alle 4s)
-            const logoText = document.getElementById('logo-text');
-            const phrases = ["T. MALIQI", "FULLSTACK", "REACT.JS"];
-            let pIdx = 0;
-            setInterval(() => {
-                logoText.style.opacity = 0;          // Fade-Out
-                setTimeout(() => {
-                    pIdx = (pIdx+1) % phrases.length; // Nächste Phrase (zyklisch)
-                    logoText.innerText = phrases[pIdx];
-                    logoText.style.opacity = 1;       // Fade-In
-                }, 500); // 500ms = Dauer der opacity-Transition
-            }, 4000); // Alle 4 Sekunden wechseln
+                // Scramble auf "Maliqi" direkt nach dem Loader
+                setTimeout(() => scrambleText("scramble-target", "Maliqi"), 200);
+
+                // Logo rotiert durch 3 Phrasen mit Fade-Out/In (alle 4s)
+                const logoText = document.getElementById('logo-text');
+                const phrases = ["T. MALIQI", "FULLSTACK", "REACT.JS"];
+                let pIdx = 0;
+                setInterval(() => {
+                    logoText.style.opacity = 0;
+                    setTimeout(() => {
+                        pIdx = (pIdx+1) % phrases.length;
+                        logoText.innerText = phrases[pIdx];
+                        logoText.style.opacity = 1;
+                    }, 500);
+                }, 4000);
+            });
         };
     </script>
 </body>
