@@ -739,7 +739,7 @@
             <button class="theme-toggle" onclick="toggleTheme()" aria-label="Theme wechseln">
                 <i class="fas fa-adjust"></i>
             </button>
-            <!-- Sprachumschalter: DE / EN / SQ (Albanisch) -->
+            <!-- Sprachumschalter: DE / EN / SQ (Albanisch) / IT (Italienisch) -->
             <div class="lang-switch" style="display:flex; gap:5px;">
                 <button class="lang-btn" id="btn-de" onclick="setLanguage('de')" aria-label="Deutsch">
                     <img src="https://flagcdn.com/w40/de.png" alt="DE"> DE
@@ -749,6 +749,9 @@
                 </button>
                 <button class="lang-btn" id="btn-sq" onclick="setLanguage('sq')" aria-label="Shqip">
                     <img src="https://flagcdn.com/w40/al.png" alt="SQ"> SQ
+                </button>
+                <button class="lang-btn" id="btn-it" onclick="setLanguage('it')" aria-label="Italiano">
+                    <img src="https://flagcdn.com/w40/it.png" alt="IT"> IT
                 </button>
             </div>
         </div>
@@ -939,13 +942,13 @@
            "long" = ausführlicher Text der im Modal angezeigt wird.
         ============================================================ */
         const years = [
-            { id: 'r26', year: '2026', title: { de: "Next Horizon", en: "Next Horizon", sq: "Horizonti i ardhshëm" }, desc: { de: "Web3 & Cloud Scaling.", en: "Web3 & Cloud Scaling.", sq: "Web3 & Skalimi." }, icons: ['fa-brands fa-ethereum', 'fa-solid fa-cloud'], long: { de: "Die Vision für 2026 ist die vollständige Dezentralisierung. Ich plane die Integration von Smart Contracts in Unternehmensprozesse und den Aufbau von hochskalierbaren Edge-Computing Architekturen.", en: "The vision for 2026 is full decentralization. Planning smart contract integration and scalable edge computing architectures.", sq: "Vizioni për vitin 2026 është deçentralizimi i plotë." } },
-            { id: 'r25', year: '2025', title: { de: "AI & Scalability", en: "AI & Scalability", sq: "AI dhe Skalueshmëria" }, desc: { de: "KI-Workflows.", en: "AI workflows.", sq: "Proceset AI." }, icons: ['fa-solid fa-robot', 'fa-solid fa-brain'], long: { de: "Zentrierung auf KI-Modelle und RAG-Systeme zur effizienten Datenverarbeitung.", en: "Focusing on AI models and RAG systems.", sq: "Fokusi në modelet AI dhe sistemet RAG." } },
-            { id: 'r1', year: '2024', title: { de: "SaaS Innovation", en: "SaaS Innovation", sq: "SaaS Inovacion" }, desc: { de: "Cloud-native B2B Apps.", en: "Cloud-native B2B apps.", sq: "Aplikacione cloud-native." }, icons: ['fa-brands fa-docker', 'fa-brands fa-aws'], long: { de: "Entwicklung hochverfügbarer SaaS-Lösungen mittels Docker und AWS.", en: "Development of high-availability SaaS solutions using Docker and AWS.", sq: "Zhvillimi i zgjidhjeve SaaS me Docker dhe AWS." } },
-            { id: 'r2', year: '2023', title: { de: "E-Commerce Core", en: "E-Commerce Core", sq: "Baza e E-Commerce" }, desc: { de: "API & Checkout.", en: "API & Checkout.", sq: "API & Checkout." }, icons: ['fa-solid fa-bolt', 'fa-solid fa-server'], long: { de: "Optimierung kritischer Checkout-Prozesse und API-Strukturen.", en: "Optimization of critical checkout processes and API structures.", sq: "Optimizimi i proceseve të arkëtimit." } },
-            { id: 'r22', year: '2022', title: { de: "Backend Excellence", en: "Backend Excellence", sq: "Backend Excellence" }, desc: { de: "Node.js & SQL.", en: "Node.js & SQL.", sq: "Node.js & SQL." }, icons: ['fa-brands fa-node-js', 'fa-solid fa-database'], long: { de: "Vertiefung in komplexe Serverarchitekturen.", en: "Deep dive into complex server architectures.", sq: "Thellimi në arkitekturat e serverëve." } },
-            { id: 'r21', year: '2021', title: { de: "Frontend Mastery", en: "Frontend Mastery", sq: "Frontend Mastery" }, desc: { de: "React & State Mgmt.", en: "React & State Mgmt.", sq: "React & State Mgmt." }, icons: ['fa-brands fa-react', 'fa-brands fa-js'], long: { de: "Spezialisierung auf moderne Frontend-Entwicklung mit React.", en: "Specialization in modern frontend development with React.", sq: "Specializimi në zhvillimin e frontend-it." } },
-            { id: 'r19', year: '2019', title: { de: "The Start", en: "The Start", sq: "Fillimi" }, desc: { de: "Official Entry.", en: "Official Entry.", sq: "Fillimi zyrtar." }, icons: ['fa-solid fa-code', 'fa-solid fa-terminal'], long: { de: "Erste Schritte in der professionellen Softwareentwicklung.", en: "First steps in professional software development.", sq: "Hapat e parë në zhvillimin e softuerit." } }
+            { id: 'r26', year: '2026', title: { de: "Next Horizon", en: "Next Horizon", sq: "Horizonti i ardhshëm", it: "Prossimo Orizzonte" }, desc: { de: "Web3 & Cloud Scaling.", en: "Web3 & Cloud Scaling.", sq: "Web3 & Skalimi.", it: "Web3 & Cloud Scaling." }, icons: ['fa-brands fa-ethereum', 'fa-solid fa-cloud'], long: { de: "Die Vision für 2026 ist die vollständige Dezentralisierung. Ich plane die Integration von Smart Contracts in Unternehmensprozesse und den Aufbau von hochskalierbaren Edge-Computing Architekturen.", en: "The vision for 2026 is full decentralization. Planning smart contract integration and scalable edge computing architectures.", sq: "Vizioni për vitin 2026 është deçentralizimi i plotë.", it: "La visione per il 2026 è la completa decentralizzazione. Pianificazione dell'integrazione di smart contract e architetture edge computing scalabili." } },
+            { id: 'r25', year: '2025', title: { de: "AI & Scalability", en: "AI & Scalability", sq: "AI dhe Skalueshmëria", it: "AI & Scalabilità" }, desc: { de: "KI-Workflows.", en: "AI workflows.", sq: "Proceset AI.", it: "Flussi di lavoro AI." }, icons: ['fa-solid fa-robot', 'fa-solid fa-brain'], long: { de: "Zentrierung auf KI-Modelle und RAG-Systeme zur effizienten Datenverarbeitung.", en: "Focusing on AI models and RAG systems.", sq: "Fokusi në modelet AI dhe sistemet RAG.", it: "Focus su modelli AI e sistemi RAG per un'elaborazione efficiente dei dati." } },
+            { id: 'r1', year: '2024', title: { de: "SaaS Innovation", en: "SaaS Innovation", sq: "SaaS Inovacion", it: "Innovazione SaaS" }, desc: { de: "Cloud-native B2B Apps.", en: "Cloud-native B2B apps.", sq: "Aplikacione cloud-native.", it: "App B2B cloud-native." }, icons: ['fa-brands fa-docker', 'fa-brands fa-aws'], long: { de: "Entwicklung hochverfügbarer SaaS-Lösungen mittels Docker und AWS.", en: "Development of high-availability SaaS solutions using Docker and AWS.", sq: "Zhvillimi i zgjidhjeve SaaS me Docker dhe AWS.", it: "Sviluppo di soluzioni SaaS ad alta disponibilità tramite Docker e AWS." } },
+            { id: 'r2', year: '2023', title: { de: "E-Commerce Core", en: "E-Commerce Core", sq: "Baza e E-Commerce", it: "Core E-Commerce" }, desc: { de: "API & Checkout.", en: "API & Checkout.", sq: "API & Checkout.", it: "API & Checkout." }, icons: ['fa-solid fa-bolt', 'fa-solid fa-server'], long: { de: "Optimierung kritischer Checkout-Prozesse und API-Strukturen.", en: "Optimization of critical checkout processes and API structures.", sq: "Optimizimi i proceseve të arkëtimit.", it: "Ottimizzazione dei processi di checkout critici e delle strutture API." } },
+            { id: 'r22', year: '2022', title: { de: "Backend Excellence", en: "Backend Excellence", sq: "Backend Excellence", it: "Eccellenza Backend" }, desc: { de: "Node.js & SQL.", en: "Node.js & SQL.", sq: "Node.js & SQL.", it: "Node.js & SQL." }, icons: ['fa-brands fa-node-js', 'fa-solid fa-database'], long: { de: "Vertiefung in komplexe Serverarchitekturen.", en: "Deep dive into complex server architectures.", sq: "Thellimi në arkitekturat e serverëve.", it: "Approfondimento nelle architetture server complesse." } },
+            { id: 'r21', year: '2021', title: { de: "Frontend Mastery", en: "Frontend Mastery", sq: "Frontend Mastery", it: "Maestria Frontend" }, desc: { de: "React & State Mgmt.", en: "React & State Mgmt.", sq: "React & State Mgmt.", it: "React & State Mgmt." }, icons: ['fa-brands fa-react', 'fa-brands fa-js'], long: { de: "Spezialisierung auf moderne Frontend-Entwicklung mit React.", en: "Specialization in modern frontend development with React.", sq: "Specializimi në zhvillimin e frontend-it.", it: "Specializzazione nello sviluppo frontend moderno con React." } },
+            { id: 'r19', year: '2019', title: { de: "The Start", en: "The Start", sq: "Fillimi", it: "L'Inizio" }, desc: { de: "Official Entry.", en: "Official Entry.", sq: "Fillimi zyrtar.", it: "Inizio ufficiale." }, icons: ['fa-solid fa-code', 'fa-solid fa-terminal'], long: { de: "Erste Schritte in der professionellen Softwareentwicklung.", en: "First steps in professional software development.", sq: "Hapat e parë në zhvillimin e softuerit.", it: "I primi passi nello sviluppo software professionale." } }
         ];
 
         /* ============================================================
@@ -957,27 +960,27 @@
         const projects = [
             {
                 id: 'p1',
-                tag: { de: "Web App", en: "Web App", sq: "Aplikacion Web" },
-                title: { de: "Developer Portfolio", en: "Developer Portfolio", sq: "Portfolio Developer" },
-                desc: { de: "Dieses Portfolio — gebaut mit reinem HTML, CSS & JS. Animationen, Mehrsprachigkeit und Dark Mode.", en: "This portfolio — built with pure HTML, CSS & JS. Animations, multilanguage and dark mode.", sq: "Ky portfolio — ndërtuar me HTML, CSS & JS." },
+                tag: { de: "Web App", en: "Web App", sq: "Aplikacion Web", it: "App Web" },
+                title: { de: "Developer Portfolio", en: "Developer Portfolio", sq: "Portfolio Developer", it: "Portfolio Developer" },
+                desc: { de: "Dieses Portfolio — gebaut mit reinem HTML, CSS & JS. Animationen, Mehrsprachigkeit und Dark Mode.", en: "This portfolio — built with pure HTML, CSS & JS. Animations, multilanguage and dark mode.", sq: "Ky portfolio — ndërtuar me HTML, CSS & JS.", it: "Questo portfolio — costruito con HTML, CSS & JS puro. Animazioni, multilingua e Dark Mode." },
                 icons: ['fa-brands fa-html5', 'fa-brands fa-css3-alt', 'fa-brands fa-js'],
-                long: { de: "Ein vollständig selbst entwickeltes Portfolio. Features: Scramble-Text-Effekt, Spotlight-Karten, Particle-System, Dark/Light Mode, 3-sprachige UI (DE/EN/SQ) und ein animiertes Roadmap-Timeline.", en: "A fully self-developed portfolio. Features: scramble text effect, spotlight cards, particle system, dark/light mode, 3-language UI (DE/EN/SQ) and an animated roadmap timeline.", sq: "Një portfolio i zhvilluar plotësisht vetë." }
+                long: { de: "Ein vollständig selbst entwickeltes Portfolio. Features: Scramble-Text-Effekt, Spotlight-Karten, Particle-System, Dark/Light Mode, 3-sprachige UI (DE/EN/SQ) und ein animiertes Roadmap-Timeline.", en: "A fully self-developed portfolio. Features: scramble text effect, spotlight cards, particle system, dark/light mode, 3-language UI (DE/EN/SQ) and an animated roadmap timeline.", sq: "Një portfolio i zhvilluar plotësisht vetë.", it: "Un portfolio sviluppato completamente in proprio. Features: effetto testo scramble, spotlight sulle card, sistema di particelle, Dark/Light Mode, UI multilingua e roadmap animata." }
             },
             {
                 id: 'p2',
-                tag: { de: "SaaS Plattform", en: "SaaS Platform", sq: "Platformë SaaS" },
-                title: { de: "E-Commerce Backend", en: "E-Commerce Backend", sq: "Backend E-Commerce" },
-                desc: { de: "Hochperformantes Backend für Online-Shops mit REST API, Auth und Zahlungsintegration.", en: "High-performance backend for online shops with REST API, auth and payment integration.", sq: "Backend me performancë të lartë për dyqane online." },
+                tag: { de: "SaaS Plattform", en: "SaaS Platform", sq: "Platformë SaaS", it: "Piattaforma SaaS" },
+                title: { de: "E-Commerce Backend", en: "E-Commerce Backend", sq: "Backend E-Commerce", it: "Backend E-Commerce" },
+                desc: { de: "Hochperformantes Backend für Online-Shops mit REST API, Auth und Zahlungsintegration.", en: "High-performance backend for online shops with REST API, auth and payment integration.", sq: "Backend me performancë të lartë për dyqane online.", it: "Backend ad alte prestazioni per shop online con REST API, autenticazione e integrazione pagamenti." },
                 icons: ['fa-brands fa-node-js', 'fa-solid fa-database', 'fa-solid fa-bolt'],
-                long: { de: "Entwicklung einer skalierbaren E-Commerce-Infrastruktur mit Node.js und PostgreSQL. Features: JWT-Auth, Stripe-Integration, Redis-Caching und Docker-Deployment.", en: "Development of a scalable e-commerce infrastructure with Node.js and PostgreSQL. Features: JWT auth, Stripe integration, Redis caching and Docker deployment.", sq: "Infrastrukturë e skaluar e-commerce me Node.js dhe PostgreSQL." }
+                long: { de: "Entwicklung einer skalierbaren E-Commerce-Infrastruktur mit Node.js und PostgreSQL. Features: JWT-Auth, Stripe-Integration, Redis-Caching und Docker-Deployment.", en: "Development of a scalable e-commerce infrastructure with Node.js and PostgreSQL. Features: JWT auth, Stripe integration, Redis caching and Docker deployment.", sq: "Infrastrukturë e skaluar e-commerce me Node.js dhe PostgreSQL.", it: "Sviluppo di un'infrastruttura e-commerce scalabile con Node.js e PostgreSQL. Features: JWT auth, integrazione Stripe, Redis caching e deployment Docker." }
             },
             {
                 id: 'p3',
-                tag: { de: "KI Projekt", en: "AI Project", sq: "Projekt AI" },
-                title: { de: "AI Dashboard", en: "AI Dashboard", sq: "Dashboard AI" },
-                desc: { de: "React-Dashboard zur Visualisierung und Steuerung von KI-Modellen und RAG-Pipelines.", en: "React dashboard for visualizing and controlling AI models and RAG pipelines.", sq: "Dashboard React për vizualizimin e modeleve AI." },
+                tag: { de: "KI Projekt", en: "AI Project", sq: "Projekt AI", it: "Progetto AI" },
+                title: { de: "AI Dashboard", en: "AI Dashboard", sq: "Dashboard AI", it: "Dashboard AI" },
+                desc: { de: "React-Dashboard zur Visualisierung und Steuerung von KI-Modellen und RAG-Pipelines.", en: "React dashboard for visualizing and controlling AI models and RAG pipelines.", sq: "Dashboard React për vizualizimin e modeleve AI.", it: "Dashboard React per la visualizzazione e il controllo di modelli AI e pipeline RAG." },
                 icons: ['fa-brands fa-react', 'fa-solid fa-robot', 'fa-brands fa-python'],
-                long: { de: "Ein modernes Dashboard zur Verwaltung von KI-Workflows. Echtzeit-Datenvisualisierung mit Chart.js, Integration von OpenAI und Anthropic APIs, Python-Backend mit FastAPI.", en: "A modern dashboard for managing AI workflows. Real-time data visualization with Chart.js, integration of OpenAI and Anthropic APIs, Python backend with FastAPI.", sq: "Dashboard modern për menaxhimin e rrjedhave të punës AI." }
+                long: { de: "Ein modernes Dashboard zur Verwaltung von KI-Workflows. Echtzeit-Datenvisualisierung mit Chart.js, Integration von OpenAI und Anthropic APIs, Python-Backend mit FastAPI.", en: "A modern dashboard for managing AI workflows. Real-time data visualization with Chart.js, integration of OpenAI and Anthropic APIs, Python backend with FastAPI.", sq: "Dashboard modern për menaxhimin e rrjedhave të punës AI.", it: "Un dashboard moderno per gestire flussi di lavoro AI. Visualizzazione dati in tempo reale con Chart.js, integrazione delle API OpenAI e Anthropic, backend Python con FastAPI." }
             }
         ];
 
@@ -1014,6 +1017,15 @@
                 contact_btn: "DËRGO MESAZH", contact_subtitle: "Më dërgo një mesazh",
                 p_name: "Emri", p_email: "Email", p_msg: "Mesazhi juaj...",
                 scroll_hint: "Scroll"
+            },
+            it: {
+                nav_home: "Home", nav_skills: "Competenze", nav_projects: "Progetti", nav_roadmap: "Roadmap", nav_contact: "Contatti",
+                roadmap_title: "Roadmap", roadmap_subtitle: "Il mio percorso da developer",
+                skills_title: "Competenze", skills_subtitle: "Tecnologie con cui lavoro",
+                projects_title: "Progetti", projects_subtitle: "Lavori selezionati",
+                contact_btn: "INVIA MESSAGGIO", contact_subtitle: "Scrivimi un messaggio",
+                p_name: "Nome", p_email: "Email", p_msg: "Il tuo messaggio...",
+                scroll_hint: "Scorri"
             }
         };
 
