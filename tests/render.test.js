@@ -34,6 +34,22 @@ describe('renderProjects', () => {
         });
     });
 
+    test('each card shows the correct description for the requested language', () => {
+        renderProjects('en');
+        const paras = document.querySelectorAll('.project-card p');
+        projects.forEach((p, i) => {
+            expect(paras[i].textContent).toBe(p.desc.en);
+        });
+    });
+
+    test('each card shows the correct description in German', () => {
+        renderProjects('de');
+        const paras = document.querySelectorAll('.project-card p');
+        projects.forEach((p, i) => {
+            expect(paras[i].textContent).toBe(p.desc.de);
+        });
+    });
+
     test('cards have staggered transition-delay in multiples of 120ms', () => {
         renderProjects('en');
         const cards = document.querySelectorAll('.project-card');
@@ -87,6 +103,14 @@ describe('renderRoadmap', () => {
         const headings = document.querySelectorAll('#roadmap-list h3');
         years.forEach((y, i) => {
             expect(headings[i].textContent).toBe(y.title.sq);
+        });
+    });
+
+    test('each entry shows the correct description for the requested language', () => {
+        renderRoadmap('en');
+        const paras = document.querySelectorAll('#roadmap-list .content p');
+        years.forEach((y, i) => {
+            expect(paras[i].textContent).toBe(y.desc.en);
         });
     });
 

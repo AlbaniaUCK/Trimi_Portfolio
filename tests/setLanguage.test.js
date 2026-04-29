@@ -2,7 +2,7 @@
 
 const { setLanguage, translations, projects, years } = require('../src/app');
 
-function setupDOM(lang = 'de') {
+function setupDOM() {
     document.body.innerHTML = `
         <button id="btn-de" class="lang-btn active"></button>
         <button id="btn-en" class="lang-btn"></button>
@@ -22,12 +22,15 @@ function setupDOM(lang = 'de') {
         <div id="projects-list"></div>
         <div id="roadmap-list"></div>
     `;
-    localStorage.setItem('preferredLang', lang);
 }
 
 describe('setLanguage', () => {
     beforeEach(() => {
-        setupDOM('de');
+        setupDOM();
+        localStorage.clear();
+    });
+
+    afterEach(() => {
         localStorage.clear();
     });
 
@@ -88,5 +91,17 @@ describe('setLanguage', () => {
         setLanguage('en');
         const entries = document.querySelectorAll('#roadmap-list .container');
         expect(entries.length).toBe(years.length);
+    });
+
+    test('does nothing for an unknown language code', () => {
+        setLanguage('de');
+        const prevLang = localStorage.getItem('preferredLang');
+        setLanguage('fr');
+        expect(localStorage.getItem('preferredLang')).toBe(prevLang);
+        expect(document.getElementById('btn-de').classList.contains('active')).toBe(true);
+    });
+
+    test('does nothing when called with undefined', () => {
+        expect(() => setLanguage(undefined)).not.toThrow();
     });
 });

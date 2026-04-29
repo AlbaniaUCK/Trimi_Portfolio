@@ -5,6 +5,7 @@ const {
     openProjectDetails,
     closeModalFunc,
     closeDetails,
+    setupKeyListeners,
     years,
     projects,
 } = require('../src/app');
@@ -21,6 +22,10 @@ function setupModalDOM(lang = 'en') {
         </div>
     `;
 }
+
+afterEach(() => {
+    localStorage.clear();
+});
 
 describe('openDetails (roadmap modal)', () => {
     beforeEach(() => setupModalDOM('en'));
@@ -67,6 +72,13 @@ describe('openDetails (roadmap modal)', () => {
         openDetails(entry.id);
         expect(document.getElementById('modalTitle').innerText).toBe(entry.title.sq);
     });
+
+    test('works for every roadmap entry', () => {
+        years.forEach(y => {
+            openDetails(y.id);
+            expect(document.getElementById('modalTitle').innerText).toBe(y.title.en);
+        });
+    });
 });
 
 describe('openProjectDetails', () => {
@@ -99,6 +111,13 @@ describe('openProjectDetails', () => {
     test('does nothing for an unknown id', () => {
         expect(() => openProjectDetails('nonexistent-id')).not.toThrow();
         expect(document.getElementById('projectModal').style.display).toBe('none');
+    });
+
+    test('works for every project entry', () => {
+        projects.forEach(p => {
+            openProjectDetails(p.id);
+            expect(document.getElementById('modalTitle').innerText).toBe(p.title.en);
+        });
     });
 });
 
@@ -134,16 +153,34 @@ describe('closeDetails (backdrop click)', () => {
 
     test('closes the modal when clicking the backdrop (#projectModal)', () => {
         const modal = document.getElementById('projectModal');
-        const event = { target: modal };
-        closeDetails(event);
+        closeDetails({ target: modal });
         expect(modal.classList.contains('show')).toBe(false);
     });
 
     test('does not close the modal when clicking inside the content area', () => {
         const modal = document.getElementById('projectModal');
         const innerEl = document.querySelector('.modal-content');
-        const event = { target: innerEl };
-        closeDetails(event);
+        closeDetails({ target: innerEl });
         expect(modal.classList.contains('show')).toBe(true);
+    });
+});
+
+describe('Escape key closes modal', () => {
+    beforeEach(() => {
+        setupModalDOM('en');
+        const modal = document.getElementById('projectModal');
+        modal.style.display = 'flex';
+        modal.classList.add('show');
+        setupKeyListeners();
+    });
+
+    test('pressing Escape removes .show class', () => {
+        document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape' }));
+        expect(document.getElementById('projectModal').classList.contains('show')).toBe(false);
+    });
+
+    test('pressing a different key does not close the modal', () => {
+        document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
+        expect(document.getElementById('projectModal').classList.contains('show')).toBe(true);
     });
 });

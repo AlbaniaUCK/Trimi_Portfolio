@@ -76,16 +76,15 @@ const translations = {
 
 /* ============================================================
    RENDER PROJECTS
+   Uses map+join so innerHTML is set exactly once, avoiding
+   repeated layout thrashing from innerHTML +=.
 ============================================================ */
 function renderProjects(lang) {
     const list = document.getElementById('projects-list');
-    list.innerHTML = '';
-
-    projects.forEach((p, index) => {
+    list.innerHTML = projects.map((p, index) => {
         const delay = index * 120;
         const iconsHtml = p.icons.map(i => `<i class="${i}"></i>`).join('');
-
-        list.innerHTML += `
+        return `
         <div class="project-card reveal spotlight-project" style="transition-delay: ${delay}ms" onclick="openProjectDetails('${p.id}')">
             <span class="project-tag">${p.tag[lang]}</span>
             <h3>${p.title[lang]}</h3>
@@ -93,21 +92,20 @@ function renderProjects(lang) {
             <div class="project-icons">${iconsHtml}</div>
             <i class="fas fa-arrow-up-right project-arrow"></i>
         </div>`;
-    });
+    }).join('');
 
     if (typeof initProjectSpotlight === 'function') initProjectSpotlight();
 }
 
 /* ============================================================
    RENDER ROADMAP
+   Same pattern: build full string, then set innerHTML once.
 ============================================================ */
 function renderRoadmap(lang) {
     const list = document.getElementById('roadmap-list');
-    list.innerHTML = '';
-
-    years.forEach((y, index) => {
+    list.innerHTML = years.map((y, index) => {
         const delay = index * 100;
-        list.innerHTML += `
+        return `
         <div class="container reveal" style="transition-delay: ${delay}ms" onclick="openDetails('${y.id}')">
             <div class="timeline-dot"></div>
             <div class="content spotlight-card">
@@ -116,7 +114,7 @@ function renderRoadmap(lang) {
                 <p style="font-size:0.95rem; color:var(--text-dim);">${y.desc[lang]}</p>
             </div>
         </div>`;
-    });
+    }).join('');
 
     if (typeof initSpotlight === 'function') initSpotlight();
     if (typeof initObserver === 'function') initObserver();
@@ -188,6 +186,8 @@ function toggleTheme() {
 }
 
 function setLanguage(lang) {
+    if (!translations[lang]) return;
+
     localStorage.setItem('preferredLang', lang);
 
     document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
@@ -208,39 +208,29 @@ function setLanguage(lang) {
 
 /* ============================================================
    MODAL FUNCTIONS
+   _openModal handles the shared DOM-filling logic so
+   openDetails and openProjectDetails stay thin.
 ============================================================ */
-function openDetails(id) {
+function _openModal(item) {
     const lang = localStorage.getItem('preferredLang') || 'de';
-    const item = years.find(y => y.id === id);
-    if (!item) return;
-
     document.getElementById('modalTitle').innerText = item.title[lang];
     document.getElementById('modalBody').innerText = item.long[lang];
-
-    const iconContainer = document.getElementById('modalIcons');
-    iconContainer.innerHTML = '';
-    item.icons.forEach(i => { iconContainer.innerHTML += `<i class="${i}"></i>`; });
-
+    document.getElementById('modalIcons').innerHTML = item.icons.map(i => `<i class="${i}"></i>`).join('');
     const modal = document.getElementById('projectModal');
     modal.style.display = 'flex';
     setTimeout(() => modal.classList.add('show'), 10);
 }
 
+function openDetails(id) {
+    const item = years.find(y => y.id === id);
+    if (!item) return;
+    _openModal(item);
+}
+
 function openProjectDetails(id) {
-    const lang = localStorage.getItem('preferredLang') || 'de';
     const item = projects.find(p => p.id === id);
     if (!item) return;
-
-    document.getElementById('modalTitle').innerText = item.title[lang];
-    document.getElementById('modalBody').innerText = item.long[lang];
-
-    const iconContainer = document.getElementById('modalIcons');
-    iconContainer.innerHTML = '';
-    item.icons.forEach(i => { iconContainer.innerHTML += `<i class="${i}"></i>`; });
-
-    const modal = document.getElementById('projectModal');
-    modal.style.display = 'flex';
-    setTimeout(() => modal.classList.add('show'), 10);
+    _openModal(item);
 }
 
 function closeModalFunc() {
@@ -251,6 +241,15 @@ function closeModalFunc() {
 
 function closeDetails(e) {
     if (e.target.id === 'projectModal') closeModalFunc();
+}
+
+/* ============================================================
+   KEY LISTENERS
+   Extracted so it can be called once at startup and tested
+   independently without side-effects on module load.
+============================================================ */
+function setupKeyListeners() {
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModalFunc(); });
 }
 
 /* ============================================================
@@ -265,6 +264,10 @@ const loaderLines = [
 ];
 
 let loaderDone = false;
+
+function _resetLoaderDone() {
+    loaderDone = false;
+}
 
 function runLoader(onComplete) {
     document.body.style.overflow = 'hidden';
@@ -315,11 +318,14 @@ if (typeof module !== 'undefined' && module.exports) {
         renderRoadmap,
         setLanguage,
         toggleTheme,
+        _openModal,
         openDetails,
         openProjectDetails,
         closeModalFunc,
         closeDetails,
+        setupKeyListeners,
         dismissLoader,
+        _resetLoaderDone,
         scrambleText,
     };
 }
