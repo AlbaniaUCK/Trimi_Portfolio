@@ -1,971 +1,1272 @@
-<!DOCTYPE html>
-<!-- Sprachattribut: Standard ist Deutsch (wird per JS dynamisch geändert) -->
-<html lang="de">
-<head>
-    <!-- Zeichenkodierung: UTF-8 für Sonderzeichen (ä, ö, ü, ë usw.) -->
-    <meta charset="UTF-8">
-    <!-- Viewport: Verhindert horizontales Zoomen auf Mobilgeräten -->
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Trimlind Maliqi | Developer Portfolio</title>
-
-    <!-- Favicon: Laptop-Emoji via fav.farm (kein eigenes Icon nötig) -->
-    <link rel="icon" href="https://fav.farm/💻">
-
-    <!-- Font Awesome 6: Ikonenbibliothek für alle Icons (React, Node, Docker, etc.) -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <!-- Google Fonts: Inter (UI-Text) + Fira Code (Terminal/Logo-Schrift) -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Fira+Code:wght@400;600&display=swap" rel="stylesheet">
-
-    <style>
-        /* ============================================================
-           CSS CUSTOM PROPERTIES (Design-Token)
-           Alle Farben und Werte zentral definiert – bei Änderungen
-           muss nur dieser Block angepasst werden.
-        ============================================================ */
-        :root {
-            --bg-dark: #0f172a;           /* Haupt-Hintergrundfarbe (tiefes Dunkelblau) */
-            --bg-dark-alt: #1e293b;       /* Leicht hellerer Hintergrund (alternativ) */
-            --accent-red: #f43f5e;        /* Akzentfarbe: Rose/Rot für Highlights */
-            --accent-glow: rgba(244, 63, 94, 0.5); /* Glow-Effekt-Farbe (halbtransparent) */
-            --text-light: #f1f5f9;        /* Heller Fließtext */
-            --text-dim: #94a3b8;          /* Gedimmter Text (Labels, Beschreibungen) */
-            --white: #ffffff;             /* Reinweiß (Überschriften, Logo) */
-            --card-bg: rgba(30, 41, 59, 0.7); /* Glassmorphism-Kartenhintergrund */
-            --grid-color: rgba(255, 255, 255, 0.05); /* Gitterlinien-Farbe */
-        }
-
-        /* ============================================================
-           LIGHT MODE OVERRIDES
-           Überschreibt alle Custom Properties wenn body.light-mode gesetzt ist.
-           Wird per toggleTheme() JavaScript-Funktion aktiviert.
-        ============================================================ */
-        body.light-mode {
-            --bg-dark: #f8fafc;
-            --bg-dark-alt: #ffffff;
-            --accent-red: #e11d48;        /* Etwas dunkleres Rot für besseren Kontrast */
-            --accent-glow: rgba(225, 29, 72, 0.3);
-            --text-light: #0f172a;        /* Im Light Mode: dunkler Text */
-            --text-dim: #64748b;
-            --white: #000000;             /* Im Light Mode: Schwarz statt Weiß */
-            --card-bg: rgba(255, 255, 255, 0.8);
-            --grid-color: rgba(0, 0, 0, 0.05);
-        }
-
-        /* ============================================================
-           CSS RESET
-           Entfernt Browser-Standardabstände, konsistentes Box-Sizing.
-        ============================================================ */
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-
-        /* ============================================================
-           BODY – Basis-Layout
-           overflow-x: hidden verhindert horizontalen Scrollbalken.
-           -webkit-tap-highlight-color entfernt blaues Tap-Highlight auf iOS.
-        ============================================================ */
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: var(--bg-dark);
-            color: var(--text-light);
-            line-height: 1.6;
-            overflow-x: hidden;
-            transition: background 0.3s, color 0.3s; /* Weicher Übergang beim Theme-Wechsel */
-            -webkit-tap-highlight-color: transparent;
-        }
-
-        /* ============================================================
-           HINTERGRUND-GITTER
-           Fixiertes, subtiles Raster-Pattern über die gesamte Seite.
-           mask-image blendet die Ränder aus, sodass das Grid in der
-           Mitte sichtbar ist und nach außen ausblendet.
-        ============================================================ */
-        .bg-grid {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background-image: linear-gradient(var(--grid-color) 1px, transparent 1px),
-            linear-gradient(90deg, var(--grid-color) 1px, transparent 1px);
-            background-size: 50px 50px; /* Gitterzellen-Größe */
-            z-index: 0;
-            pointer-events: none; /* Kein Mausklick-Blocking */
-            mask-image: radial-gradient(circle at center, black 40%, transparent 100%);
-            -webkit-mask-image: radial-gradient(circle at center, black 40%, transparent 100%);
-        }
-
-        /* ============================================================
-           PARTICLES.JS CONTAINER
-           Fixierter Layer für die animierten Partikel.
-           pointer-events: none → Partikel blockieren keine Klicks.
-           opacity: 0.6 → leicht transparent für subtilen Effekt.
-        ============================================================ */
-        #particles-js { position: fixed; width: 100%; height: 100%; z-index: 1; top: 0; left: 0; pointer-events: none; opacity: 0.6; }
-
-        /* ============================================================
-           NAVIGATION
-           Fixiert am oberen Rand. backdrop-filter: blur erzeugt den
-           Glasmorphism-Effekt (Hintergrund verschwimmt hinter der Nav).
-           z-index: 1000 → immer über allem anderen.
-        ============================================================ */
-        nav {
-            display: flex; justify-content: space-between; align-items: center;
-            padding: 1rem 5%; position: fixed; width: 100%;
-            background: rgba(15, 23, 42, 0.7); /* Halbtransparenter Hintergrund */
-            backdrop-filter: blur(12px);        /* Blur-Effekt hinter der Nav */
-            z-index: 1000; border-bottom: 1px solid rgba(255,255,255,0.05);
-        }
-        /* Light-Mode: weißer Glasmorphism statt dunkel */
-        body.light-mode nav { background: rgba(255, 255, 255, 0.7); border-bottom: 1px solid rgba(0,0,0,0.05); }
-
-        /* Logo-Link: Fira Code Monospace, Klammern in Akzentfarbe */
-        .logo { font-family: 'Fira Code', monospace; font-weight: 600; color: var(--white); text-decoration: none; display: flex; align-items: center; font-size: 0.9rem; }
-        .logo-icon { color: var(--accent-red); font-weight: 800; }
-        /* #logo-text rotiert per JS durch "T. MALIQI" → "FULLSTACK" → "REACT.JS" */
-        #logo-text { margin: 0 6px; transition: opacity 0.5s; color: var(--accent-red); font-weight: 700; text-shadow: 0 0 10px var(--accent-glow); }
-
-        /* Navigationslinks in der Mitte der Nav (auf Mobile versteckt) */
-        .nav-links {
-            display: flex; align-items: center; gap: 0.2rem;
-        }
-        .nav-link {
-            color: var(--text-dim); text-decoration: none; font-size: 0.82rem;
-            font-weight: 600; padding: 6px 12px; border-radius: 8px;
-            transition: 0.2s; letter-spacing: 0.3px;
-        }
-        /* Hover: heller + leichter Hintergrund */
-        .nav-link:hover { color: var(--text-light); background: rgba(255,255,255,0.06); }
-        body.light-mode .nav-link:hover { background: rgba(0,0,0,0.05); }
-
-        /* Rechte Seite der Nav: Theme-Toggle + Sprachbuttons */
-        .nav-right { display: flex; align-items: center; gap: 0.8rem; }
-
-        /* Theme-Toggle-Button und Sprachbuttons: einheitliches Outline-Design */
-        .theme-toggle, .lang-btn {
-            background: transparent; border: 1px solid var(--text-dim); color: var(--text-dim);
-            padding: 6px 10px; border-radius: 8px; cursor: pointer; display: flex; align-items: center; gap: 6px; font-size: 0.75rem; transition: 0.3s;
-        }
-        .theme-toggle:hover, .lang-btn:hover { border-color: var(--accent-red); color: var(--accent-red); }
-        /* Aktiver Sprachbutton: gefüllt mit Akzentfarbe + Glow */
-        .lang-btn.active { background: var(--accent-red); color: white; border-color: var(--accent-red); box-shadow: 0 0 15px var(--accent-glow); }
-        .lang-btn img { width: 14px; border-radius: 2px; } /* Flaggen-Icon */
-
-        /* ============================================================
-           SECTIONS – Basis-Styling für alle Sektionen
-           min-height: 100vh → jede Sektion füllt mindestens den Viewport.
-           padding-top: 120px → Abstand zur fixierten Nav.
-           z-index: 2 → über dem Hintergrund-Grid und Partikeln.
-        ============================================================ */
-        section { position: relative; z-index: 2; padding: 120px 7% 80px; min-height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; width: 100%; }
-
-        /* ============================================================
-           HERO – Großer Name im Hero-Bereich
-           clamp(): responsiver Font-Size (min 2.5rem, ideal 10vw, max 6.5rem).
-           letter-spacing: -2px → enge Buchstabenabstand für fetten Look.
-        ============================================================ */
-        .hero-title {
-            font-size: clamp(2.5rem, 10vw, 6.5rem);
-            font-weight: 900;
-            text-transform: uppercase;
-            line-height: 1.1;
-            text-align: center;
-            width: 100%;
-            margin-bottom: 1.2rem;
-            letter-spacing: -2px;
-        }
-
-        /* ============================================================
-           HERO TAGLINE
-           Kurzzeile unter dem Namen: "Full-Stack · React · Node.js · Cloud"
-           <span>-Tags darin werden in Akzentfarbe dargestellt.
-        ============================================================ */
-        .hero-tagline {
-            font-size: clamp(0.9rem, 2vw, 1.1rem);
-            color: var(--text-dim);
-            text-align: center;
-            margin-bottom: 2.5rem;
-            font-weight: 400;
-            letter-spacing: 1px;
-        }
-        .hero-tagline span {
-            color: var(--accent-red); /* Technologienamen rot hervorheben */
-            font-weight: 600;
-        }
-
-        /* ============================================================
-           SCROLL-INDIKATOR
-           Absolut positioniert unten-mittig im Hero.
-           fadeInUp: erscheint erst nach 1.5s (wenn Seite geladen ist).
-           bounce: Pfeil wippt auf und ab als visuelle Einladung zum Scrollen.
-           Klick scrollt smooth zur Skills-Section.
-        ============================================================ */
-        .scroll-indicator {
-            position: absolute;
-            bottom: 2.5rem;
-            left: 50%;
-            transform: translateX(-50%); /* Horizontale Zentrierung */
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 6px;
-            color: var(--text-dim);
-            font-size: 0.75rem;
-            letter-spacing: 1px;
-            cursor: pointer;
-            animation: fadeInUp 1s ease 1.5s both; /* Verzögert einblenden */
-        }
-        .scroll-indicator i {
-            font-size: 1.1rem;
-            animation: bounce 2s ease-in-out infinite; /* Dauerhaftes Wippen */
-        }
-        /* Pfeil wippt 6px nach unten und wieder zurück */
-        @keyframes bounce {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(6px); }
-        }
-        /* Slide-in von unten mit gleichzeitigem Einblenden */
-        @keyframes fadeInUp {
-            from { opacity: 0; transform: translateX(-50%) translateY(10px); }
-            to { opacity: 1; transform: translateX(-50%) translateY(0); }
-        }
-
-        /* ============================================================
-           TEXT-EFFEKTE
-           .gradient-text: Name "Maliqi" mit Farbverlauf (hell → gedimmt).
-             Trick: background-clip auf Text + transparente Textfarbe.
-           .outline-text: "Trimlind" nur als Kontur, halb transparent.
-        ============================================================ */
-        .gradient-text {
-            background: linear-gradient(135deg, var(--text-light) 30%, var(--text-dim) 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-        .outline-text {
-            color: transparent;
-            -webkit-text-stroke: 1px var(--text-dim); /* Nur Umrisslinie */
-            opacity: 0.5;
-            display: block;
-        }
-
-        /* ============================================================
-           TERMINAL-FENSTER (Hero)
-           Simuliert ein macOS-Terminal mit roten/gelben/grünen Dots.
-           float-Animation: schwebt sanft auf und ab (6s Loop).
-           font-family: Fira Code → Monospace-Look.
-        ============================================================ */
-        .terminal-window {
-            background: #0d1117; /* GitHub-Dark-Farbe */
-            border-radius: 12px; border: 1px solid #30363d;
-            box-shadow: 0 20px 50px -10px rgba(0,0,0,0.5); max-width: 600px; width: 100%;
-            font-family: 'Fira Code', monospace; overflow: hidden;
-            animation: float 6s ease-in-out infinite;
-            transform: translateY(0);
-        }
-        /* Sanftes Schweben: 15px nach oben und wieder zurück */
-        @keyframes float {
-            0% { transform: translateY(0px); }
-            50% { transform: translateY(-15px); }
-            100% { transform: translateY(0px); }
-        }
-
-        /* Terminal-Titelleiste mit den drei Ampel-Dots */
-        .terminal-header { background: #161b22; padding: 12px 18px; display: flex; gap: 8px; border-bottom: 1px solid #30363d; }
-        .dot { width: 12px; height: 12px; border-radius: 50%; }
-        /* macOS-Ampelfarben */
-        .red { background: #ff5f56; } .yellow { background: #ffbd2e; } .green { background: #27c93f; }
-        /* Terminal-Inhalt: heller Text auf dunklem Hintergrund */
-        .terminal-body { padding: 20px; font-size: 0.9rem; color: #c9d1d9; text-align: left; line-height: 1.8; }
-        /* Blinkender Cursor am Ende der letzten Zeile */
-        .cursor { display: inline-block; width: 8px; height: 15px; background: var(--accent-red); animation: blink 1s infinite; }
-        @keyframes blink { 50% { opacity: 0; } } /* Alle 0.5s ein-/ausblenden */
-
-        /* ============================================================
-           SECTION-HEADER (wiederverwendbar)
-           .section-title: Großer Titel (2.5rem, fett)
-           .section-subtitle: Gedimmter Untertitel darunter
-        ============================================================ */
-        .section-title {
-            font-size: 2.5rem;
-            font-weight: 800;
-            margin-bottom: 0.5rem;
-            text-align: center;
-        }
-        .section-subtitle {
-            color: var(--text-dim);
-            font-size: 1rem;
-            margin-bottom: 3rem;
-            text-align: center;
-        }
-
-        /* ============================================================
-           SKILLS-SECTION
-           Responsive Grid: mindestens 110px breite Spalten, so viele
-           wie reinpassen (auto-fill). Auf Mobile: 90px Mindestbreite.
-        ============================================================ */
-        #skills { background: var(--bg-dark); }
-
-        .skills-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
-            gap: 1rem;
-            width: 100%;
-            max-width: 800px;
-        }
-
-        /* Einzelne Skill-Karte: Icon oben, Bezeichnung unten */
-        .skill-card {
-            background: var(--card-bg);
-            border: 1px solid rgba(255,255,255,0.05);
-            border-radius: 14px;
-            padding: 1.4rem 1rem;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 0.6rem;
-            cursor: default;
-            transition: 0.25s;
-        }
-        /* Hover: 4px nach oben, roter Rahmen + Glow-Schatten */
-        .skill-card:hover {
-            transform: translateY(-4px);
-            border-color: var(--accent-red);
-            box-shadow: 0 8px 25px -8px var(--accent-glow);
-        }
-        .skill-card i {
-            font-size: 2rem;
-            color: var(--text-dim);
-            transition: 0.25s;
-        }
-        /* Hover: Icon wechselt auf Akzentfarbe */
-        .skill-card:hover i { color: var(--accent-red); }
-        .skill-card span {
-            font-size: 0.75rem;
-            font-weight: 600;
-            color: var(--text-dim);
-            letter-spacing: 0.5px;
-        }
-
-        /* ============================================================
-           PROJECTS-SECTION
-           Abwechselnder Hintergrund (--bg-dark-alt) zur visuellen Trennung.
-           Grid: mindestens 300px breite Karten, auf Mobile 1 Spalte.
-        ============================================================ */
-        #projects { background: var(--bg-dark-alt); border-top: 1px solid rgba(255,255,255,0.05); }
-        body.light-mode #projects { border-top: 1px solid rgba(0,0,0,0.05); }
-
-        .projects-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 1.5rem;
-            width: 100%;
-            max-width: 1000px;
-        }
-
-        /* Projekt-Karte: clickbar, mit Spotlight-Effekt (::before-Pseudo-Element) */
-        .project-card {
-            background: var(--card-bg);
-            border: 1px solid rgba(255,255,255,0.05);
-            border-radius: 16px;
-            padding: 2rem;
-            cursor: pointer;
-            transition: 0.25s;
-            position: relative; /* Nötig für ::before und project-arrow */
-            overflow: hidden;   /* Spotlight soll nicht über Rahmen hinaus leuchten */
-            text-align: left;
-        }
-        /* Spotlight-Layer: radiales Gradient folgt der Maus (via CSS-Variable) */
-        .project-card::before {
-            content: "";
-            position: absolute;
-            height: 100%; width: 100%;
-            top: 0; left: 0;
-            background: radial-gradient(600px circle at var(--mouse-x) var(--mouse-y), rgba(244,63,94,0.06), transparent 40%);
-            z-index: 1;
-            opacity: 0;         /* Standardmäßig unsichtbar */
-            transition: opacity 0.5s;
-            pointer-events: none;
-        }
-        /* Spotlight nur bei Hover sichtbar */
-        .project-card:hover::before { opacity: 1; }
-        .project-card:hover {
-            transform: translateY(-4px);
-            border-color: rgba(255,255,255,0.1);
-            box-shadow: 0 12px 30px -10px rgba(0,0,0,0.5);
-        }
-        /* Alle direkten Kinder über dem Spotlight-Layer */
-        .project-card > * { position: relative; z-index: 2; }
-
-        /* Kleines rotes Badge oben (z.B. "Web App", "SaaS Plattform") */
-        .project-tag {
-            display: inline-block;
-            background: rgba(244, 63, 94, 0.1);
-            color: var(--accent-red);
-            padding: 3px 10px;
-            border-radius: 20px;
-            font-size: 0.72rem;
-            font-weight: 700;
-            margin-bottom: 0.8rem;
-            border: 1px solid rgba(244, 63, 94, 0.2);
-        }
-        .project-card h3 { font-size: 1.2rem; color: var(--white); margin-bottom: 0.5rem; }
-        .project-card p { font-size: 0.9rem; color: var(--text-dim); line-height: 1.6; margin-bottom: 1.2rem; }
-        /* Zeile mit Tech-Icons (React, Node, etc.) unten in der Karte */
-        .project-icons { display: flex; gap: 12px; font-size: 1.3rem; color: var(--text-dim); flex-wrap: wrap; }
-        /* Pfeil-Icon unten rechts – zeigt Klickbarkeit an */
-        .project-arrow {
-            position: absolute; bottom: 1.5rem; right: 1.5rem;
-            color: var(--text-dim); font-size: 0.9rem;
-            transition: 0.2s; z-index: 2;
-        }
-        /* Hover: Pfeil bewegt sich diagonal nach rechts-oben + wird rot */
-        .project-card:hover .project-arrow { color: var(--accent-red); transform: translate(3px, -3px); }
-
-        /* ============================================================
-           ROADMAP / TIMELINE
-           Linke Borderlinie = Timeline-Strich.
-           .timeline-dot = Kreis-Punkt auf der Linie (absolut positioniert).
-           .content = die eigentliche Karte rechts neben dem Punkt.
-        ============================================================ */
-        .roadmap-container { width: 100%; max-width: 900px; margin: 0 auto; position: relative; }
-        .timeline { border-left: 2px solid rgba(255,255,255,0.1); padding-left: 30px; position: relative; }
-        body.light-mode .timeline { border-left: 2px solid rgba(0,0,0,0.1); }
-
-        /* Wrapper-Div für Dot + Karte */
-        .container {
-            position: relative;
-            margin-bottom: 2rem;
-            width: 100%;
-            perspective: 1000px; /* Vorbereitung für mögliche 3D-Effekte */
-        }
-
-        /* Kreis-Punkt auf der Timeline-Linie */
-        .timeline-dot {
-            position: absolute; width: 16px; height: 16px;
-            background: var(--bg-dark); border: 2px solid var(--accent-red);
-            left: -39px; top: 24px; /* Ausgerichtet auf die Border-Left der .timeline */
-            border-radius: 50%;
-            z-index: 5; box-shadow: 0 0 10px var(--accent-glow);
-            transition: 0.3s;
-        }
-        /* Hover: Punkt füllt sich mit Akzentfarbe und wächst leicht */
-        .container:hover .timeline-dot { background: var(--accent-red); transform: scale(1.2); }
-
-        /* Roadmap-Inhaltskarte mit Spotlight-Effekt (identisch zu project-card) */
-        .content {
-            background: var(--card-bg);
-            padding: 1.8rem;
-            border-radius: 16px;
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            transition: 0.2s;
-            position: relative;
-            overflow: hidden;
-            text-align: left;
-            cursor: pointer;
-        }
-        /* Spotlight-Layer für Roadmap-Karten (weiß statt rot) */
-        .content::before {
-            content: "";
-            position: absolute;
-            height: 100%; width: 100%;
-            top: 0; left: 0;
-            background: radial-gradient(800px circle at var(--mouse-x) var(--mouse-y), rgba(255,255,255,0.06), transparent 40%);
-            z-index: 1;
-            opacity: 0;
-            transition: opacity 0.5s;
-            pointer-events: none;
-        }
-        .content:hover::before { opacity: 1; }
-        .content h3 { font-size: 1.25rem; margin-bottom: 0.5rem; color: var(--white); }
-        /* Jahres-Badge (z.B. "2024") – identisches Design wie project-tag */
-        .year-badge { display: inline-block; background: rgba(244, 63, 94, 0.1); color: var(--accent-red); padding: 4px 10px; border-radius: 20px; font-size: 0.75rem; font-weight: 800; margin-bottom: 10px; border: 1px solid rgba(244, 63, 94, 0.2); }
-        .content:hover { transform: translateY(-3px); border-color: rgba(255,255,255,0.1); box-shadow: 0 10px 30px -10px rgba(0,0,0,0.5); }
-
-        /* ============================================================
-           SCROLL-REVEAL ANIMATION
-           Elemente mit .reveal starten unsichtbar (opacity: 0) und
-           verschoben (translateY: 30px). Sobald sie in den Viewport
-           scrollen, fügt der IntersectionObserver .active hinzu →
-           sanfter Einblend-Effekt von unten.
-        ============================================================ */
-        .reveal { opacity: 0; transform: translateY(30px); transition: all 0.8s ease-out; }
-        .reveal.active { opacity: 1; transform: translateY(0); }
-
-        /* ============================================================
-           KONTAKT-SECTION
-           Leichter Verlauf nach unten für visuellen Abschluss der Seite.
-        ============================================================ */
-        #contact {
-            background: linear-gradient(180deg, var(--bg-dark) 0%, rgba(20, 33, 46, 1) 100%);
-            border-top: 1px solid rgba(255,255,255,0.05);
-        }
-
-        /* Formular-Container: Glassmorphism-Karte mit Shadow */
-        .contact-wrapper {
-            background: var(--card-bg);
-            padding: 3rem;
-            border-radius: 20px;
-            border: 1px solid rgba(255,255,255,0.05);
-            width: 100%; max-width: 600px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .contact-form { display: flex; flex-direction: column; gap: 1rem; position: relative; z-index: 2; }
-
-        /* Input-Felder: transparenter Hintergrund, subtile Border */
-        .contact-form input, .contact-form textarea {
-            background: rgba(0, 0, 0, 0.2); border: 1px solid rgba(255, 255, 255, 0.1);
-            padding: 1.2rem; color: var(--text-light); border-radius: 8px; outline: none; font-size: 1rem;
-            width: 100%; transition: 0.3s; font-family: 'Inter', sans-serif;
-        }
-        /* Fokus: rote Border als Highlight */
-        .contact-form input:focus, .contact-form textarea:focus {
-            border-color: var(--accent-red); background: rgba(0,0,0,0.3);
-        }
-        /* Light-Mode: helle Inputs */
-        body.light-mode .contact-form input, body.light-mode .contact-form textarea {
-            background: rgba(255, 255, 255, 0.5); border: 1px solid rgba(0, 0, 0, 0.1); color: #1a2a3a;
-        }
-
-        /* Submit-Button: voller roter Hintergrund mit Glow-Shadow */
-        .email-btn {
-            background: var(--accent-red); color: white; padding: 1.2rem; border: none;
-            font-weight: 800; cursor: pointer; border-radius: 8px; width: 100%;
-            transition: 0.3s; letter-spacing: 1px; margin-top: 10px;
-            box-shadow: 0 4px 15px var(--accent-glow);
-        }
-        /* Hover: leicht anheben + stärkerer Glow */
-        .email-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 20px var(--accent-glow); }
-
-        /* ============================================================
-           MODAL (Detail-Overlay)
-           Wird für Roadmap-Einträge UND Projekt-Karten verwendet.
-           display: none → flex beim Öffnen (via JS).
-           opacity-Transition + scale-Transition = weicher Pop-in Effekt.
-           backdrop-filter: blur(8px) → Hintergrund verschwimmt.
-        ============================================================ */
-        .modal { display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); backdrop-filter: blur(8px); align-items: center; justify-content: center; padding: 20px; opacity: 0; transition: opacity 0.3s; }
-        .modal.show { opacity: 1; } /* Klasse wird per JS gesetzt */
-
-        /* Modal-Inhalt: startet bei scale(0.9), federt auf scale(1) */
-        .modal-content {
-            background: #161b22; padding: 2.5rem; width: 100%; max-width: 550px;
-            border-radius: 16px; border: 1px solid rgba(255,255,255,0.1);
-            position: relative; text-align: left;
-            transform: scale(0.9); transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1); /* Federnde Kurve */
-            box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5);
-        }
-        .modal.show .modal-content { transform: scale(1); }
-
-        /* Schließen-Button oben rechts (×) – dreht sich beim Hover */
-        .close-modal { position: absolute; top: 1.2rem; right: 1.2rem; font-size: 1.5rem; color: var(--text-dim); cursor: pointer; transition: 0.3s; }
-        .close-modal:hover { color: var(--accent-red); transform: rotate(90deg); }
-
-        /* ============================================================
-           FOOTER
-           Einfacher zentrierter Abschluss der Seite.
-        ============================================================ */
-        footer { z-index: 2; position: relative; padding: 3rem 5%; text-align: center; background: var(--bg-dark); font-size: 0.85rem; color: var(--text-dim); border-top: 1px solid rgba(255,255,255,0.05); }
-
-        /* ============================================================
-           RESPONSIVE BREAKPOINTS
-           768px: Nav-Links verstecken, Projekte-Grid auf 1 Spalte.
-           400px: Hero-Titel fix auf 2.5rem, Karten kompakter.
-        ============================================================ */
-        @media (max-width: 768px) {
-            .nav-links { display: none; } /* Navigationslinks auf kleinen Screens ausblenden */
-            .projects-grid { grid-template-columns: 1fr; } /* 1 Spalte statt mehrere */
-            .skills-grid { grid-template-columns: repeat(auto-fill, minmax(90px, 1fr)); } /* Kleinere Skill-Karten */
-        }
-        @media (max-width: 400px) {
-            .hero-title { font-size: 2.5rem; } /* clamp-Minimum fix setzen */
-            .content { padding: 1.5rem; }     /* Roadmap-Karten kompakter */
-        }
-
-        /* ============================================================
-           PAGE LOADER
-           Vollbild-Overlay das beim ersten Laden erscheint.
-           slide-out: schiebt das Overlay nach oben aus dem Viewport.
-        ============================================================ */
-        #page-loader {
-            position: fixed;
-            inset: 0;
-            background: #080d18;
-            z-index: 9999;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            transition: transform 0.9s cubic-bezier(0.76, 0, 0.24, 1);
-        }
-        #page-loader.slide-out {
-            transform: translateY(-100%); /* Schiebt komplett nach oben raus */
-        }
-
-        /* Terminal-Fenster im Loader (gleicher Style wie Hero-Terminal) */
-        .loader-terminal {
-            background: #0d1117;
-            border: 1px solid #30363d;
-            border-radius: 12px;
-            width: min(520px, 90vw);
-            overflow: hidden;
-            box-shadow: 0 30px 60px rgba(0,0,0,0.6);
-        }
-        .loader-terminal-header {
-            background: #161b22;
-            padding: 12px 18px;
-            display: flex;
-            gap: 8px;
-            align-items: center;
-            border-bottom: 1px solid #30363d;
-        }
-        /* Dateiname rechts in der Titelleiste */
-        .loader-terminal-title {
-            margin-left: auto;
-            font-family: 'Fira Code', monospace;
-            font-size: 0.72rem;
-            color: #484f58;
-        }
-        .loader-terminal-body {
-            padding: 24px;
-            font-family: 'Fira Code', monospace;
-            font-size: 0.88rem;
-            color: #c9d1d9;
-            min-height: 160px;
-            line-height: 2;
-        }
-
-        /* Jede Terminal-Zeile: startet unsichtbar, blendet sanft ein */
-        .loader-line {
-            opacity: 0;
-            transform: translateY(5px);
-            transition: opacity 0.35s ease, transform 0.35s ease;
-        }
-        .loader-line.visible {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        /* Roter Fortschrittsbalken am unteren Rand des Terminals */
-        .loader-progress-bar {
-            height: 3px;
-            background: #21262d;
-            overflow: hidden;
-        }
-        .loader-progress-fill {
-            height: 100%;
-            width: 0%;
-            background: linear-gradient(90deg, #f43f5e, #fb7185);
-            transition: width 0.7s cubic-bezier(0.4, 0, 0.2, 1);
-            box-shadow: 0 0 10px rgba(244, 63, 94, 0.7);
-        }
-
-        /* Skip-Button unten rechts – dezent, aber immer erreichbar */
-        #loader-skip {
-            position: absolute;
-            bottom: 2rem;
-            right: 2rem;
-            background: transparent;
-            border: 1px solid rgba(255,255,255,0.12);
-            color: rgba(255,255,255,0.35);
-            padding: 6px 16px;
-            border-radius: 6px;
-            font-family: 'Fira Code', monospace;
-            font-size: 0.75rem;
-            cursor: pointer;
-            transition: 0.25s;
-            letter-spacing: 1px;
-        }
-        #loader-skip:hover {
-            border-color: #f43f5e;
-            color: #f43f5e;
-        }
-    </style>
-</head>
-<body>
-
-    <!-- ============================================================
-         PAGE LOADER OVERLAY
-         Erscheint beim Seitenaufruf, läuft die Bootsequenz ab
-         und wird dann per slide-out nach oben weggescrollt.
-    ============================================================ -->
-    <div id="page-loader">
-        <div class="loader-terminal">
-            <!-- Titelleiste mit Ampel-Dots und Dateinamen -->
-            <div class="loader-terminal-header">
-                <div class="dot red"></div>
-                <div class="dot yellow"></div>
-                <div class="dot green"></div>
-                <span class="loader-terminal-title">portfolio.init</span>
-            </div>
-            <!-- Terminal-Zeilen werden per JS eingefügt -->
-            <div class="loader-terminal-body" id="loader-body"></div>
-            <!-- Roter Fortschrittsbalken -->
-            <div class="loader-progress-bar">
-                <div class="loader-progress-fill" id="loader-progress"></div>
-            </div>
-        </div>
-        <!-- Skip-Button: überspringt die Animation sofort -->
-        <button id="loader-skip" onclick="dismissLoader()">SKIP &rarr;</button>
-    </div>
-
-    <!-- Hintergrund-Ebene 1: Subtiles Raster-Grid (CSS-only) -->
-    <div class="bg-grid"></div>
-
-    <!-- Hintergrund-Ebene 2: Animierte Partikel (particles.js Library) -->
-    <div id="particles-js"></div>
-
-    <!-- ============================================================
-         NAVIGATION (fixiert, Glassmorphism)
-         Logo links | Nav-Links Mitte | Theme+Sprache rechts
-    ============================================================ -->
-    <nav>
-        <!-- Logo: klickbar, scrollt zurück zum Hero -->
-        <a href="#home" class="logo">
-            <span class="logo-icon">{</span>
-            <!-- #logo-text rotiert per JS: T. MALIQI → FULLSTACK → REACT.JS -->
-            <span id="logo-text">T. MALIQI</span>
-            <span class="logo-icon">}</span>
-        </a>
-
-        <!-- Anchor-Links zu den Sektionen (auf Mobile ausgeblendet) -->
-        <!-- data-key: Schlüssel für Mehrsprachigkeits-System (translations-Objekt) -->
-        <div class="nav-links">
-            <a href="#home" class="nav-link" data-key="nav_home">Home</a>
-            <a href="#skills" class="nav-link" data-key="nav_skills">Skills</a>
-            <a href="#projects" class="nav-link" data-key="nav_projects">Projekte</a>
-            <a href="#roadmap" class="nav-link" data-key="nav_roadmap">Roadmap</a>
-            <a href="#contact" class="nav-link" data-key="nav_contact">Kontakt</a>
-        </div>
-
-        <div class="nav-right">
-            <!-- Theme-Toggle: Wechsel zwischen Dark und Light Mode -->
-            <button class="theme-toggle" onclick="toggleTheme()" aria-label="Theme wechseln">
-                <i class="fas fa-adjust"></i>
-            </button>
-            <!-- Sprachumschalter: DE / EN / SQ (Albanisch) -->
-            <div class="lang-switch" style="display:flex; gap:5px;">
-                <button class="lang-btn" id="btn-de" onclick="setLanguage('de')" aria-label="Deutsch">
-                    <img src="https://flagcdn.com/w40/de.png" alt="DE"> DE
-                </button>
-                <button class="lang-btn" id="btn-en" onclick="setLanguage('en')" aria-label="English">
-                    <img src="https://flagcdn.com/w40/gb.png" alt="EN"> EN
-                </button>
-                <button class="lang-btn" id="btn-sq" onclick="setLanguage('sq')" aria-label="Shqip">
-                    <img src="https://flagcdn.com/w40/al.png" alt="SQ"> SQ
-                </button>
-            </div>
-        </div>
-    </nav>
-
-    <!-- ============================================================
-         HERO-SECTION (#home)
-         Startseite: Name + Tagline + Terminal-Fenster + Scroll-Pfeil
-    ============================================================ -->
-    <section id="home">
-
-        <!-- Großer Name: "Trimlind" als Outline, "Maliqi" als Gradient -->
-        <h1 class="hero-title">
-            <span class="outline-text">Trimlind</span>
-            <!-- id="scramble-target": Scramble-Texteffekt startet hier beim Laden -->
-            <span class="gradient-text" id="scramble-target">Maliqi</span>
-        </h1>
-
-        <!-- Tagline: Kurzbeschreibung mit roten Technologie-Highlights -->
-        <!-- &middot; = typografischer Mittelpunkt als Trenner -->
-        <p class="hero-tagline" id="hero-tagline">
-            Full-Stack Developer &middot; <span>React</span> &middot; <span>Node.js</span> &middot; <span>Cloud</span>
-        </p>
-
-        <!-- Terminal-Fenster: dekoratives UI-Element, schwebt animiert -->
-        <div class="terminal-window">
-            <!-- Titelleiste mit macOS-Ampel-Dots -->
-            <div class="terminal-header">
-                <div class="dot red"></div>
-                <div class="dot yellow"></div>
-                <div class="dot green"></div>
-            </div>
-            <!-- Terminal-Ausgabe: simulierte CLI-Befehle -->
-            <div class="terminal-body">
-                <div><span style="color:var(--accent-red)">user@portfolio</span>:~$ init profile</div>
-                <div style="margin-top: 5px;">> Loading modules...</div>
-                <div style="color: #7ee787; margin-top: 5px;">> [SUCCESS] Full-Stack Developer loaded.</div>
-                <div style="color: #7ee787; margin-top: 5px;">> [SUCCESS] Creative Mindset active.</div>
-                <!-- Blinkender Cursor am Ende -->
-                <div style="margin-top: 5px;">> <span class="cursor"></span></div>
-            </div>
-        </div>
-
-        <!-- Scroll-Indikator: absolut positioniert unten, scrollt zu #skills -->
-        <div class="scroll-indicator" onclick="document.getElementById('skills').scrollIntoView({behavior:'smooth'})">
-            <span data-key="scroll_hint">Scroll</span>
-            <i class="fas fa-chevron-down"></i> <!-- Wippender Pfeil nach unten -->
-        </div>
-    </section>
-
-    <!-- ============================================================
-         SKILLS-SECTION (#skills)
-         Grid mit 12 Technologie-Karten (Icon + Bezeichnung).
-         Karten sind statisch im HTML – kein JS-Rendering.
-    ============================================================ -->
-    <section id="skills">
-        <!-- data-key: wird von setLanguage() mit der richtigen Übersetzung befüllt -->
-        <h2 class="section-title reveal" data-key="skills_title">Skills</h2>
-        <p class="section-subtitle reveal" data-key="skills_subtitle">Technologien mit denen ich arbeite</p>
-
-        <div class="skills-grid">
-            <!-- Jede Karte: Font-Awesome-Icon + Text-Label -->
-            <!-- reveal-Klasse: Einblend-Animation beim Einscrollen -->
-            <div class="skill-card reveal"><i class="fa-brands fa-react"></i><span>React</span></div>
-            <div class="skill-card reveal"><i class="fa-brands fa-node-js"></i><span>Node.js</span></div>
-            <div class="skill-card reveal"><i class="fa-brands fa-js"></i><span>JavaScript</span></div>
-            <div class="skill-card reveal"><i class="fa-brands fa-python"></i><span>Python</span></div>
-            <div class="skill-card reveal"><i class="fa-brands fa-docker"></i><span>Docker</span></div>
-            <div class="skill-card reveal"><i class="fa-brands fa-aws"></i><span>AWS</span></div>
-            <div class="skill-card reveal"><i class="fa-brands fa-git-alt"></i><span>Git</span></div>
-            <div class="skill-card reveal"><i class="fa-solid fa-database"></i><span>SQL / NoSQL</span></div>
-            <div class="skill-card reveal"><i class="fa-brands fa-html5"></i><span>HTML5</span></div>
-            <div class="skill-card reveal"><i class="fa-brands fa-css3-alt"></i><span>CSS3</span></div>
-            <div class="skill-card reveal"><i class="fa-solid fa-robot"></i><span>AI / LLMs</span></div>
-            <div class="skill-card reveal"><i class="fa-brands fa-linux"></i><span>Linux</span></div>
-        </div>
-    </section>
-
-    <!-- ============================================================
-         PROJEKTE-SECTION (#projects)
-         Karten werden per JS (renderProjects) dynamisch aus dem
-         projects-Array gerendert → einfach erweiterbar.
-    ============================================================ -->
-    <section id="projects">
-        <h2 class="section-title reveal" data-key="projects_title">Projekte</h2>
-        <p class="section-subtitle reveal" data-key="projects_subtitle">Ausgewählte Arbeiten</p>
-        <!-- Leerer Container – wird von renderProjects(lang) befüllt -->
-        <div class="projects-grid" id="projects-list"></div>
-    </section>
-
-    <!-- ============================================================
-         ROADMAP-SECTION (#roadmap)
-         Zeitstrahl-Timeline von 2019 bis 2026.
-         Wird per JS (renderRoadmap) dynamisch aus dem years-Array gerendert.
-    ============================================================ -->
-    <section id="roadmap">
-        <h2 class="section-title reveal" data-key="roadmap_title">Roadmap</h2>
-        <p class="section-subtitle reveal" data-key="roadmap_subtitle">Meine Entwicklung als Developer</p>
-        <div class="roadmap-container">
-            <!-- Leerer Container – wird von renderRoadmap(lang) befüllt -->
-            <!-- Die linke Border dieser div ist der vertikale Timeline-Strich -->
-            <div class="timeline" id="roadmap-list"></div>
-        </div>
-    </section>
-
-    <!-- ============================================================
-         KONTAKT-SECTION (#contact)
-         Formular via Formspree (externer Dienst) – kein eigenes Backend nötig.
-         id="p_name", "p_email", "p_msg": werden von setLanguage() für
-         Placeholder-Texte angesprochen.
-    ============================================================ -->
-    <section id="contact">
-        <h2 class="section-title reveal" data-key="nav_contact">Kontakt</h2>
-        <p class="section-subtitle reveal" data-key="contact_subtitle">Schreib mir eine Nachricht</p>
-        <div class="contact-wrapper reveal">
-            <!-- action="https://formspree.io/...": Formular-Daten gehen an Formspree -->
-            <form action="https://formspree.io/f/xnjqdepv" method="POST" class="contact-form">
-                <input type="text" name="name" id="p_name" placeholder="Name" required>
-                <input type="email" name="email" id="p_email" placeholder="Email" required>
-                <textarea name="message" id="p_msg" rows="5" placeholder="Nachricht" required></textarea>
-                <!-- data-key: Buttontext wird übersetzt (z.B. "SEND MESSAGE" auf EN) -->
-                <button type="submit" class="email-btn" data-key="contact_btn">NACHRICHT SENDEN</button>
-            </form>
-        </div>
-    </section>
-
-    <!-- ============================================================
-         MODAL / DETAIL-OVERLAY (#projectModal)
-         Wird von openDetails() (Roadmap) und openProjectDetails() (Projekte)
-         befüllt und angezeigt. Schließt per:
-           - Klick auf Backdrop (closeDetails)
-           - Klick auf × (closeModalFunc)
-           - Escape-Taste (keydown-Listener)
-         Inhalte (Titel, Text, Icons) werden dynamisch per JS gesetzt.
-    ============================================================ -->
-    <div id="projectModal" class="modal" onclick="closeDetails(event)">
-        <!-- event.stopPropagation() verhindert, dass Klick im Content das Modal schließt -->
-        <div class="modal-content" onclick="event.stopPropagation()">
-            <!-- Schließen-Button – dreht sich beim Hover um 90° -->
-            <span class="close-modal" onclick="closeModalFunc()">&times;</span>
-            <!-- Dynamisch befüllt per JS -->
-            <h2 id="modalTitle" style="font-size: 1.8rem; color: var(--accent-red); margin-bottom: 1rem; font-weight:700;"></h2>
-            <p id="modalBody" style="line-height: 1.7; font-size: 1rem; color: var(--text-light);"></p>
-            <!-- Icon-Zeile: Font-Awesome-Icons des jeweiligen Eintrags -->
-            <div id="modalIcons" style="display: flex; gap: 20px; font-size: 2.5rem; color: var(--text-dim); margin-top: 2rem; flex-wrap: wrap;"></div>
-        </div>
-    </div>
-
-    <!-- Footer: Copyright-Zeile -->
-    <footer>&copy; 2026 Trimlind Maliqi | Built with code & passion ❤️</footer>
-
-    <!-- particles.js: externe Library für den Partikeleffekt im Hintergrund -->
-    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
-    <!-- Application logic (shared with tests) -->
-    <script src="src/app.js"></script>
-    <script>
-        particlesJS('particles-js', {
-            "particles": {
-                "number": { "value": 40 },
-                "color": { "value": "#64748b" },
-                "opacity": { "value": 0.3 },
-                "size": { "value": 3 },
-                "line_linked": {
-                    "enable": true,
-                    "distance": 150,
-                    "color": "#64748b",
-                    "opacity": 0.1,
-                    "width": 1
-                },
-                "move": { "enable": true, "speed": 0.8 }
-            },
-            "interactivity": {
-                "detect_on": "canvas",
-                "events": { "onhover": { "enable": true, "mode": "grab" } },
-                "modes": { "grab": { "distance": 140, "line_linked": { "opacity": 0.5 } } }
-            }
-        });
-
-        // Data and functions are provided by src/app.js loaded above.
-
-        setupKeyListeners();
-
-        /* ============================================================
-           INITIALISIERUNG (window.onload)
-           Läuft sobald die gesamte Seite geladen ist:
-           1. Gespeicherte Sprache laden (oder 'de' als Default)
-           2. setLanguage → rendert alles + setzt aktiven Button
-           3. initObserver → startet Scroll-Animationen
-           4. Scramble-Effekt auf "Maliqi" nach 500ms Verzögerung
-           5. Logo-Text-Rotation: alle 4s wechselt der Text mit Fade
-        ============================================================ */
-        window.onload = () => {
-            // Seite im Hintergrund vorbereiten während der Loader läuft
-            const savedLang = localStorage.getItem('preferredLang') || 'de';
-            setLanguage(savedLang);
-
-            // Loader starten – Hauptseiten-Initialisierung als Callback
-            runLoader(() => {
-                initObserver();
-
-                // Scramble auf "Maliqi" direkt nach dem Loader
-                setTimeout(() => scrambleText("scramble-target", "Maliqi"), 200);
-
-                // Logo rotiert durch 3 Phrasen mit Fade-Out/In (alle 4s)
-                const logoText = document.getElementById('logo-text');
-                const phrases = ["T. MALIQI", "FULLSTACK", "REACT.JS"];
-                let pIdx = 0;
-                setInterval(() => {
-                    logoText.style.opacity = 0;
-                    setTimeout(() => {
-                        pIdx = (pIdx+1) % phrases.length;
-                        logoText.innerText = phrases[pIdx];
-                        logoText.style.opacity = 1;
-                    }, 500);
-                }, 4000);
-            });
-        };
-    </script>
-</body>
-</html>
+1	<!DOCTYPE html>
+2	<!-- Sprachattribut: Standard ist Deutsch (wird per JS dynamisch geändert) -->
+3	<html lang="de">
+4	<head>
+5	    <!-- Zeichenkodierung: UTF-8 für Sonderzeichen (ä, ö, ü, ë usw.) -->
+6	    <meta charset="UTF-8">
+7	    <!-- Viewport: Verhindert horizontales Zoomen auf Mobilgeräten -->
+8	    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+9	    <title>Trimlind Maliqi | Developer Portfolio</title>
+10	
+11	    <!-- Favicon: Laptop-Emoji via fav.farm (kein eigenes Icon nötig) -->
+12	    <link rel="icon" href="https://fav.farm/💻">
+13	
+14	    <!-- Font Awesome 6: Ikonenbibliothek für alle Icons (React, Node, Docker, etc.) -->
+15	    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+16	    <!-- Google Fonts: Inter (UI-Text) + Fira Code (Terminal/Logo-Schrift) -->
+17	    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Fira+Code:wght@400;600&display=swap" rel="stylesheet">
+18	
+19	    <style>
+20	        /* ============================================================
+21	           CSS CUSTOM PROPERTIES (Design-Token)
+22	           Alle Farben und Werte zentral definiert – bei Änderungen
+23	           muss nur dieser Block angepasst werden.
+24	        ============================================================ */
+25	        :root {
+26	            --bg: #080706;
+27	            --bg-alt: #120f0d;
+28	            --accent: #D1B280;
+29	            --accent-dim: #594D46;
+30	            --text: #EFEFEF;
+31	            --text-dim: #594D46;
+32	            --accent-glow: rgba(209, 178, 128, 0.3);
+33	        }
+34	
+35	        /* ============================================================
+36	           LIGHT MODE OVERRIDES
+37	           Überschreibt alle Custom Properties wenn body.light-mode gesetzt ist.
+38	           Wird per toggleTheme() JavaScript-Funktion aktiviert.
+39	        ============================================================ */
+40	        body.light-mode {
+41	            --bg: #EFEFEF;
+42	            --bg-alt: #ffffff;
+43	            --accent: #594D46;
+44	            --accent-dim: #8B7355;
+45	            --text: #080706;
+46	            --text-dim: #594D46;
+47	            --accent-glow: rgba(89, 77, 70, 0.3);
+48	        }
+49	
+50	        /* ============================================================
+51	           CSS RESET
+52	           Entfernt Browser-Standardabstände, konsistentes Box-Sizing.
+53	        ============================================================ */
+54	        * { margin: 0; padding: 0; box-sizing: border-box; }
+55	
+56	        /* ============================================================
+57	           BODY – Basis-Layout
+58	           overflow-x: hidden verhindert horizontalen Scrollbalken.
+59	           -webkit-tap-highlight-color entfernt blaues Tap-Highlight auf iOS.
+60	        ============================================================ */
+61	        body {
+62	            font-family: 'Inter', sans-serif;
+63	            background-color: var(--bg);
+64	            color: var(--text);
+65	            line-height: 1.6;
+66	            overflow-x: hidden;
+67	            transition: background 0.3s, color 0.3s; /* Weicher Übergang beim Theme-Wechsel */
+68	            -webkit-tap-highlight-color: transparent;
+69	        }
+70	
+71	        /* Grain texture overlay for depth */
+72	        body::after {
+73	            content: "";
+74	            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+75	            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+76	            pointer-events: none;
+77	            z-index: 0;
+78	            opacity: 0.35;
+79	        }
+80	
+81	        /* ============================================================
+82	           NAVIGATION
+83	           Fixiert am oberen Rand. backdrop-filter: blur erzeugt den
+84	           Glasmorphism-Effekt (Hintergrund verschwimmt hinter der Nav).
+85	           z-index: 1000 → immer über allem anderen.
+86	        ============================================================ */
+87	        nav {
+88	            display: flex; justify-content: space-between; align-items: center;
+89	            padding: 1rem 5%; position: fixed; width: 100%;
+90	            background: rgba(8, 7, 6, 0.95);
+91	            z-index: 1000; border-bottom: 1px solid var(--accent-dim);
+92	        }
+93	        body.light-mode nav { background: rgba(239, 239, 239, 0.97); border-bottom: 1px solid var(--accent-dim); }
+94	
+95	        /* Logo-Link: Fira Code Monospace, Klammern in Akzentfarbe */
+96	        .logo { font-family: 'Fira Code', monospace; font-weight: 600; color: var(--text); text-decoration: none; display: flex; align-items: center; font-size: 0.9rem; }
+97	        .logo-icon { color: var(--accent); font-weight: 800; }
+98	        /* #logo-text rotiert per JS durch "T. MALIQI" → "FULLSTACK" → "REACT.JS" */
+99	        #logo-text { margin: 0 6px; transition: opacity 0.5s; color: var(--accent); font-weight: 700; text-shadow: 0 0 10px var(--accent-glow); }
+100	
+101	        /* Navigationslinks in der Mitte der Nav (auf Mobile versteckt) */
+102	        .nav-links {
+103	            display: flex; align-items: center; gap: 0.2rem;
+104	        }
+105	        .nav-link {
+106	            color: var(--text-dim); text-decoration: none; font-size: 0.82rem;
+107	            font-weight: 600; padding: 6px 12px; border-radius: 8px;
+108	            transition: 0.2s; letter-spacing: 0.3px;
+109	        }
+110	        /* Hover: heller + leichter Hintergrund */
+111	        .nav-link:hover { color: var(--accent); background: transparent; border-bottom: 2px solid var(--accent); }
+112	        body.light-mode .nav-link:hover { background: transparent; }
+113	
+114	        /* Rechte Seite der Nav: Theme-Toggle + Sprachbuttons */
+115	        .nav-right { display: flex; align-items: center; gap: 0.8rem; }
+116	
+117	        /* Theme-Toggle-Button und Sprachbuttons: einheitliches Outline-Design */
+118	        .theme-toggle, .lang-btn {
+119	            background: transparent; border: 1px solid var(--text-dim); color: var(--text-dim);
+120	            padding: 6px 10px; border-radius: 8px; cursor: pointer; display: flex; align-items: center; gap: 6px; font-size: 0.75rem; transition: 0.3s;
+121	        }
+122	        .theme-toggle:hover, .lang-btn:hover { border-color: var(--accent); color: var(--accent); }
+123	        /* Aktiver Sprachbutton: gefüllt mit Akzentfarbe + Glow */
+124	        .lang-btn.active { background: var(--accent); color: #080706; border-color: var(--accent); box-shadow: 0 0 15px var(--accent-glow); }
+125	        .lang-btn img { width: 14px; border-radius: 2px; } /* Flaggen-Icon */
+126	
+127	        /* ============================================================
+128	           SECTIONS – Basis-Styling für alle Sektionen
+129	           min-height: 100vh → jede Sektion füllt mindestens den Viewport.
+130	           padding-top: 120px → Abstand zur fixierten Nav.
+131	           z-index: 2 → über dem Hintergrund-Grid und Partikeln.
+132	        ============================================================ */
+133	        section { position: relative; z-index: 2; padding: 120px 7% 80px; min-height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; width: 100%; }
+134	
+135	        /* ============================================================
+136	           HERO – Großer Name im Hero-Bereich
+137	           clamp(): responsiver Font-Size (min 2.5rem, ideal 10vw, max 6.5rem).
+138	           letter-spacing: -2px → enge Buchstabenabstand für fetten Look.
+139	        ============================================================ */
+140	        .hero-title {
+141	            font-size: clamp(3.5rem, 14vw, 10rem);
+142	            font-weight: 900;
+143	            text-transform: uppercase;
+144	            line-height: 1.0;
+145	            text-align: center;
+146	            width: 100%;
+147	            margin-bottom: 1.2rem;
+148	            letter-spacing: -4px;
+149	        }
+150	
+151	        /* ============================================================
+152	           HERO TAGLINE
+153	           Kurzzeile unter dem Namen: "Full-Stack · React · Node.js · Cloud"
+154	           <span>-Tags darin werden in Akzentfarbe dargestellt.
+155	        ============================================================ */
+156	        .hero-tagline {
+157	            font-size: clamp(0.9rem, 2vw, 1.1rem);
+158	            color: var(--text-dim);
+159	            text-align: center;
+160	            margin-bottom: 2.5rem;
+161	            font-weight: 400;
+162	            letter-spacing: 1px;
+163	        }
+164	        .hero-tagline span {
+165	            color: var(--accent);
+166	            font-weight: 600;
+167	        }
+168	
+169	        /* ============================================================
+170	           SCROLL-INDIKATOR
+171	           Absolut positioniert unten-mittig im Hero.
+172	           fadeInUp: erscheint erst nach 1.5s (wenn Seite geladen ist).
+173	           bounce: Pfeil wippt auf und ab als visuelle Einladung zum Scrollen.
+174	           Klick scrollt smooth zur Skills-Section.
+175	        ============================================================ */
+176	        .scroll-indicator {
+177	            position: absolute;
+178	            bottom: 2.5rem;
+179	            left: 50%;
+180	            transform: translateX(-50%); /* Horizontale Zentrierung */
+181	            display: flex;
+182	            flex-direction: column;
+183	            align-items: center;
+184	            gap: 6px;
+185	            color: var(--text-dim);
+186	            font-size: 0.75rem;
+187	            letter-spacing: 1px;
+188	            cursor: pointer;
+189	            animation: fadeInUp 1s ease 1.5s both; /* Verzögert einblenden */
+190	        }
+191	        .scroll-indicator i {
+192	            font-size: 1.1rem;
+193	            animation: bounce 2s ease-in-out infinite; /* Dauerhaftes Wippen */
+194	        }
+195	        /* Pfeil wippt 6px nach unten und wieder zurück */
+196	        @keyframes bounce {
+197	            0%, 100% { transform: translateY(0); }
+198	            50% { transform: translateY(6px); }
+199	        }
+200	        /* Slide-in von unten mit gleichzeitigem Einblenden */
+201	        @keyframes fadeInUp {
+202	            from { opacity: 0; transform: translateX(-50%) translateY(10px); }
+203	            to { opacity: 1; transform: translateX(-50%) translateY(0); }
+204	        }
+205	
+206	        /* ============================================================
+207	           TEXT-EFFEKTE
+208	           .gradient-text: Name "Maliqi" mit Farbverlauf (hell → gedimmt).
+209	             Trick: background-clip auf Text + transparente Textfarbe.
+210	           .outline-text: "Trimlind" nur als Kontur, halb transparent.
+211	        ============================================================ */
+212	        .gradient-text {
+213	            background: linear-gradient(135deg, var(--accent) 0%, #E8D5A3 60%, var(--text) 100%);
+214	            -webkit-background-clip: text;
+215	            -webkit-text-fill-color: transparent;
+216	        }
+217	        .outline-text {
+218	            color: transparent;
+219	            -webkit-text-stroke: 1px var(--accent-dim);
+220	            opacity: 0.6;
+221	            display: block;
+222	        }
+223	
+224	        /* ============================================================
+225	           TERMINAL-FENSTER (Hero)
+226	           Simuliert ein macOS-Terminal mit roten/gelben/grünen Dots.
+227	           float-Animation: schwebt sanft auf und ab (6s Loop).
+228	           font-family: Fira Code → Monospace-Look.
+229	        ============================================================ */
+230	        .terminal-window {
+231	            background: #0d1117; /* GitHub-Dark-Farbe */
+232	            border-radius: 12px; border: 1px solid #30363d;
+233	            box-shadow: 0 20px 50px -10px rgba(0,0,0,0.5); max-width: 600px; width: 100%;
+234	            font-family: 'Fira Code', monospace; overflow: hidden;
+235	            animation: float 6s ease-in-out infinite;
+236	            transform: translateY(0);
+237	        }
+238	        /* Sanftes Schweben: 15px nach oben und wieder zurück */
+239	        @keyframes float {
+240	            0% { transform: translateY(0px); }
+241	            50% { transform: translateY(-15px); }
+242	            100% { transform: translateY(0px); }
+243	        }
+244	
+245	        /* Terminal-Titelleiste mit den drei Ampel-Dots */
+246	        .terminal-header { background: #161b22; padding: 12px 18px; display: flex; gap: 8px; border-bottom: 1px solid #30363d; }
+247	        .dot { width: 12px; height: 12px; border-radius: 50%; }
+248	        /* macOS-Ampelfarben */
+249	        .red { background: #ff5f56; } .yellow { background: #ffbd2e; } .green { background: #27c93f; }
+250	        /* Terminal-Inhalt: heller Text auf dunklem Hintergrund */
+251	        .terminal-body { padding: 20px; font-size: 0.9rem; color: #c9d1d9; text-align: left; line-height: 1.8; }
+252	        /* Blinkender Cursor am Ende der letzten Zeile */
+253	        .cursor { display: inline-block; width: 8px; height: 15px; background: var(--accent); animation: blink 1s infinite; }
+254	        @keyframes blink { 50% { opacity: 0; } } /* Alle 0.5s ein-/ausblenden */
+255	
+256	        /* ============================================================
+257	           SECTION-HEADER (wiederverwendbar)
+258	           .section-title: Großer Titel (2.5rem, fett)
+259	           .section-subtitle: Gedimmter Untertitel darunter
+260	        ============================================================ */
+261	        .section-title {
+262	            font-size: clamp(2rem, 5vw, 3.5rem);
+263	            font-weight: 900;
+264	            margin-bottom: 0.5rem;
+265	            text-align: center;
+266	        }
+267	        .section-subtitle {
+268	            color: var(--text-dim);
+269	            font-size: 1rem;
+270	            margin-bottom: 3rem;
+271	            text-align: center;
+272	        }
+273	
+274	        /* ============================================================
+275	           SKILLS-SECTION
+276	           Responsive Grid: mindestens 110px breite Spalten, so viele
+277	           wie reinpassen (auto-fill). Auf Mobile: 90px Mindestbreite.
+278	        ============================================================ */
+279	        #skills { background: var(--bg); }
+280	        #roadmap { background: var(--bg); }
+281	
+282	        .skills-grid {
+283	            display: grid;
+284	            grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+285	            gap: 1rem;
+286	            width: 100%;
+287	            max-width: 800px;
+288	        }
+289	
+290	        /* Einzelne Skill-Karte: Icon oben, Bezeichnung unten */
+291	        .skill-card {
+292	            background: var(--bg-alt);
+293	            border: 1px solid var(--accent-dim);
+294	            border-radius: 14px;
+295	            padding: 1.4rem 1rem;
+296	            display: flex;
+297	            flex-direction: column;
+298	            align-items: center;
+299	            gap: 0.6rem;
+300	            cursor: default;
+301	            transition: 0.25s;
+302	        }
+303	        .skill-card:hover {
+304	            transform: translateY(-8px);
+305	            border-color: var(--accent);
+306	            box-shadow: 0 8px 25px -8px var(--accent-glow);
+307	        }
+308	        .skill-card i {
+309	            font-size: 2rem;
+310	            color: var(--text-dim);
+311	            transition: 0.25s;
+312	        }
+313	        .skill-card:hover i { color: var(--accent); }
+314	        .skill-card span {
+315	            font-size: 0.75rem;
+316	            font-weight: 600;
+317	            color: var(--text-dim);
+318	            letter-spacing: 0.5px;
+319	        }
+320	
+321	        /* ============================================================
+322	           PROJECTS-SECTION
+323	           Abwechselnder Hintergrund (--bg-dark-alt) zur visuellen Trennung.
+324	           Grid: mindestens 300px breite Karten, auf Mobile 1 Spalte.
+325	        ============================================================ */
+326	        #projects { background: var(--bg-alt); border-top: 1px solid var(--accent-dim); }
+327	        body.light-mode #projects { border-top: 1px solid var(--accent-dim); }
+328	
+329	        .projects-grid {
+330	            display: grid;
+331	            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+332	            gap: 1.5rem;
+333	            width: 100%;
+334	            max-width: 1000px;
+335	        }
+336	
+337	        /* Projekt-Karte: clickbar, mit Spotlight-Effekt (::before-Pseudo-Element) */
+338	        .project-card {
+339	            background: var(--bg-alt);
+340	            border: 1px solid var(--accent-dim);
+341	            border-radius: 16px;
+342	            padding: 2.5rem;
+343	            cursor: pointer;
+344	            transition: 0.25s;
+345	            position: relative;
+346	            overflow: hidden;
+347	            text-align: left;
+348	        }
+349	        .project-card::before {
+350	            content: "";
+351	            position: absolute;
+352	            height: 100%; width: 100%;
+353	            top: 0; left: 0;
+354	            background: radial-gradient(600px circle at var(--mouse-x) var(--mouse-y), rgba(209,178,128,0.08), transparent 40%);
+355	            z-index: 1;
+356	            opacity: 0;
+357	            transition: opacity 0.5s;
+358	            pointer-events: none;
+359	        }
+360	        .project-card:hover::before { opacity: 1; }
+361	        .project-card:hover {
+362	            transform: translateY(-8px);
+363	            border-color: var(--accent);
+364	            box-shadow: 0 12px 30px -10px var(--accent-glow);
+365	        }
+366	        /* Alle direkten Kinder über dem Spotlight-Layer */
+367	        .project-card > * { position: relative; z-index: 2; }
+368	
+369	        .project-tag {
+370	            display: inline-block;
+371	            background: rgba(209, 178, 128, 0.1);
+372	            color: var(--accent);
+373	            padding: 3px 10px;
+374	            border-radius: 20px;
+375	            font-size: 0.72rem;
+376	            font-weight: 700;
+377	            margin-bottom: 0.8rem;
+378	            border: 1px solid rgba(209, 178, 128, 0.25);
+379	        }
+380	        .project-card h3 { font-size: 1.2rem; color: var(--text); margin-bottom: 0.5rem; }
+381	        .project-card p { font-size: 0.9rem; color: var(--text-dim); line-height: 1.6; margin-bottom: 1.2rem; }
+382	        .project-icons { display: flex; gap: 12px; font-size: 1.3rem; color: var(--text-dim); flex-wrap: wrap; }
+383	        .project-arrow {
+384	            position: absolute; bottom: 1.5rem; right: 1.5rem;
+385	            color: var(--accent); font-size: 0.9rem;
+386	            transition: 0.2s; z-index: 2;
+387	        }
+388	        .project-card:hover .project-arrow { color: var(--accent); transform: translate(3px, -3px); }
+389	
+390	        /* ============================================================
+391	           ROADMAP / TIMELINE
+392	           Linke Borderlinie = Timeline-Strich.
+393	           .timeline-dot = Kreis-Punkt auf der Linie (absolut positioniert).
+394	           .content = die eigentliche Karte rechts neben dem Punkt.
+395	        ============================================================ */
+396	        .roadmap-container { width: 100%; max-width: 900px; margin: 0 auto; position: relative; }
+397	        .timeline { border-left: 2px solid var(--accent-dim); padding-left: 30px; position: relative; }
+398	        body.light-mode .timeline { border-left: 2px solid var(--accent-dim); }
+399	
+400	        /* Wrapper-Div für Dot + Karte */
+401	        .container {
+402	            position: relative;
+403	            margin-bottom: 2rem;
+404	            width: 100%;
+405	            perspective: 1000px; /* Vorbereitung für mögliche 3D-Effekte */
+406	        }
+407	
+408	        .timeline-dot {
+409	            position: absolute; width: 18px; height: 18px;
+410	            background: var(--bg); border: 2px solid var(--accent);
+411	            left: -40px; top: 24px;
+412	            border-radius: 50%;
+413	            z-index: 5; box-shadow: 0 0 12px var(--accent-glow);
+414	            transition: 0.3s;
+415	        }
+416	        .container:hover .timeline-dot { background: var(--accent); transform: scale(1.25); }
+417	
+418	        .content {
+419	            background: var(--bg-alt);
+420	            padding: 1.8rem;
+421	            border-radius: 16px;
+422	            border: 1px solid var(--accent-dim);
+423	            transition: 0.2s;
+424	            position: relative;
+425	            overflow: hidden;
+426	            text-align: left;
+427	            cursor: pointer;
+428	        }
+429	        .content::before {
+430	            content: "";
+431	            position: absolute;
+432	            height: 100%; width: 100%;
+433	            top: 0; left: 0;
+434	            background: radial-gradient(800px circle at var(--mouse-x) var(--mouse-y), rgba(209,178,128,0.07), transparent 40%);
+435	            z-index: 1;
+436	            opacity: 0;
+437	            transition: opacity 0.5s;
+438	            pointer-events: none;
+439	        }
+440	        .content:hover::before { opacity: 1; }
+441	        .content h3 { font-size: 1.25rem; margin-bottom: 0.5rem; color: var(--text); }
+442	        .year-badge { display: inline-block; background: rgba(209, 178, 128, 0.1); color: var(--accent); padding: 4px 10px; border-radius: 20px; font-size: 0.75rem; font-weight: 800; margin-bottom: 10px; border: 1px solid rgba(209, 178, 128, 0.25); }
+443	        .content:hover { transform: translateY(-8px); border-color: var(--accent); box-shadow: 0 10px 30px -10px var(--accent-glow); }
+444	
+445	        /* ============================================================
+446	           SCROLL-REVEAL ANIMATION
+447	           Elemente mit .reveal starten unsichtbar (opacity: 0) und
+448	           verschoben (translateY: 30px). Sobald sie in den Viewport
+449	           scrollen, fügt der IntersectionObserver .active hinzu →
+450	           sanfter Einblend-Effekt von unten.
+451	        ============================================================ */
+452	        .reveal { opacity: 0; transform: translateY(30px); transition: all 0.8s ease-out; }
+453	        .reveal.active { opacity: 1; transform: translateY(0); }
+454	
+455	        /* ============================================================
+456	           KONTAKT-SECTION
+457	           Leichter Verlauf nach unten für visuellen Abschluss der Seite.
+458	        ============================================================ */
+459	        #contact {
+460	            background: linear-gradient(180deg, var(--bg) 0%, var(--bg-alt) 100%);
+461	            border-top: 1px solid var(--accent-dim);
+462	        }
+463	
+464	        .contact-wrapper {
+465	            background: var(--bg-alt);
+466	            padding: 3rem;
+467	            border-radius: 20px;
+468	            border: 1px solid var(--accent-dim);
+469	            width: 100%; max-width: 600px;
+470	            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+471	            position: relative;
+472	            overflow: hidden;
+473	        }
+474	
+475	        .contact-form { display: flex; flex-direction: column; gap: 1rem; position: relative; z-index: 2; }
+476	
+477	        .contact-form input, .contact-form textarea {
+478	            background: rgba(0, 0, 0, 0.3); border: 1px solid var(--accent-dim);
+479	            padding: 1.2rem; color: var(--text); border-radius: 8px; outline: none; font-size: 1rem;
+480	            width: 100%; transition: 0.3s; font-family: 'Inter', sans-serif;
+481	        }
+482	        .contact-form input:focus, .contact-form textarea:focus {
+483	            border-color: var(--accent); background: rgba(0,0,0,0.4);
+484	        }
+485	        /* Light-Mode: helle Inputs */
+486	        body.light-mode .contact-form input, body.light-mode .contact-form textarea {
+487	            background: rgba(255, 255, 255, 0.6); border: 1px solid var(--accent-dim); color: var(--text);
+488	        }
+489	
+490	        .email-btn {
+491	            background: var(--accent); color: #080706; padding: 1.2rem; border: none;
+492	            font-weight: 800; cursor: pointer; border-radius: 8px; width: 100%;
+493	            transition: 0.3s; letter-spacing: 1px; margin-top: 10px;
+494	            box-shadow: 0 4px 15px var(--accent-glow);
+495	        }
+496	        .email-btn:hover { transform: translateY(-3px); box-shadow: 0 8px 25px var(--accent-glow); filter: brightness(1.1); }
+497	
+498	        /* ============================================================
+499	           MODAL (Detail-Overlay)
+500	           Wird für Roadmap-Einträge UND Projekt-Karten verwendet.
+501	           display: none → flex beim Öffnen (via JS).
+502	           opacity-Transition + scale-Transition = weicher Pop-in Effekt.
+503	           backdrop-filter: blur(8px) → Hintergrund verschwimmt.
+504	        ============================================================ */
+505	        .modal { display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); backdrop-filter: blur(8px); align-items: center; justify-content: center; padding: 20px; opacity: 0; transition: opacity 0.3s; }
+506	        .modal.show { opacity: 1; } /* Klasse wird per JS gesetzt */
+507	
+508	        /* Modal-Inhalt: startet bei scale(0.9), federt auf scale(1) */
+509	        .modal-content {
+510	            background: #161b22; padding: 2.5rem; width: 100%; max-width: 550px;
+511	            border-radius: 16px; border: 1px solid rgba(255,255,255,0.1);
+512	            position: relative; text-align: left;
+513	            transform: scale(0.9); transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1); /* Federnde Kurve */
+514	            box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5);
+515	        }
+516	        .modal.show .modal-content { transform: scale(1); }
+517	
+518	        /* Schließen-Button oben rechts (×) – dreht sich beim Hover */
+519	        .close-modal { position: absolute; top: 1.2rem; right: 1.2rem; font-size: 1.5rem; color: var(--text-dim); cursor: pointer; transition: 0.3s; }
+520	        .close-modal:hover { color: var(--accent); transform: rotate(90deg); }
+521	
+522	        /* ============================================================
+523	           FOOTER
+524	           Einfacher zentrierter Abschluss der Seite.
+525	        ============================================================ */
+526	        footer { z-index: 2; position: relative; padding: 3rem 5%; text-align: center; background: var(--bg); font-size: 0.85rem; color: var(--text-dim); border-top: 1px solid var(--accent-dim); }
+527	
+528	        /* ============================================================
+529	           RESPONSIVE BREAKPOINTS
+530	           768px: Nav-Links verstecken, Projekte-Grid auf 1 Spalte.
+531	           400px: Hero-Titel fix auf 2.5rem, Karten kompakter.
+532	        ============================================================ */
+533	        @media (max-width: 768px) {
+534	            .nav-links { display: none; } /* Navigationslinks auf kleinen Screens ausblenden */
+535	            .projects-grid { grid-template-columns: 1fr; } /* 1 Spalte statt mehrere */
+536	            .skills-grid { grid-template-columns: repeat(auto-fill, minmax(90px, 1fr)); } /* Kleinere Skill-Karten */
+537	        }
+538	        @media (max-width: 400px) {
+539	            .hero-title { font-size: 3rem; letter-spacing: -2px; }
+540	            .content { padding: 1.5rem; }
+541	        }
+542	
+543	        /* ============================================================
+544	           PAGE LOADER
+545	           Vollbild-Overlay das beim ersten Laden erscheint.
+546	           slide-out: schiebt das Overlay nach oben aus dem Viewport.
+547	        ============================================================ */
+548	        #page-loader {
+549	            position: fixed;
+550	            inset: 0;
+551	            background: #080706;
+552	            z-index: 9999;
+553	            display: flex;
+554	            flex-direction: column;
+555	            align-items: center;
+556	            justify-content: center;
+557	            transition: transform 0.9s cubic-bezier(0.76, 0, 0.24, 1);
+558	        }
+559	        #page-loader.slide-out {
+560	            transform: translateY(-100%); /* Schiebt komplett nach oben raus */
+561	        }
+562	
+563	        /* Terminal-Fenster im Loader (gleicher Style wie Hero-Terminal) */
+564	        .loader-terminal {
+565	            background: #0d1117;
+566	            border: 1px solid #30363d;
+567	            border-radius: 12px;
+568	            width: min(520px, 90vw);
+569	            overflow: hidden;
+570	            box-shadow: 0 30px 60px rgba(0,0,0,0.6);
+571	        }
+572	        .loader-terminal-header {
+573	            background: #161b22;
+574	            padding: 12px 18px;
+575	            display: flex;
+576	            gap: 8px;
+577	            align-items: center;
+578	            border-bottom: 1px solid #30363d;
+579	        }
+580	        /* Dateiname rechts in der Titelleiste */
+581	        .loader-terminal-title {
+582	            margin-left: auto;
+583	            font-family: 'Fira Code', monospace;
+584	            font-size: 0.72rem;
+585	            color: #484f58;
+586	        }
+587	        .loader-terminal-body {
+588	            padding: 24px;
+589	            font-family: 'Fira Code', monospace;
+590	            font-size: 0.88rem;
+591	            color: #c9d1d9;
+592	            min-height: 160px;
+593	            line-height: 2;
+594	        }
+595	
+596	        /* Jede Terminal-Zeile: startet unsichtbar, blendet sanft ein */
+597	        .loader-line {
+598	            opacity: 0;
+599	            transform: translateY(5px);
+600	            transition: opacity 0.35s ease, transform 0.35s ease;
+601	        }
+602	        .loader-line.visible {
+603	            opacity: 1;
+604	            transform: translateY(0);
+605	        }
+606	
+607	        /* Roter Fortschrittsbalken am unteren Rand des Terminals */
+608	        .loader-progress-bar {
+609	            height: 3px;
+610	            background: #21262d;
+611	            overflow: hidden;
+612	        }
+613	        .loader-progress-fill {
+614	            height: 100%;
+615	            width: 0%;
+616	            background: linear-gradient(90deg, #D1B280, #E8D5A3);
+617	            transition: width 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+618	            box-shadow: 0 0 10px rgba(209, 178, 128, 0.7);
+619	        }
+620	
+621	        /* Skip-Button unten rechts – dezent, aber immer erreichbar */
+622	        #loader-skip {
+623	            position: absolute;
+624	            bottom: 2rem;
+625	            right: 2rem;
+626	            background: transparent;
+627	            border: 1px solid rgba(255,255,255,0.12);
+628	            color: rgba(255,255,255,0.35);
+629	            padding: 6px 16px;
+630	            border-radius: 6px;
+631	            font-family: 'Fira Code', monospace;
+632	            font-size: 0.75rem;
+633	            cursor: pointer;
+634	            transition: 0.25s;
+635	            letter-spacing: 1px;
+636	        }
+637	        #loader-skip:hover {
+638	            border-color: #D1B280;
+639	            color: #D1B280;
+640	        }
+641	    </style>
+642	</head>
+643	<body>
+644	
+645	    <!-- ============================================================
+646	         PAGE LOADER OVERLAY
+647	         Erscheint beim Seitenaufruf, läuft die Bootsequenz ab
+648	         und wird dann per slide-out nach oben weggescrollt.
+649	    ============================================================ -->
+650	    <div id="page-loader">
+651	        <div class="loader-terminal">
+652	            <!-- Titelleiste mit Ampel-Dots und Dateinamen -->
+653	            <div class="loader-terminal-header">
+654	                <div class="dot red"></div>
+655	                <div class="dot yellow"></div>
+656	                <div class="dot green"></div>
+657	                <span class="loader-terminal-title">portfolio.init</span>
+658	            </div>
+659	            <!-- Terminal-Zeilen werden per JS eingefügt -->
+660	            <div class="loader-terminal-body" id="loader-body"></div>
+661	            <!-- Roter Fortschrittsbalken -->
+662	            <div class="loader-progress-bar">
+663	                <div class="loader-progress-fill" id="loader-progress"></div>
+664	            </div>
+665	        </div>
+666	        <!-- Skip-Button: überspringt die Animation sofort -->
+667	        <button id="loader-skip" onclick="dismissLoader()">SKIP &rarr;</button>
+668	    </div>
+669	
+670	    <!-- ============================================================
+671	         NAVIGATION (fixiert, Glassmorphism)
+672	         Logo links | Nav-Links Mitte | Theme+Sprache rechts
+673	    ============================================================ -->
+674	    <nav>
+675	        <!-- Logo: klickbar, scrollt zurück zum Hero -->
+676	        <a href="#home" class="logo">
+677	            <span class="logo-icon">{</span>
+678	            <!-- #logo-text rotiert per JS: T. MALIQI → FULLSTACK → REACT.JS -->
+679	            <span id="logo-text">T. MALIQI</span>
+680	            <span class="logo-icon">}</span>
+681	        </a>
+682	
+683	        <!-- Anchor-Links zu den Sektionen (auf Mobile ausgeblendet) -->
+684	        <!-- data-key: Schlüssel für Mehrsprachigkeits-System (translations-Objekt) -->
+685	        <div class="nav-links">
+686	            <a href="#home" class="nav-link" data-key="nav_home">Home</a>
+687	            <a href="#skills" class="nav-link" data-key="nav_skills">Skills</a>
+688	            <a href="#projects" class="nav-link" data-key="nav_projects">Projekte</a>
+689	            <a href="#roadmap" class="nav-link" data-key="nav_roadmap">Roadmap</a>
+690	            <a href="#contact" class="nav-link" data-key="nav_contact">Kontakt</a>
+691	        </div>
+692	
+693	        <div class="nav-right">
+694	            <!-- Theme-Toggle: Wechsel zwischen Dark und Light Mode -->
+695	            <button class="theme-toggle" onclick="toggleTheme()" aria-label="Theme wechseln">
+696	                <i class="fas fa-adjust"></i>
+697	            </button>
+698	            <!-- Sprachumschalter: DE / EN / SQ (Albanisch) / IT (Italienisch) -->
+699	            <div class="lang-switch" style="display:flex; gap:5px;">
+700	                <button class="lang-btn" id="btn-de" onclick="setLanguage('de')" aria-label="Deutsch">
+701	                    <img src="https://flagcdn.com/w40/de.png" alt="DE"> DE
+702	                </button>
+703	                <button class="lang-btn" id="btn-en" onclick="setLanguage('en')" aria-label="English">
+704	                    <img src="https://flagcdn.com/w40/gb.png" alt="EN"> EN
+705	                </button>
+706	                <button class="lang-btn" id="btn-sq" onclick="setLanguage('sq')" aria-label="Shqip">
+707	                    <img src="https://flagcdn.com/w40/al.png" alt="SQ"> SQ
+708	                </button>
+709	                <button class="lang-btn" id="btn-it" onclick="setLanguage('it')" aria-label="Italiano">
+710	                    <img src="https://flagcdn.com/w40/it.png" alt="IT"> IT
+711	                </button>
+712	            </div>
+713	        </div>
+714	    </nav>
+715	
+716	    <!-- ============================================================
+717	         HERO-SECTION (#home)
+718	         Startseite: Name + Tagline + Terminal-Fenster + Scroll-Pfeil
+719	    ============================================================ -->
+720	    <section id="home">
+721	
+722	        <!-- Großer Name: "Trimlind" als Outline, "Maliqi" als Gradient -->
+723	        <h1 class="hero-title">
+724	            <span class="outline-text">Trimlind</span>
+725	            <!-- id="scramble-target": Scramble-Texteffekt startet hier beim Laden -->
+726	            <span class="gradient-text" id="scramble-target">Maliqi</span>
+727	        </h1>
+728	
+729	        <!-- Tagline: Kurzbeschreibung mit roten Technologie-Highlights -->
+730	        <!-- &middot; = typografischer Mittelpunkt als Trenner -->
+731	        <p class="hero-tagline" id="hero-tagline">
+732	            Full-Stack Developer &middot; <span>React</span> &middot; <span>Node.js</span> &middot; <span>Cloud</span>
+733	        </p>
+734	
+735	        <!-- Terminal-Fenster: dekoratives UI-Element, schwebt animiert -->
+736	        <div class="terminal-window">
+737	            <!-- Titelleiste mit macOS-Ampel-Dots -->
+738	            <div class="terminal-header">
+739	                <div class="dot red"></div>
+740	                <div class="dot yellow"></div>
+741	                <div class="dot green"></div>
+742	            </div>
+743	            <!-- Terminal-Ausgabe: simulierte CLI-Befehle -->
+744	            <div class="terminal-body">
+745	                <div><span style="color:var(--accent)">user@portfolio</span>:~$ init profile</div>
+746	                <div style="margin-top: 5px;">> Loading modules...</div>
+747	                <div style="color: #7ee787; margin-top: 5px;">> [SUCCESS] Full-Stack Developer loaded.</div>
+748	                <div style="color: #7ee787; margin-top: 5px;">> [SUCCESS] Creative Mindset active.</div>
+749	                <!-- Blinkender Cursor am Ende -->
+750	                <div style="margin-top: 5px;">> <span class="cursor"></span></div>
+751	            </div>
+752	        </div>
+753	
+754	        <!-- Scroll-Indikator: absolut positioniert unten, scrollt zu #skills -->
+755	        <div class="scroll-indicator" onclick="document.getElementById('skills').scrollIntoView({behavior:'smooth'})">
+756	            <span data-key="scroll_hint">Scroll</span>
+757	            <i class="fas fa-chevron-down"></i> <!-- Wippender Pfeil nach unten -->
+758	        </div>
+759	    </section>
+760	
+761	    <!-- ============================================================
+762	         SKILLS-SECTION (#skills)
+763	         Grid mit 12 Technologie-Karten (Icon + Bezeichnung).
+764	         Karten sind statisch im HTML – kein JS-Rendering.
+765	    ============================================================ -->
+766	    <section id="skills">
+767	        <!-- data-key: wird von setLanguage() mit der richtigen Übersetzung befüllt -->
+768	        <h2 class="section-title reveal" data-key="skills_title">Skills</h2>
+769	        <p class="section-subtitle reveal" data-key="skills_subtitle">Technologien mit denen ich arbeite</p>
+770	
+771	        <div class="skills-grid">
+772	            <!-- Jede Karte: Font-Awesome-Icon + Text-Label -->
+773	            <!-- reveal-Klasse: Einblend-Animation beim Einscrollen -->
+774	            <div class="skill-card reveal"><i class="fa-brands fa-react"></i><span>React</span></div>
+775	            <div class="skill-card reveal"><i class="fa-brands fa-node-js"></i><span>Node.js</span></div>
+776	            <div class="skill-card reveal"><i class="fa-brands fa-js"></i><span>JavaScript</span></div>
+777	            <div class="skill-card reveal"><i class="fa-brands fa-python"></i><span>Python</span></div>
+778	            <div class="skill-card reveal"><i class="fa-brands fa-docker"></i><span>Docker</span></div>
+779	            <div class="skill-card reveal"><i class="fa-brands fa-aws"></i><span>AWS</span></div>
+780	            <div class="skill-card reveal"><i class="fa-brands fa-git-alt"></i><span>Git</span></div>
+781	            <div class="skill-card reveal"><i class="fa-solid fa-database"></i><span>SQL / NoSQL</span></div>
+782	            <div class="skill-card reveal"><i class="fa-brands fa-html5"></i><span>HTML5</span></div>
+783	            <div class="skill-card reveal"><i class="fa-brands fa-css3-alt"></i><span>CSS3</span></div>
+784	            <div class="skill-card reveal"><i class="fa-solid fa-robot"></i><span>AI / LLMs</span></div>
+785	            <div class="skill-card reveal"><i class="fa-brands fa-linux"></i><span>Linux</span></div>
+786	        </div>
+787	    </section>
+788	
+789	    <!-- ============================================================
+790	         PROJEKTE-SECTION (#projects)
+791	         Karten werden per JS (renderProjects) dynamisch aus dem
+792	         projects-Array gerendert → einfach erweiterbar.
+793	    ============================================================ -->
+794	    <section id="projects">
+795	        <h2 class="section-title reveal" data-key="projects_title">Projekte</h2>
+796	        <p class="section-subtitle reveal" data-key="projects_subtitle">Ausgewählte Arbeiten</p>
+797	        <!-- Leerer Container – wird von renderProjects(lang) befüllt -->
+798	        <div class="projects-grid" id="projects-list"></div>
+799	    </section>
+800	
+801	    <!-- ============================================================
+802	         ROADMAP-SECTION (#roadmap)
+803	         Zeitstrahl-Timeline von 2019 bis 2026.
+804	         Wird per JS (renderRoadmap) dynamisch aus dem years-Array gerendert.
+805	    ============================================================ -->
+806	    <section id="roadmap">
+807	        <h2 class="section-title reveal" data-key="roadmap_title">Roadmap</h2>
+808	        <p class="section-subtitle reveal" data-key="roadmap_subtitle">Meine Entwicklung als Developer</p>
+809	        <div class="roadmap-container">
+810	            <!-- Leerer Container – wird von renderRoadmap(lang) befüllt -->
+811	            <!-- Die linke Border dieser div ist der vertikale Timeline-Strich -->
+812	            <div class="timeline" id="roadmap-list"></div>
+813	        </div>
+814	    </section>
+815	
+816	    <!-- ============================================================
+817	         KONTAKT-SECTION (#contact)
+818	         Formular via Formspree (externer Dienst) – kein eigenes Backend nötig.
+819	         id="p_name", "p_email", "p_msg": werden von setLanguage() für
+820	         Placeholder-Texte angesprochen.
+821	    ============================================================ -->
+822	    <section id="contact">
+823	        <h2 class="section-title reveal" data-key="nav_contact">Kontakt</h2>
+824	        <p class="section-subtitle reveal" data-key="contact_subtitle">Schreib mir eine Nachricht</p>
+825	        <div class="contact-wrapper reveal">
+826	            <!-- action="https://formspree.io/...": Formular-Daten gehen an Formspree -->
+827	            <form action="https://formspree.io/f/xnjqdepv" method="POST" class="contact-form">
+828	                <input type="text" name="name" id="p_name" placeholder="Name" required>
+829	                <input type="email" name="email" id="p_email" placeholder="Email" required>
+830	                <textarea name="message" id="p_msg" rows="5" placeholder="Nachricht" required></textarea>
+831	                <!-- data-key: Buttontext wird übersetzt (z.B. "SEND MESSAGE" auf EN) -->
+832	                <button type="submit" class="email-btn" data-key="contact_btn">NACHRICHT SENDEN</button>
+833	            </form>
+834	        </div>
+835	    </section>
+836	
+837	    <!-- ============================================================
+838	         MODAL / DETAIL-OVERLAY (#projectModal)
+839	         Wird von openDetails() (Roadmap) und openProjectDetails() (Projekte)
+840	         befüllt und angezeigt. Schließt per:
+841	           - Klick auf Backdrop (closeDetails)
+842	           - Klick auf × (closeModalFunc)
+843	           - Escape-Taste (keydown-Listener)
+844	         Inhalte (Titel, Text, Icons) werden dynamisch per JS gesetzt.
+845	    ============================================================ -->
+846	    <div id="projectModal" class="modal" onclick="closeDetails(event)">
+847	        <!-- event.stopPropagation() verhindert, dass Klick im Content das Modal schließt -->
+848	        <div class="modal-content" onclick="event.stopPropagation()">
+849	            <!-- Schließen-Button – dreht sich beim Hover um 90° -->
+850	            <span class="close-modal" onclick="closeModalFunc()">&times;</span>
+851	            <!-- Dynamisch befüllt per JS -->
+852	            <h2 id="modalTitle" style="font-size: 1.8rem; color: var(--accent); margin-bottom: 1rem; font-weight:700;"></h2>
+853	            <p id="modalBody" style="line-height: 1.7; font-size: 1rem; color: var(--text);"></p>
+854	            <!-- Icon-Zeile: Font-Awesome-Icons des jeweiligen Eintrags -->
+855	            <div id="modalIcons" style="display: flex; gap: 20px; font-size: 2.5rem; color: var(--text-dim); margin-top: 2rem; flex-wrap: wrap;"></div>
+856	        </div>
+857	    </div>
+858	
+859	    <!-- Footer: Copyright-Zeile -->
+860	    <footer>&copy; 2026 Trimlind Maliqi | Built with code & passion ❤️</footer>
+861	
+862	    <script>
+863	
+864	        /* ============================================================
+865	           2. DATEN – ROADMAP
+866	           Array aus Objekten, jedes Objekt = 1 Jahr auf der Timeline.
+867	           Felder: id (eindeutig), year, title/desc/long (je Sprache), icons (FA-Klassen).
+868	           "long" = ausführlicher Text der im Modal angezeigt wird.
+869	        ============================================================ */
+870	        const years = [
+871	            { id: 'r26', year: '2026', title: { de: "Next Horizon", en: "Next Horizon", sq: "Horizonti i ardhshëm", it: "Prossimo Orizzonte" }, desc: { de: "Web3 & Cloud Scaling.", en: "Web3 & Cloud Scaling.", sq: "Web3 & Skalimi.", it: "Web3 & Cloud Scaling." }, icons: ['fa-brands fa-ethereum', 'fa-solid fa-cloud'], long: { de: "Die Vision für 2026 ist die vollständige Dezentralisierung. Ich plane die Integration von Smart Contracts in Unternehmensprozesse und den Aufbau von hochskalierbaren Edge-Computing Architekturen.", en: "The vision for 2026 is full decentralization. Planning smart contract integration and scalable edge computing architectures.", sq: "Vizioni për vitin 2026 është deçentralizimi i plotë.", it: "La visione per il 2026 è la completa decentralizzazione. Pianificazione dell'integrazione di smart contract e architetture edge computing scalabili." } },
+872	            { id: 'r25', year: '2025', title: { de: "AI & Scalability", en: "AI & Scalability", sq: "AI dhe Skalueshmëria", it: "AI & Scalabilità" }, desc: { de: "KI-Workflows.", en: "AI workflows.", sq: "Proceset AI.", it: "Flussi di lavoro AI." }, icons: ['fa-solid fa-robot', 'fa-solid fa-brain'], long: { de: "Zentrierung auf KI-Modelle und RAG-Systeme zur effizienten Datenverarbeitung.", en: "Focusing on AI models and RAG systems.", sq: "Fokusi në modelet AI dhe sistemet RAG.", it: "Focus su modelli AI e sistemi RAG per un'elaborazione efficiente dei dati." } },
+873	            { id: 'r1', year: '2024', title: { de: "SaaS Innovation", en: "SaaS Innovation", sq: "SaaS Inovacion", it: "Innovazione SaaS" }, desc: { de: "Cloud-native B2B Apps.", en: "Cloud-native B2B apps.", sq: "Aplikacione cloud-native.", it: "App B2B cloud-native." }, icons: ['fa-brands fa-docker', 'fa-brands fa-aws'], long: { de: "Entwicklung hochverfügbarer SaaS-Lösungen mittels Docker und AWS.", en: "Development of high-availability SaaS solutions using Docker and AWS.", sq: "Zhvillimi i zgjidhjeve SaaS me Docker dhe AWS.", it: "Sviluppo di soluzioni SaaS ad alta disponibilità tramite Docker e AWS." } },
+874	            { id: 'r2', year: '2023', title: { de: "E-Commerce Core", en: "E-Commerce Core", sq: "Baza e E-Commerce", it: "Core E-Commerce" }, desc: { de: "API & Checkout.", en: "API & Checkout.", sq: "API & Checkout.", it: "API & Checkout." }, icons: ['fa-solid fa-bolt', 'fa-solid fa-server'], long: { de: "Optimierung kritischer Checkout-Prozesse und API-Strukturen.", en: "Optimization of critical checkout processes and API structures.", sq: "Optimizimi i proceseve të arkëtimit.", it: "Ottimizzazione dei processi di checkout critici e delle strutture API." } },
+875	            { id: 'r22', year: '2022', title: { de: "Backend Excellence", en: "Backend Excellence", sq: "Backend Excellence", it: "Eccellenza Backend" }, desc: { de: "Node.js & SQL.", en: "Node.js & SQL.", sq: "Node.js & SQL.", it: "Node.js & SQL." }, icons: ['fa-brands fa-node-js', 'fa-solid fa-database'], long: { de: "Vertiefung in komplexe Serverarchitekturen.", en: "Deep dive into complex server architectures.", sq: "Thellimi në arkitekturat e serverëve.", it: "Approfondimento nelle architetture server complesse." } },
+876	            { id: 'r21', year: '2021', title: { de: "Frontend Mastery", en: "Frontend Mastery", sq: "Frontend Mastery", it: "Maestria Frontend" }, desc: { de: "React & State Mgmt.", en: "React & State Mgmt.", sq: "React & State Mgmt.", it: "React & State Mgmt." }, icons: ['fa-brands fa-react', 'fa-brands fa-js'], long: { de: "Spezialisierung auf moderne Frontend-Entwicklung mit React.", en: "Specialization in modern frontend development with React.", sq: "Specializimi në zhvillimin e frontend-it.", it: "Specializzazione nello sviluppo frontend moderno con React." } },
+877	            { id: 'r19', year: '2019', title: { de: "The Start", en: "The Start", sq: "Fillimi", it: "L'Inizio" }, desc: { de: "Official Entry.", en: "Official Entry.", sq: "Fillimi zyrtar.", it: "Inizio ufficiale." }, icons: ['fa-solid fa-code', 'fa-solid fa-terminal'], long: { de: "Erste Schritte in der professionellen Softwareentwicklung.", en: "First steps in professional software development.", sq: "Hapat e parë në zhvillimin e softuerit.", it: "I primi passi nello sviluppo software professionale." } }
+878	        ];
+879	
+880	        /* ============================================================
+881	           2b. DATEN – PROJEKTE
+882	           Gleiche Struktur wie years, aber für Projekt-Karten.
+883	           tag = kleine Kategorie-Badge oben in der Karte.
+884	           Neue Projekte: einfach ein weiteres Objekt hinzufügen.
+885	        ============================================================ */
+886	        const projects = [
+887	            {
+888	                id: 'p1',
+889	                tag: { de: "Web App", en: "Web App", sq: "Aplikacion Web", it: "App Web" },
+890	                title: { de: "Developer Portfolio", en: "Developer Portfolio", sq: "Portfolio Developer", it: "Portfolio Developer" },
+891	                desc: { de: "Dieses Portfolio — gebaut mit reinem HTML, CSS & JS. Animationen, Mehrsprachigkeit und Dark Mode.", en: "This portfolio — built with pure HTML, CSS & JS. Animations, multilanguage and dark mode.", sq: "Ky portfolio — ndërtuar me HTML, CSS & JS.", it: "Questo portfolio — costruito con HTML, CSS & JS puro. Animazioni, multilingua e Dark Mode." },
+892	                icons: ['fa-brands fa-html5', 'fa-brands fa-css3-alt', 'fa-brands fa-js'],
+893	                long: { de: "Ein vollständig selbst entwickeltes Portfolio. Features: Scramble-Text-Effekt, Spotlight-Karten, Particle-System, Dark/Light Mode, 3-sprachige UI (DE/EN/SQ) und ein animiertes Roadmap-Timeline.", en: "A fully self-developed portfolio. Features: scramble text effect, spotlight cards, particle system, dark/light mode, 3-language UI (DE/EN/SQ) and an animated roadmap timeline.", sq: "Një portfolio i zhvilluar plotësisht vetë.", it: "Un portfolio sviluppato completamente in proprio. Features: effetto testo scramble, spotlight sulle card, sistema di particelle, Dark/Light Mode, UI multilingua e roadmap animata." }
+894	            },
+895	            {
+896	                id: 'p2',
+897	                tag: { de: "SaaS Plattform", en: "SaaS Platform", sq: "Platformë SaaS", it: "Piattaforma SaaS" },
+898	                title: { de: "E-Commerce Backend", en: "E-Commerce Backend", sq: "Backend E-Commerce", it: "Backend E-Commerce" },
+899	                desc: { de: "Hochperformantes Backend für Online-Shops mit REST API, Auth und Zahlungsintegration.", en: "High-performance backend for online shops with REST API, auth and payment integration.", sq: "Backend me performancë të lartë për dyqane online.", it: "Backend ad alte prestazioni per shop online con REST API, autenticazione e integrazione pagamenti." },
+900	                icons: ['fa-brands fa-node-js', 'fa-solid fa-database', 'fa-solid fa-bolt'],
+901	                long: { de: "Entwicklung einer skalierbaren E-Commerce-Infrastruktur mit Node.js und PostgreSQL. Features: JWT-Auth, Stripe-Integration, Redis-Caching und Docker-Deployment.", en: "Development of a scalable e-commerce infrastructure with Node.js and PostgreSQL. Features: JWT auth, Stripe integration, Redis caching and Docker deployment.", sq: "Infrastrukturë e skaluar e-commerce me Node.js dhe PostgreSQL.", it: "Sviluppo di un'infrastruttura e-commerce scalabile con Node.js e PostgreSQL. Features: JWT auth, integrazione Stripe, Redis caching e deployment Docker." }
+902	            },
+903	            {
+904	                id: 'p3',
+905	                tag: { de: "KI Projekt", en: "AI Project", sq: "Projekt AI", it: "Progetto AI" },
+906	                title: { de: "AI Dashboard", en: "AI Dashboard", sq: "Dashboard AI", it: "Dashboard AI" },
+907	                desc: { de: "React-Dashboard zur Visualisierung und Steuerung von KI-Modellen und RAG-Pipelines.", en: "React dashboard for visualizing and controlling AI models and RAG pipelines.", sq: "Dashboard React për vizualizimin e modeleve AI.", it: "Dashboard React per la visualizzazione e il controllo di modelli AI e pipeline RAG." },
+908	                icons: ['fa-brands fa-react', 'fa-solid fa-robot', 'fa-brands fa-python'],
+909	                long: { de: "Ein modernes Dashboard zur Verwaltung von KI-Workflows. Echtzeit-Datenvisualisierung mit Chart.js, Integration von OpenAI und Anthropic APIs, Python-Backend mit FastAPI.", en: "A modern dashboard for managing AI workflows. Real-time data visualization with Chart.js, integration of OpenAI and Anthropic APIs, Python backend with FastAPI.", sq: "Dashboard modern për menaxhimin e rrjedhave të punës AI.", it: "Un dashboard moderno per gestire flussi di lavoro AI. Visualizzazione dati in tempo reale con Chart.js, integrazione delle API OpenAI e Anthropic, backend Python con FastAPI." }
+910	            }
+911	        ];
+912	
+913	        /* ============================================================
+914	           3. ÜBERSETZUNGEN (i18n)
+915	           Flat-Map: Schlüssel → übersetzter Text.
+916	           data-key-Attribute im HTML werden von setLanguage() abgeglichen.
+917	           Neue Texte: Schlüssel in alle drei Sprachen eintragen.
+918	        ============================================================ */
+919	        const translations = {
+920	            de: {
+921	                nav_home: "Home", nav_skills: "Skills", nav_projects: "Projekte", nav_roadmap: "Roadmap", nav_contact: "Kontakt",
+922	                roadmap_title: "Roadmap", roadmap_subtitle: "Meine Entwicklung als Developer",
+923	                skills_title: "Skills", skills_subtitle: "Technologien mit denen ich arbeite",
+924	                projects_title: "Projekte", projects_subtitle: "Ausgewählte Arbeiten",
+925	                contact_btn: "NACHRICHT SENDEN", contact_subtitle: "Schreib mir eine Nachricht",
+926	                p_name: "Name", p_email: "Email", p_msg: "Deine Nachricht...",
+927	                scroll_hint: "Scroll"
+928	            },
+929	            en: {
+930	                nav_home: "Home", nav_skills: "Skills", nav_projects: "Projects", nav_roadmap: "Roadmap", nav_contact: "Contact",
+931	                roadmap_title: "Roadmap", roadmap_subtitle: "My journey as a developer",
+932	                skills_title: "Skills", skills_subtitle: "Technologies I work with",
+933	                projects_title: "Projects", projects_subtitle: "Selected works",
+934	                contact_btn: "SEND MESSAGE", contact_subtitle: "Send me a message",
+935	                p_name: "Name", p_email: "Email", p_msg: "Your message...",
+936	                scroll_hint: "Scroll"
+937	            },
+938	            sq: {
+939	                nav_home: "Kryefaqja", nav_skills: "Aftësitë", nav_projects: "Projektet", nav_roadmap: "Ecuria", nav_contact: "Kontakt",
+940	                roadmap_title: "Ecuria", roadmap_subtitle: "Udhëtimi im si developer",
+941	                skills_title: "Aftësitë", skills_subtitle: "Teknologjitë që përdor",
+942	                projects_title: "Projektet", projects_subtitle: "Punime të zgjedhura",
+943	                contact_btn: "DËRGO MESAZH", contact_subtitle: "Më dërgo një mesazh",
+944	                p_name: "Emri", p_email: "Email", p_msg: "Mesazhi juaj...",
+945	                scroll_hint: "Scroll"
+946	            },
+947	            it: {
+948	                nav_home: "Home", nav_skills: "Competenze", nav_projects: "Progetti", nav_roadmap: "Roadmap", nav_contact: "Contatti",
+949	                roadmap_title: "Roadmap", roadmap_subtitle: "Il mio percorso da developer",
+950	                skills_title: "Competenze", skills_subtitle: "Tecnologie con cui lavoro",
+951	                projects_title: "Progetti", projects_subtitle: "Lavori selezionati",
+952	                contact_btn: "INVIA MESSAGGIO", contact_subtitle: "Scrivimi un messaggio",
+953	                p_name: "Nome", p_email: "Email", p_msg: "Il tuo messaggio...",
+954	                scroll_hint: "Scorri"
+955	            }
+956	        };
+957	
+958	        /* ============================================================
+959	           4. RENDER PROJECTS
+960	           Iteriert über das projects-Array und erstellt für jedes Projekt
+961	           eine HTML-Karte mit staggered Animation (jede Karte 120ms später).
+962	           Danach: Spotlight-Listener und Scroll-Observer neu initialisieren.
+963	        ============================================================ */
+964	        function renderProjects(lang) {
+965	            const list = document.getElementById('projects-list');
+966	            list.innerHTML = ''; // Alten Inhalt leeren (z.B. bei Sprachwechsel)
+967	
+968	            projects.forEach((p, index) => {
+969	                const delay = index * 120; // Gestaffelte Einblend-Verzögerung in ms
+970	                const iconsHtml = p.icons.map(i => `<i class="${i}"></i>`).join('');
+971	
+972	                list.innerHTML += `
+973	                <div class="project-card reveal spotlight-project" style="transition-delay: ${delay}ms" onclick="openProjectDetails('${p.id}')">
+974	                    <span class="project-tag">${p.tag[lang]}</span>
+975	                    <h3>${p.title[lang]}</h3>
+976	                    <p>${p.desc[lang]}</p>
+977	                    <div class="project-icons">${iconsHtml}</div>
+978	                    <i class="fas fa-arrow-up-right project-arrow"></i>
+979	                </div>`;
+980	            });
+981	
+982	            initProjectSpotlight(); // Maus-Tracking für neue Karten registrieren
+983	        }
+984	
+985	        /* ============================================================
+986	           5. RENDER ROADMAP
+987	           Identisches Prinzip wie renderProjects, aber für die Timeline.
+988	           Jeder Eintrag bekommt einen .timeline-dot und eine .content-Karte.
+989	           Nach dem Rendern: Spotlight + Observer neu starten.
+990	        ============================================================ */
+991	        function renderRoadmap(lang) {
+992	            const list = document.getElementById('roadmap-list');
+993	            list.innerHTML = '';
+994	
+995	            years.forEach((y, index) => {
+996	                const delay = index * 100; // 100ms gestaffelt
+997	                list.innerHTML += `
+998	                <div class="container reveal" style="transition-delay: ${delay}ms" onclick="openDetails('${y.id}')">
+999	                    <div class="timeline-dot"></div>
+1000	                    <div class="content spotlight-card">
+1001	                        <span class="year-badge">${y.year}</span>
+1002	                        <h3>${y.title[lang]}</h3>
+1003	                        <p style="font-size:0.95rem; color:var(--text-dim);">${y.desc[lang]}</p>
+1004	                    </div>
+1005	                </div>`;
+1006	            });
+1007	
+1008	            initSpotlight();  // Spotlight für neue .spotlight-card Elemente
+1009	            initObserver();   // IntersectionObserver für neue .reveal Elemente
+1010	        }
+1011	
+1012	        /* ============================================================
+1013	           6. SPOTLIGHT EFFEKTE
+1014	           initSpotlight(): für Roadmap-Karten (.spotlight-card)
+1015	           initProjectSpotlight(): für Projekt-Karten (.spotlight-project)
+1016	           Beide funktionieren gleich: mousemove setzt CSS-Variablen
+1017	           --mouse-x und --mouse-y → das ::before-Pseudo-Element
+1018	           positioniert seinen Gradienten an der Mausposition.
+1019	        ============================================================ */
+1020	        function initSpotlight() {
+1021	            document.querySelectorAll('.spotlight-card').forEach(card => {
+1022	                card.addEventListener('mousemove', e => {
+1023	                    const rect = card.getBoundingClientRect(); // Position der Karte im Viewport
+1024	                    card.style.setProperty('--mouse-x', `${e.clientX - rect.left}px`);
+1025	                    card.style.setProperty('--mouse-y', `${e.clientY - rect.top}px`);
+1026	                });
+1027	            });
+1028	        }
+1029	
+1030	        function initProjectSpotlight() {
+1031	            document.querySelectorAll('.spotlight-project').forEach(card => {
+1032	                card.addEventListener('mousemove', e => {
+1033	                    const rect = card.getBoundingClientRect();
+1034	                    card.style.setProperty('--mouse-x', `${e.clientX - rect.left}px`);
+1035	                    card.style.setProperty('--mouse-y', `${e.clientY - rect.top}px`);
+1036	                });
+1037	            });
+1038	        }
+1039	
+1040	        /* ============================================================
+1041	           7. SCRAMBLE TEXT EFFEKT ("Decrypted Text")
+1042	           Animiert den Hero-Namen: zuerst zufällige Zeichen, dann
+1043	           werden Buchstabe für Buchstabe die echten Zeichen aufgedeckt.
+1044	           iterations steigt um 1/3 pro Frame (30ms) → weiche Enthüllung.
+1045	        ============================================================ */
+1046	        function scrambleText(elementId, finalSubText) {
+1047	            const element = document.getElementById(elementId);
+1048	            const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%&"; // Zufallszeichen-Pool
+1049	            let iterations = 0;
+1050	            const finalText = finalSubText || element.innerText;
+1051	
+1052	            const interval = setInterval(() => {
+1053	                element.innerText = finalText.split("").map((letter, index) => {
+1054	                    if(index < iterations) return finalText[index]; // Bereits enthüllte Zeichen
+1055	                    return chars[Math.floor(Math.random() * chars.length)]; // Noch zufällig
+1056	                }).join("");
+1057	
+1058	                if(iterations >= finalText.length) clearInterval(interval); // Fertig
+1059	                iterations += 1/3; // Langsame, fließende Enthüllung
+1060	            }, 30); // Alle 30ms = ~33fps
+1061	        }
+1062	
+1063	        /* ============================================================
+1064	           8. INTERSECTION OBSERVER (Scroll-Reveal)
+1065	           Beobachtet alle .reveal-Elemente. Sobald 10% eines Elements
+1066	           im Viewport sichtbar ist → .active hinzufügen → CSS-Animation.
+1067	           Wird nach jedem Render neu aufgerufen (da neue Elemente entstehen).
+1068	        ============================================================ */
+1069	        function initObserver() {
+1070	            const observer = new IntersectionObserver((entries) => {
+1071	                entries.forEach(entry => {
+1072	                    if (entry.isIntersecting) entry.target.classList.add('active');
+1073	                });
+1074	            }, { threshold: 0.1 }); // 10% Sichtbarkeit reicht zum Triggern
+1075	
+1076	            document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+1077	        }
+1078	
+1079	        /* ============================================================
+1080	           9. CORE FUNCTIONS
+1081	
+1082	           toggleTheme(): Schaltet body.light-mode ein/aus.
+1083	             Alle CSS-Variablen wechseln automatisch via :root vs body.light-mode.
+1084	
+1085	           setLanguage(lang): Haupt-Lokalisierungsfunktion.
+1086	             - Speichert Sprache in localStorage (bleibt nach Reload erhalten)
+1087	             - Markiert den aktiven Sprach-Button
+1088	             - Übersetzt alle data-key Elemente
+1089	             - Setzt Placeholder-Texte der Formularfelder
+1090	             - Re-rendert Projekte und Roadmap in der neuen Sprache
+1091	        ============================================================ */
+1092	        function toggleTheme() {
+1093	            document.body.classList.toggle('light-mode');
+1094	        }
+1095	
+1096	        function setLanguage(lang) {
+1097	            localStorage.setItem('preferredLang', lang); // Persistieren
+1098	
+1099	            // Alle Sprach-Buttons zurücksetzen, aktiven hervorheben
+1100	            document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
+1101	            document.getElementById('btn-'+lang).classList.add('active');
+1102	
+1103	            // Alle Elemente mit data-key übersetzen
+1104	            document.querySelectorAll('[data-key]').forEach(el => {
+1105	                const key = el.getAttribute('data-key');
+1106	                if(translations[lang][key]) el.innerText = translations[lang][key];
+1107	            });
+1108	
+1109	            // Placeholder-Texte separat setzen (nicht via innerText)
+1110	            document.getElementById('p_name').placeholder = translations[lang].p_name;
+1111	            document.getElementById('p_email').placeholder = translations[lang].p_email;
+1112	            document.getElementById('p_msg').placeholder = translations[lang].p_msg;
+1113	
+1114	            // Dynamisch gerenderte Bereiche neu aufbauen
+1115	            renderProjects(lang);
+1116	            renderRoadmap(lang);
+1117	        }
+1118	
+1119	        /* ============================================================
+1120	           10. MODAL-FUNKTIONEN
+1121	
+1122	           openDetails(id): Öffnet Modal für einen Roadmap-Eintrag.
+1123	           openProjectDetails(id): Öffnet Modal für eine Projekt-Karte.
+1124	           Beide suchen das passende Objekt per .find() und füllen
+1125	           #modalTitle, #modalBody und #modalIcons dynamisch.
+1126	
+1127	           closeModalFunc(): Entfernt .show → CSS-Transition → display:none.
+1128	           closeDetails(e): Schließt bei Klick auf den Backdrop.
+1129	           keydown 'Escape': Globaler Schließen-Shortcut.
+1130	        ============================================================ */
+1131	        function openDetails(id) {
+1132	            const lang = localStorage.getItem('preferredLang') || 'de';
+1133	            const item = years.find(y => y.id === id); // Passendes Jahr-Objekt finden
+1134	
+1135	            document.getElementById('modalTitle').innerText = item.title[lang];
+1136	            document.getElementById('modalBody').innerText = item.long[lang];
+1137	
+1138	            const iconContainer = document.getElementById('modalIcons');
+1139	            iconContainer.innerHTML = '';
+1140	            item.icons.forEach(i => { iconContainer.innerHTML += `<i class="${i}"></i>`; });
+1141	
+1142	            const modal = document.getElementById('projectModal');
+1143	            modal.style.display = 'flex';
+1144	            setTimeout(() => modal.classList.add('show'), 10); // Kurze Verzögerung für CSS-Transition
+1145	        }
+1146	
+1147	        function openProjectDetails(id) {
+1148	            const lang = localStorage.getItem('preferredLang') || 'de';
+1149	            const item = projects.find(p => p.id === id); // Passendes Projekt-Objekt finden
+1150	
+1151	            document.getElementById('modalTitle').innerText = item.title[lang];
+1152	            document.getElementById('modalBody').innerText = item.long[lang];
+1153	
+1154	            const iconContainer = document.getElementById('modalIcons');
+1155	            iconContainer.innerHTML = '';
+1156	            item.icons.forEach(i => { iconContainer.innerHTML += `<i class="${i}"></i>`; });
+1157	
+1158	            const modal = document.getElementById('projectModal');
+1159	            modal.style.display = 'flex';
+1160	            setTimeout(() => modal.classList.add('show'), 10);
+1161	        }
+1162	
+1163	        function closeModalFunc() {
+1164	            const modal = document.getElementById('projectModal');
+1165	            modal.classList.remove('show'); // Trigger CSS-Fade-out
+1166	            setTimeout(() => modal.style.display = 'none', 300); // Nach Transition verstecken
+1167	        }
+1168	        // Klick auf Backdrop (nicht auf modal-content) schließt Modal
+1169	        function closeDetails(e) { if(e.target.id === 'projectModal') closeModalFunc(); }
+1170	        // Escape-Taste als globaler Schließen-Shortcut
+1171	        document.addEventListener('keydown', e => { if(e.key === 'Escape') closeModalFunc(); });
+1172	
+1173	        /* ============================================================
+1174	           11. PAGE LOADER ANIMATION
+1175	           runLoader(): tippt Terminal-Zeilen nacheinander ein,
+1176	             füllt den Fortschrittsbalken und ruft dann onComplete auf.
+1177	           dismissLoader(): schiebt das Overlay nach oben raus (slide-out).
+1178	             Kann auch vom SKIP-Button aufgerufen werden.
+1179	        ============================================================ */
+1180	
+1181	        // Boot-Zeilen mit individuellem Delay (ms) und optionaler Farbe
+1182	        const loaderLines = [
+1183	            { text: '> system.boot()',                        color: null,       delay: 150  },
+1184	            { text: '> Loading Trimlind Maliqi...',           color: null,       delay: 700  },
+1185	            { text: '> Compiling assets...',                  color: null,       delay: 1200 },
+1186	            { text: '> [████████████████████] 100%',          color: '#7ee787',  delay: 1800 },
+1187	            { text: '> [SUCCESS] Portfolio ready.',           color: '#7ee787',  delay: 2250 },
+1188	        ];
+1189	
+1190	        let loaderDone = false; // Verhindert doppeltes Auslösen
+1191	
+1192	        function runLoader(onComplete) {
+1193	            document.body.style.overflow = 'hidden'; // Kein Scrollen während Loader läuft
+1194	            const body = document.getElementById('loader-body');
+1195	            const progress = document.getElementById('loader-progress');
+1196	
+1197	            // Zeilen nacheinander einblenden
+1198	            loaderLines.forEach(line => {
+1199	                setTimeout(() => {
+1200	                    const el = document.createElement('div');
+1201	                    el.className = 'loader-line';
+1202	                    el.innerText = line.text;
+1203	                    if (line.color) el.style.color = line.color;
+1204	                    body.appendChild(el);
+1205	                    // Zwei rAF-Frames warten damit der Browser die opacity:0 Startposition rendert
+1206	                    requestAnimationFrame(() => requestAnimationFrame(() => el.classList.add('visible')));
+1207	                }, line.delay);
+1208	            });
+1209	
+1210	            // Fortschrittsbalken in 3 Stufen füllen
+1211	            setTimeout(() => { progress.style.width = '35%'; }, 500);
+1212	            setTimeout(() => { progress.style.width = '70%'; }, 1100);
+1213	            setTimeout(() => { progress.style.width = '100%'; }, 1700);
+1214	
+1215	            // Nach letzter Zeile: Overlay wegsliden und Hauptseite starten
+1216	            setTimeout(() => dismissLoader(onComplete), 2900);
+1217	        }
+1218	
+1219	        function dismissLoader(onComplete) {
+1220	            if (loaderDone) return; // Nur einmal ausführen (SKIP oder automatisch)
+1221	            loaderDone = true;
+1222	
+1223	            const loader = document.getElementById('page-loader');
+1224	            loader.classList.add('slide-out'); // CSS-Transition: nach oben raus
+1225	            document.body.style.overflow = '';  // Scrollen wieder erlauben
+1226	
+1227	            // Nach Abschluss der Slide-Transition: Loader aus dem DOM entfernen
+1228	            setTimeout(() => {
+1229	                loader.style.display = 'none';
+1230	                if (typeof onComplete === 'function') onComplete();
+1231	            }, 900); // 900ms = Transition-Dauer
+1232	        }
+1233	
+1234	        /* ============================================================
+1235	           12. INITIALISIERUNG (window.onload)
+1236	           Läuft sobald die gesamte Seite geladen ist:
+1237	           1. Gespeicherte Sprache laden (oder 'de' als Default)
+1238	           2. setLanguage → rendert alles + setzt aktiven Button
+1239	           3. initObserver → startet Scroll-Animationen
+1240	           4. Scramble-Effekt auf "Maliqi" nach 500ms Verzögerung
+1241	           5. Logo-Text-Rotation: alle 4s wechselt der Text mit Fade
+1242	        ============================================================ */
+1243	        window.onload = () => {
+1244	            // Seite im Hintergrund vorbereiten während der Loader läuft
+1245	            const savedLang = localStorage.getItem('preferredLang') || 'de';
+1246	            setLanguage(savedLang);
+1247	
+1248	            // Loader starten – Hauptseiten-Initialisierung als Callback
+1249	            runLoader(() => {
+1250	                initObserver();
+1251	
+1252	                // Scramble auf "Maliqi" direkt nach dem Loader
+1253	                setTimeout(() => scrambleText("scramble-target", "Maliqi"), 200);
+1254	
+1255	                // Logo rotiert durch 3 Phrasen mit Fade-Out/In (alle 4s)
+1256	                const logoText = document.getElementById('logo-text');
+1257	                const phrases = ["T. MALIQI", "FULLSTACK", "REACT.JS"];
+1258	                let pIdx = 0;
+1259	                setInterval(() => {
+1260	                    logoText.style.opacity = 0;
+1261	                    setTimeout(() => {
+1262	                        pIdx = (pIdx+1) % phrases.length;
+1263	                        logoText.innerText = phrases[pIdx];
+1264	                        logoText.style.opacity = 1;
+1265	                    }, 500);
+1266	                }, 4000);
+1267	            });
+1268	        };
+1269	    </script>
+1270	</body>
+1271	</html>
+1272
