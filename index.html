@@ -61,9 +61,30 @@
         }
         body.light-mode nav { background: rgba(239, 239, 239, 0.97); }
 
-        .logo { font-family: 'Fira Code', monospace; font-weight: 600; color: var(--text); text-decoration: none; display: flex; align-items: center; font-size: 0.9rem; }
-        .logo-icon { color: var(--accent); font-weight: 800; }
-        #logo-text { margin: 0 6px; transition: opacity 0.5s; color: var(--accent); font-weight: 700; text-shadow: 0 0 10px var(--accent-glow); }
+        /* ============================================================
+           SVG MONOGRAMM LOGO
+           Klickbarer Link zurück zu #home. Das SVG-Logo enthält:
+           - Äußerer Kreis als Ring mit Akzentfarbe
+           - Zwei ineinandergreifende Initialen "T" und "M"
+           - Hover-Effekt: leichter Glow + scale
+        ============================================================ */
+        .logo {
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+        }
+        .logo-svg {
+            width: 42px;
+            height: 42px;
+            transition: transform 0.3s ease, filter 0.3s ease;
+        }
+        .logo:hover .logo-svg {
+            transform: scale(1.08) rotate(-3deg);
+            filter: drop-shadow(0 0 8px var(--accent-glow));
+        }
+        /* Ring + Text passen sich dem Theme an */
+        .logo-ring { stroke: var(--accent); fill: none; }
+        .logo-letters { fill: var(--accent); }
 
         .nav-links { display: flex; align-items: center; gap: 0.2rem; }
         .nav-link {
@@ -441,10 +462,24 @@
     </div>
 
     <nav>
-        <a href="#home" class="logo">
-            <span class="logo-icon">{</span>
-            <span id="logo-text">T. MALIQI</span>
-            <span class="logo-icon">}</span>
+        <a href="#home" class="logo" aria-label="Trimlind Maliqi – zurück zur Startseite">
+            <svg class="logo-svg" viewBox="0 0 42 42" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                <!-- Äußerer Ring -->
+                <circle class="logo-ring" cx="21" cy="21" r="19" stroke-width="1.5"/>
+                <!-- Innerer dekorativer Ring (dünner, gedimmt) -->
+                <circle cx="21" cy="21" r="15.5" stroke="var(--accent-dim)" stroke-width="0.5" fill="none"/>
+                <!-- Monogramm "TM" – sorgfältig zentriert -->
+                <text
+                    x="21" y="26"
+                    text-anchor="middle"
+                    font-family="'Fira Code', monospace"
+                    font-weight="700"
+                    font-size="13"
+                    class="logo-letters"
+                    letter-spacing="-0.5">TM</text>
+                <!-- Dekorativer Unterstrich -->
+                <line x1="14" y1="29" x2="28" y2="29" stroke="var(--accent)" stroke-width="1" stroke-linecap="round" opacity="0.4"/>
+            </svg>
         </a>
 
         <div class="nav-links">
@@ -976,39 +1011,7 @@
             initObserver();
             setTimeout(() => scrambleText("scramble-target", "Maliqi"), 200);
 
-            // IMPROVEMENT 8: Logo-Rotation pausiert wenn Tab im Hintergrund
-            const logoText = document.getElementById('logo-text');
-            const phrases = ["T. MALIQI", "FULLSTACK", "REACT.JS"];
-            let pIdx = 0;
-            let logoInterval = null;
 
-            function startLogoRotation() {
-                if (logoInterval) return;
-                logoInterval = setInterval(() => {
-                    logoText.style.opacity = 0;
-                    setTimeout(() => {
-                        pIdx = (pIdx + 1) % phrases.length;
-                        logoText.innerText = phrases[pIdx];
-                        logoText.style.opacity = 1;
-                    }, 500);
-                }, 4000);
-            }
-
-            function stopLogoRotation() {
-                clearInterval(logoInterval);
-                logoInterval = null;
-            }
-
-            startLogoRotation();
-
-            // IMPROVEMENT 8: visibilitychange – pausiert Timer bei Tab-Wechsel
-            document.addEventListener('visibilitychange', () => {
-                if (document.hidden) {
-                    stopLogoRotation();
-                } else {
-                    startLogoRotation();
-                }
-            });
         }
 
         function runLoader() {
