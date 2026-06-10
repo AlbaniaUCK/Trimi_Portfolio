@@ -2,132 +2,159 @@
 <html lang="de">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Trimlind Maliqi | Developer Portfolio</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trimlind Maliqi | Software Developer – Healthcare IT, Data & Web</title>
+
+    <!-- ============ SEO ============ -->
+    <meta name="description" content="Trimlind Maliqi – Software Developer mit Fokus auf Healthcare IT, Labordaten-Analytics (Python, Oracle SQL, Jupyter) und moderne Web-Apps mit SvelteKit. Portfolio mit echten Projekten.">
+    <meta name="author" content="Trimlind Maliqi">
+    <link rel="canonical" href="https://trimlind-maliqi.dev/"> <!-- TODO: echte Domain eintragen -->
+
+    <!-- Open Graph (LinkedIn, WhatsApp, Slack ...) -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Trimlind Maliqi | Software Developer">
+    <meta property="og:description" content="Healthcare IT · Data Analytics · Full-Stack Web. Projekte mit PHP, Python, Oracle SQL und SvelteKit.">
+    <meta property="og:url" content="https://trimlind-maliqi.dev/"> <!-- TODO: echte Domain -->
+    <meta property="og:image" content="https://trimlind-maliqi.dev/og-image.png"> <!-- TODO: 1200x630px Bild hochladen -->
+    <meta property="og:locale" content="de_CH">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Trimlind Maliqi | Software Developer">
+    <meta name="twitter:description" content="Healthcare IT · Data Analytics · Full-Stack Web.">
+
+    <!-- JSON-LD: Person Schema -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Person",
+      "name": "Trimlind Maliqi",
+      "jobTitle": "Software Developer",
+      "url": "https://trimlind-maliqi.dev/",
+      "knowsAbout": ["PHP", "JavaScript", "Python", "Oracle SQL", "SvelteKit", "Healthcare IT", "Data Analytics"],
+      "sameAs": [
+        "https://github.com/DEIN-GITHUB",
+        "https://www.linkedin.com/in/DEIN-LINKEDIN"
+      ]
+    }
+    </script>
+
     <link rel="icon" href="https://fav.farm/💻">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <!-- PERF: Font Preload verhindert FOUT -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Fira+Code:wght@400;600&display=swap">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Fira+Code:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
     <style>
+        /* ============================================================
+           CRITICAL CSS – Loader inline, kein FOUC
+        ============================================================ */
+        #page-loader {
+            position: fixed; inset: 0; background: #080706; z-index: 9999;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            transition: transform 0.7s cubic-bezier(0.76, 0, 0.24, 1);
+        }
+        #page-loader.slide-out { transform: translateY(-100%); }
+        #page-loader.instant-hide { display: none; }
+        .loader-terminal { background: #0d1117; border: 1px solid #30363d; border-radius: 12px; width: min(520px, 90vw); overflow: hidden; box-shadow: 0 30px 60px rgba(0,0,0,0.6); }
+        .loader-terminal-header { background: #161b22; padding: 12px 18px; display: flex; gap: 8px; align-items: center; border-bottom: 1px solid #30363d; }
+        .loader-terminal-title { margin-left: auto; font-family: 'Fira Code', monospace; font-size: 0.72rem; color: #484f58; }
+        .loader-terminal-body { padding: 24px; font-family: 'Fira Code', monospace; font-size: 0.88rem; color: #c9d1d9; min-height: 130px; line-height: 2; }
+        .loader-line { opacity: 0; transform: translateY(5px); transition: opacity 0.3s ease, transform 0.3s ease; }
+        .loader-line.visible { opacity: 1; transform: translateY(0); }
+        .loader-progress-bar { height: 3px; background: #21262d; overflow: hidden; }
+        .loader-progress-fill { height: 100%; width: 0%; background: linear-gradient(90deg, #D1B280, #E8D5A3); transition: width 0.6s cubic-bezier(0.4,0,0.2,1); box-shadow: 0 0 10px rgba(209,178,128,0.7); }
+        #loader-skip { position: absolute; bottom: 2rem; right: 2rem; background: transparent; border: 1px solid rgba(255,255,255,0.12); color: rgba(255,255,255,0.35); padding: 6px 16px; border-radius: 6px; font-family: 'Fira Code', monospace; font-size: 0.75rem; cursor: pointer; transition: 0.25s; letter-spacing: 1px; }
+        #loader-skip:hover { border-color: #D1B280; color: #D1B280; }
+        .dot { width: 12px; height: 12px; border-radius: 50%; }
+        .red { background: #ff5f56; } .yellow { background: #ffbd2e; } .green { background: #27c93f; }
+
         :root {
             --bg: #080706;
             --bg-alt: #120f0d;
             --accent: #D1B280;
             --accent-dim: #594D46;
             --text: #EFEFEF;
-            --text-dim: #594D46;
+            --text-dim: #8a7d72;
             --accent-glow: rgba(209, 178, 128, 0.3);
         }
-
         body.light-mode {
-            --bg: #EFEFEF;
-            --bg-alt: #ffffff;
-            --accent: #594D46;
-            --accent-dim: #8B7355;
-            --text: #080706;
-            --text-dim: #594D46;
+            --bg: #EFEFEF; --bg-alt: #ffffff; --accent: #594D46;
+            --accent-dim: #8B7355; --text: #080706; --text-dim: #594D46;
             --accent-glow: rgba(89, 77, 70, 0.3);
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
-            font-family: 'Inter', sans-serif;
-            background-color: var(--bg);
-            color: var(--text);
-            line-height: 1.6;
-            overflow-x: hidden;
-            transition: background 0.3s, color 0.3s;
-            -webkit-tap-highlight-color: transparent;
+            font-family: 'Inter', sans-serif; background-color: var(--bg);
+            color: var(--text); line-height: 1.6; overflow-x: hidden;
+            transition: background 0.3s, color 0.3s; -webkit-tap-highlight-color: transparent;
         }
-
         body::after {
-            content: "";
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            content: ""; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
-            pointer-events: none;
-            z-index: 0;
-            opacity: 0.35;
+            pointer-events: none; z-index: 0; opacity: 0.35;
         }
 
-        /* ============================================================
-           NAVIGATION
-        ============================================================ */
+        .skip-link {
+            position: absolute; top: -100px; left: 1rem;
+            background: var(--accent); color: #080706;
+            padding: 8px 16px; border-radius: 0 0 8px 8px;
+            font-weight: 700; font-size: 0.85rem; text-decoration: none;
+            transition: top 0.2s; z-index: 9998;
+        }
+        .skip-link:focus { top: 0; }
+
+        /* ============ NAVIGATION ============ */
         nav {
             display: flex; justify-content: space-between; align-items: center;
             padding: 1rem 5%; position: fixed; width: 100%;
-            background: rgba(8, 7, 6, 0.95);
-            z-index: 1000; border-bottom: 1px solid var(--accent-dim);
+            background: rgba(8,7,6,0.95); z-index: 1000;
+            border-bottom: 1px solid var(--accent-dim);
         }
-        body.light-mode nav { background: rgba(239, 239, 239, 0.97); }
+        body.light-mode nav { background: rgba(239,239,239,0.97); }
 
-        /* ============================================================
-           SVG MONOGRAMM LOGO
-           Klickbarer Link zurück zu #home. Das SVG-Logo enthält:
-           - Äußerer Kreis als Ring mit Akzentfarbe
-           - Zwei ineinandergreifende Initialen "T" und "M"
-           - Hover-Effekt: leichter Glow + scale
-        ============================================================ */
-        .logo {
-            text-decoration: none;
-            display: flex;
-            align-items: center;
-        }
-        .logo-svg {
-            width: 42px;
-            height: 42px;
-            transition: transform 0.3s ease, filter 0.3s ease;
-        }
-        .logo:hover .logo-svg {
-            transform: scale(1.08) rotate(-3deg);
-            filter: drop-shadow(0 0 8px var(--accent-glow));
-        }
-        /* Ring + Text passen sich dem Theme an */
+        .logo { text-decoration: none; display: flex; align-items: center; }
+        .logo-svg { width: 42px; height: 42px; transition: transform 0.3s ease, filter 0.3s ease; }
+        .logo:hover .logo-svg { transform: scale(1.08) rotate(-3deg); filter: drop-shadow(0 0 8px var(--accent-glow)); }
         .logo-ring { stroke: var(--accent); fill: none; }
         .logo-letters { fill: var(--accent); }
+
+        :focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 4px; }
 
         .nav-links { display: flex; align-items: center; gap: 0.2rem; }
         .nav-link {
             color: var(--text-dim); text-decoration: none; font-size: 0.82rem;
             font-weight: 600; padding: 6px 12px; border-radius: 8px;
-            transition: 0.2s; letter-spacing: 0.3px;
+            transition: color 0.2s, border-color 0.2s; letter-spacing: 0.3px;
+            border-bottom: 2px solid transparent;
         }
-        .nav-link:hover { color: var(--accent); border-bottom: 2px solid var(--accent); }
+        .nav-link:hover,
+        .nav-link.active-section { color: var(--accent); border-bottom-color: var(--accent); }
 
         .nav-right { display: flex; align-items: center; gap: 0.8rem; }
 
-        /* IMPROVEMENT 1: Hamburger-Button für Mobile */
         .hamburger {
-            display: none;
-            background: transparent;
-            border: 1px solid var(--text-dim);
-            color: var(--text-dim);
-            padding: 6px 10px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 1rem;
-            transition: 0.3s;
+            display: none; background: transparent; border: 1px solid var(--text-dim);
+            color: var(--text-dim); padding: 6px 10px; border-radius: 8px;
+            cursor: pointer; font-size: 1rem; transition: 0.3s;
         }
         .hamburger:hover { border-color: var(--accent); color: var(--accent); }
 
-        /* Mobile Drawer */
         .mobile-menu {
-            display: none;
-            position: fixed;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(8,7,6,0.97);
-            z-index: 999;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            gap: 2rem;
-            opacity: 0;
-            transition: opacity 0.3s;
+            display: none; position: fixed; inset: 0;
+            background: rgba(8,7,6,0.97); z-index: 999;
+            flex-direction: column; align-items: center; justify-content: center;
+            gap: 2rem; opacity: 0; transition: opacity 0.3s;
         }
         body.light-mode .mobile-menu { background: rgba(239,239,239,0.98); }
         .mobile-menu.open { display: flex; opacity: 1; }
         .mobile-menu .nav-link { font-size: 1.5rem; padding: 12px 24px; color: var(--text-dim); }
-        .mobile-menu .nav-link:hover { color: var(--accent); border-bottom: 2px solid var(--accent); }
+        .mobile-menu .nav-link:hover { color: var(--accent); border-bottom-color: var(--accent); }
         .mobile-menu-close {
             position: absolute; top: 1.5rem; right: 1.5rem;
             background: transparent; border: none; color: var(--text-dim);
@@ -142,82 +169,75 @@
         }
         .theme-toggle:hover, .lang-btn:hover { border-color: var(--accent); color: var(--accent); }
         .lang-btn.active { background: var(--accent); color: #080706; border-color: var(--accent); box-shadow: 0 0 15px var(--accent-glow); }
-        /* IMPROVEMENT 2: loading="lazy" wird per JS gesetzt, hier nur Grundstyle */
         .lang-btn img { width: 14px; border-radius: 2px; }
 
-        /* ============================================================
-           SECTIONS
-        ============================================================ */
+        #back-to-top {
+            position: fixed; bottom: 2rem; right: 2rem; z-index: 500;
+            background: var(--accent); color: #080706;
+            border: none; width: 42px; height: 42px; border-radius: 50%;
+            cursor: pointer; font-size: 1rem;
+            display: flex; align-items: center; justify-content: center;
+            box-shadow: 0 4px 15px var(--accent-glow);
+            opacity: 0; transform: translateY(10px);
+            transition: opacity 0.3s, transform 0.3s;
+            pointer-events: none;
+        }
+        #back-to-top.visible { opacity: 1; transform: translateY(0); pointer-events: auto; }
+        #back-to-top:hover { filter: brightness(1.15); transform: translateY(-2px); }
+
+        /* ============ SECTIONS ============ */
         section { position: relative; z-index: 2; padding: 120px 7% 80px; min-height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; width: 100%; }
 
         .hero-title {
-            font-size: clamp(3.5rem, 14vw, 10rem);
-            font-weight: 900;
-            text-transform: uppercase;
-            line-height: 1.0;
-            text-align: center;
-            width: 100%;
-            margin-bottom: 1.2rem;
-            letter-spacing: -4px;
+            font-size: clamp(3.5rem, 14vw, 10rem); font-weight: 900;
+            text-transform: uppercase; line-height: 1.0; text-align: center;
+            width: 100%; margin-bottom: 1.2rem; letter-spacing: -4px;
         }
-
         .hero-tagline {
-            font-size: clamp(0.9rem, 2vw, 1.1rem);
-            color: var(--text-dim);
-            text-align: center;
-            margin-bottom: 2.5rem;
-            font-weight: 400;
-            letter-spacing: 1px;
+            font-size: clamp(0.9rem, 2vw, 1.1rem); color: var(--text-dim);
+            text-align: center; margin-bottom: 1.5rem; font-weight: 400; letter-spacing: 1px;
         }
         .hero-tagline span { color: var(--accent); font-weight: 600; }
 
+        /* Social-Links direkt im Hero – Beweise statt Behauptung */
+        .hero-socials { display: flex; gap: 1rem; margin-bottom: 2.5rem; }
+        .hero-socials a {
+            color: var(--text-dim); border: 1px solid var(--accent-dim);
+            width: 44px; height: 44px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.2rem; text-decoration: none; transition: 0.25s;
+        }
+        .hero-socials a:hover { color: var(--accent); border-color: var(--accent); transform: translateY(-3px); box-shadow: 0 6px 18px -6px var(--accent-glow); }
+
         .scroll-indicator {
-            position: absolute; bottom: 2.5rem; left: 50%;
-            transform: translateX(-50%);
+            position: absolute; bottom: 2.5rem; left: 50%; transform: translateX(-50%);
             display: flex; flex-direction: column; align-items: center; gap: 6px;
             color: var(--text-dim); font-size: 0.75rem; letter-spacing: 1px; cursor: pointer;
-            animation: fadeInUp 1s ease 1.5s both;
+            animation: fadeInUp 1s ease 1.5s both; background: none; border: none;
+            font-family: 'Inter', sans-serif;
         }
         .scroll-indicator i { font-size: 1.1rem; animation: bounce 2s ease-in-out infinite; }
 
-        @keyframes bounce {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(6px); }
-        }
+        @keyframes bounce { 0%,100% { transform: translateY(0); } 50% { transform: translateY(6px); } }
         @keyframes fadeInUp {
             from { opacity: 0; transform: translateX(-50%) translateY(10px); }
-            to { opacity: 1; transform: translateX(-50%) translateY(0); }
+            to   { opacity: 1; transform: translateX(-50%) translateY(0); }
         }
 
         .gradient-text {
             background: linear-gradient(135deg, var(--accent) 0%, #E8D5A3 60%, var(--text) 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
         }
-        .outline-text {
-            color: transparent;
-            -webkit-text-stroke: 1px var(--accent-dim);
-            opacity: 0.6;
-            display: block;
-        }
+        .outline-text { color: transparent; -webkit-text-stroke: 1px var(--accent-dim); opacity: 0.6; display: block; }
 
         .terminal-window {
-            background: #0d1117;
-            border-radius: 12px; border: 1px solid #30363d;
-            box-shadow: 0 20px 50px -10px rgba(0,0,0,0.5);
-            max-width: 600px; width: 100%;
+            background: #0d1117; border-radius: 12px; border: 1px solid #30363d;
+            box-shadow: 0 20px 50px -10px rgba(0,0,0,0.5); max-width: 600px; width: 100%;
             font-family: 'Fira Code', monospace; overflow: hidden;
             animation: float 6s ease-in-out infinite;
         }
-        @keyframes float {
-            0% { transform: translateY(0px); }
-            50% { transform: translateY(-15px); }
-            100% { transform: translateY(0px); }
-        }
-
+        @keyframes float { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-15px); } }
         .terminal-header { background: #161b22; padding: 12px 18px; display: flex; gap: 8px; border-bottom: 1px solid #30363d; }
-        .dot { width: 12px; height: 12px; border-radius: 50%; }
-        .red { background: #ff5f56; } .yellow { background: #ffbd2e; } .green { background: #27c93f; }
         .terminal-body { padding: 20px; font-size: 0.9rem; color: #c9d1d9; text-align: left; line-height: 1.8; }
         .cursor { display: inline-block; width: 8px; height: 15px; background: var(--accent); animation: blink 1s infinite; }
         @keyframes blink { 50% { opacity: 0; } }
@@ -225,39 +245,44 @@
         .section-title { font-size: clamp(2rem, 5vw, 3.5rem); font-weight: 900; margin-bottom: 0.5rem; text-align: center; }
         .section-subtitle { color: var(--text-dim); font-size: 1rem; margin-bottom: 3rem; text-align: center; }
 
-        #skills { background: var(--bg); }
-        #roadmap { background: var(--bg); }
+        /* ============================================================
+           SKILLS – gruppiert, ohne Prozentbalken
+           (Skill-Prozente sind ein Anti-Pattern; Gruppen + Projekte
+            als Beleg wirken glaubwürdiger.)
+        ============================================================ */
+        #skills, #roadmap { background: var(--bg); }
+
+        .skills-wrapper { width: 100%; max-width: 850px; display: flex; flex-direction: column; gap: 2.5rem; }
+        .skill-group h3 {
+            font-family: 'Fira Code', monospace; font-size: 0.85rem; font-weight: 600;
+            color: var(--accent); letter-spacing: 2px; text-transform: uppercase;
+            margin-bottom: 1rem; display: flex; align-items: center; gap: 10px;
+        }
+        .skill-group h3::after { content: ""; flex: 1; height: 1px; background: var(--accent-dim); opacity: 0.5; }
 
         .skills-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
-            gap: 1rem; width: 100%; max-width: 800px;
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+            gap: 1rem; width: 100%;
         }
-
         .skill-card {
             background: var(--bg-alt); border: 1px solid var(--accent-dim);
             border-radius: 14px; padding: 1.4rem 1rem;
-            display: flex; flex-direction: column; align-items: center; gap: 0.6rem;
+            display: flex; flex-direction: column; align-items: center; gap: 0.5rem;
             cursor: default; transition: 0.25s;
         }
         .skill-card:hover { transform: translateY(-8px); border-color: var(--accent); box-shadow: 0 8px 25px -8px var(--accent-glow); }
         .skill-card i { font-size: 2rem; color: var(--text-dim); transition: 0.25s; }
         .skill-card:hover i { color: var(--accent); }
-        .skill-card span { font-size: 0.75rem; font-weight: 600; color: var(--text-dim); letter-spacing: 0.5px; }
+        .skill-card span { font-size: 0.75rem; font-weight: 600; color: var(--text-dim); letter-spacing: 0.5px; text-align: center; }
 
+        /* ============ PROJECTS ============ */
         #projects { background: var(--bg-alt); border-top: 1px solid var(--accent-dim); }
-
-        .projects-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 1.5rem; width: 100%; max-width: 1000px;
-        }
+        .projects-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1.5rem; width: 100%; max-width: 1000px; }
 
         .project-card {
             background: var(--bg-alt); border: 1px solid var(--accent-dim);
-            border-radius: 16px; padding: 2.5rem;
-            cursor: pointer; transition: 0.25s;
-            position: relative; overflow: hidden; text-align: left;
+            border-radius: 16px; padding: 2.5rem; cursor: pointer;
+            transition: 0.25s; position: relative; overflow: hidden; text-align: left;
         }
         .project-card::before {
             content: ""; position: absolute; height: 100%; width: 100%; top: 0; left: 0;
@@ -268,19 +293,17 @@
         .project-card:hover { transform: translateY(-8px); border-color: var(--accent); box-shadow: 0 12px 30px -10px var(--accent-glow); }
         .project-card > * { position: relative; z-index: 2; }
 
-        .project-tag {
-            display: inline-block; background: rgba(209,178,128,0.1); color: var(--accent);
-            padding: 3px 10px; border-radius: 20px; font-size: 0.72rem; font-weight: 700;
-            margin-bottom: 0.8rem; border: 1px solid rgba(209,178,128,0.25);
-        }
+        .project-tag { display: inline-block; background: rgba(209,178,128,0.1); color: var(--accent); padding: 3px 10px; border-radius: 20px; font-size: 0.72rem; font-weight: 700; margin-bottom: 0.8rem; border: 1px solid rgba(209,178,128,0.25); }
         .project-card h3 { font-size: 1.2rem; color: var(--text); margin-bottom: 0.5rem; }
         .project-card p { font-size: 0.9rem; color: var(--text-dim); line-height: 1.6; margin-bottom: 1.2rem; }
         .project-icons { display: flex; gap: 12px; font-size: 1.3rem; color: var(--text-dim); flex-wrap: wrap; }
-        .project-arrow { position: absolute; bottom: 1.5rem; right: 1.5rem; color: var(--accent); font-size: 0.9rem; transition: 0.2s; z-index: 2; }
-        .project-card:hover .project-arrow { transform: translate(3px, -3px); }
+        /* FIX: fa-arrow-up-right existiert in FA6 Free nicht → fa-arrow-right + Rotation */
+        .project-arrow { position: absolute; bottom: 1.5rem; right: 1.5rem; color: var(--accent); font-size: 0.9rem; transition: 0.2s; z-index: 2; transform: rotate(-45deg); }
+        .project-card:hover .project-arrow { transform: rotate(-45deg) translateX(4px); }
 
-        .roadmap-container { width: 100%; max-width: 900px; margin: 0 auto; position: relative; }
-        .timeline { border-left: 2px solid var(--accent-dim); padding-left: 30px; position: relative; }
+        /* ============ ROADMAP ============ */
+        .roadmap-container { width: 100%; max-width: 900px; margin: 0 auto; }
+        .timeline { border-left: 2px solid var(--accent-dim); padding-left: 30px; }
 
         .container { position: relative; margin-bottom: 2rem; width: 100%; }
         .timeline-dot {
@@ -303,39 +326,24 @@
         }
         .content:hover::before { opacity: 1; }
         .content h3 { font-size: 1.25rem; margin-bottom: 0.5rem; color: var(--text); }
+        .content p { font-size: 0.95rem; color: var(--text-dim); }
         .year-badge { display: inline-block; background: rgba(209,178,128,0.1); color: var(--accent); padding: 4px 10px; border-radius: 20px; font-size: 0.75rem; font-weight: 800; margin-bottom: 10px; border: 1px solid rgba(209,178,128,0.25); }
         .content:hover { transform: translateY(-8px); border-color: var(--accent); box-shadow: 0 10px 30px -10px var(--accent-glow); }
 
         .reveal { opacity: 0; transform: translateY(30px); transition: all 0.8s ease-out; }
-        .reveal.active { opacity: 1; transform: translateY(0); }
+        .reveal.active { opacity: 1; transform: translateY(0); transition-delay: 0ms !important; }
 
-        /* IMPROVEMENT 3: transition-delay nur beim ersten Einblenden,
-           beim Sprachwechsel bereits aktive Elemente sofort anzeigen */
-        .reveal.active { transition-delay: 0ms !important; }
-
-        #contact {
-            background: linear-gradient(180deg, var(--bg) 0%, var(--bg-alt) 100%);
-            border-top: 1px solid var(--accent-dim);
-        }
-
-        .contact-wrapper {
-            background: var(--bg-alt); padding: 3rem; border-radius: 20px;
-            border: 1px solid var(--accent-dim); width: 100%; max-width: 600px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.3); position: relative; overflow: hidden;
-        }
-
-        .contact-form { display: flex; flex-direction: column; gap: 1rem; position: relative; z-index: 2; }
+        /* ============ CONTACT ============ */
+        #contact { background: linear-gradient(180deg, var(--bg) 0%, var(--bg-alt) 100%); border-top: 1px solid var(--accent-dim); }
+        .contact-wrapper { background: var(--bg-alt); padding: 3rem; border-radius: 20px; border: 1px solid var(--accent-dim); width: 100%; max-width: 600px; box-shadow: 0 20px 40px rgba(0,0,0,0.3); position: relative; overflow: hidden; }
+        .contact-form { display: flex; flex-direction: column; gap: 1rem; }
         .contact-form input, .contact-form textarea {
             background: rgba(0,0,0,0.3); border: 1px solid var(--accent-dim);
             padding: 1.2rem; color: var(--text); border-radius: 8px; outline: none;
             font-size: 1rem; width: 100%; transition: 0.3s; font-family: 'Inter', sans-serif;
         }
         .contact-form input:focus, .contact-form textarea:focus { border-color: var(--accent); background: rgba(0,0,0,0.4); }
-        body.light-mode .contact-form input, body.light-mode .contact-form textarea {
-            background: rgba(255,255,255,0.6); border: 1px solid var(--accent-dim); color: var(--text);
-        }
-
-        /* IMPROVEMENT 4: Honeypot-Feld versteckt */
+        body.light-mode .contact-form input, body.light-mode .contact-form textarea { background: rgba(255,255,255,0.6); color: var(--text); }
         .hp-field { display: none !important; visibility: hidden; }
 
         .email-btn {
@@ -343,115 +351,71 @@
             font-weight: 800; cursor: pointer; border-radius: 8px; width: 100%;
             transition: 0.3s; letter-spacing: 1px; margin-top: 10px;
             box-shadow: 0 4px 15px var(--accent-glow);
+            display: flex; align-items: center; justify-content: center; gap: 8px;
         }
-        .email-btn:hover { transform: translateY(-3px); box-shadow: 0 8px 25px var(--accent-glow); filter: brightness(1.1); }
+        .email-btn:hover:not(:disabled) { transform: translateY(-3px); box-shadow: 0 8px 25px var(--accent-glow); filter: brightness(1.1); }
+        .email-btn:disabled { opacity: 0.7; cursor: not-allowed; }
 
-        .modal {
-            display: none; position: fixed; z-index: 2000; left: 0; top: 0;
-            width: 100%; height: 100%; background: rgba(0,0,0,0.8);
-            backdrop-filter: blur(8px); align-items: center; justify-content: center;
-            padding: 20px; opacity: 0; transition: opacity 0.3s;
+        .form-feedback {
+            display: none; padding: 1rem 1.2rem; border-radius: 8px;
+            font-size: 0.9rem; font-weight: 600; text-align: center; margin-bottom: 1rem;
         }
+        .form-feedback.success { display: block; background: rgba(126,231,135,0.15); border: 1px solid #7ee787; color: #7ee787; }
+        .form-feedback.error   { display: block; background: rgba(255,95,86,0.15);  border: 1px solid #ff5f56; color: #ff5f56; }
+
+        /* ============ MODAL ============ */
+        .modal { display: none; position: fixed; z-index: 2000; inset: 0; background: rgba(0,0,0,0.8); backdrop-filter: blur(8px); align-items: center; justify-content: center; padding: 20px; opacity: 0; transition: opacity 0.3s; }
         .modal.show { opacity: 1; }
-        .modal-content {
-            background: #161b22; padding: 2.5rem; width: 100%; max-width: 550px;
-            border-radius: 16px; border: 1px solid rgba(255,255,255,0.1);
-            position: relative; text-align: left;
-            transform: scale(0.9); transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-            box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5);
-        }
+        .modal-content { background: #161b22; padding: 2.5rem; width: 100%; max-width: 550px; border-radius: 16px; border: 1px solid rgba(255,255,255,0.1); position: relative; text-align: left; transform: scale(0.9); transition: transform 0.3s cubic-bezier(0.34,1.56,0.64,1); box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5); }
         .modal.show .modal-content { transform: scale(1); }
-        .close-modal { position: absolute; top: 1.2rem; right: 1.2rem; font-size: 1.5rem; color: var(--text-dim); cursor: pointer; transition: 0.3s; }
+        .close-modal { position: absolute; top: 1.2rem; right: 1.2rem; font-size: 1.5rem; color: var(--text-dim); cursor: pointer; transition: 0.3s; background: none; border: none; }
         .close-modal:hover { color: var(--accent); transform: rotate(90deg); }
 
         footer { z-index: 2; position: relative; padding: 3rem 5%; text-align: center; background: var(--bg); font-size: 0.85rem; color: var(--text-dim); border-top: 1px solid var(--accent-dim); }
+        .footer-socials { display: flex; justify-content: center; gap: 1.2rem; margin-bottom: 1rem; font-size: 1.3rem; }
+        .footer-socials a { color: var(--text-dim); transition: 0.25s; }
+        .footer-socials a:hover { color: var(--accent); }
 
-        /* ============================================================
-           IMPROVEMENT 5: prefers-reduced-motion
-           Alle Animationen auf 0 reduzieren für Nutzer die das bevorzugen.
-        ============================================================ */
         @media (prefers-reduced-motion: reduce) {
-            *, *::before, *::after {
-                animation-duration: 0.01ms !important;
-                animation-iteration-count: 1 !important;
-                transition-duration: 0.01ms !important;
-            }
+            *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
             .reveal { opacity: 1; transform: none; }
-            .reveal.active { opacity: 1; transform: none; }
         }
 
-        /* ============================================================
-           RESPONSIVE BREAKPOINTS
-        ============================================================ */
         @media (max-width: 768px) {
-            /* IMPROVEMENT 1: Nav-Links versteckt, Hamburger sichtbar */
             .nav-links { display: none; }
             .hamburger { display: flex; align-items: center; }
-            /* Sprachbuttons auf Mobile: nur Flagge, kein Text */
             .lang-btn .lang-label { display: none; }
             .projects-grid { grid-template-columns: 1fr; }
             .skills-grid { grid-template-columns: repeat(auto-fill, minmax(90px, 1fr)); }
+            #back-to-top { bottom: 1.2rem; right: 1.2rem; }
         }
         @media (max-width: 400px) {
             .hero-title { font-size: 3rem; letter-spacing: -2px; }
             .content { padding: 1.5rem; }
         }
-
-        /* ============================================================
-           PAGE LOADER
-        ============================================================ */
-        #page-loader {
-            position: fixed; inset: 0; background: #080706; z-index: 9999;
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
-            transition: transform 0.9s cubic-bezier(0.76, 0, 0.24, 1);
-        }
-        #page-loader.slide-out { transform: translateY(-100%); }
-
-        .loader-terminal {
-            background: #0d1117; border: 1px solid #30363d; border-radius: 12px;
-            width: min(520px, 90vw); overflow: hidden; box-shadow: 0 30px 60px rgba(0,0,0,0.6);
-        }
-        .loader-terminal-header {
-            background: #161b22; padding: 12px 18px; display: flex; gap: 8px;
-            align-items: center; border-bottom: 1px solid #30363d;
-        }
-        .loader-terminal-title { margin-left: auto; font-family: 'Fira Code', monospace; font-size: 0.72rem; color: #484f58; }
-        .loader-terminal-body { padding: 24px; font-family: 'Fira Code', monospace; font-size: 0.88rem; color: #c9d1d9; min-height: 160px; line-height: 2; }
-        .loader-line { opacity: 0; transform: translateY(5px); transition: opacity 0.35s ease, transform 0.35s ease; }
-        .loader-line.visible { opacity: 1; transform: translateY(0); }
-        .loader-progress-bar { height: 3px; background: #21262d; overflow: hidden; }
-        .loader-progress-fill { height: 100%; width: 0%; background: linear-gradient(90deg, #D1B280, #E8D5A3); transition: width 0.7s cubic-bezier(0.4, 0, 0.2, 1); box-shadow: 0 0 10px rgba(209,178,128,0.7); }
-
-        #loader-skip {
-            position: absolute; bottom: 2rem; right: 2rem;
-            background: transparent; border: 1px solid rgba(255,255,255,0.12);
-            color: rgba(255,255,255,0.35); padding: 6px 16px; border-radius: 6px;
-            font-family: 'Fira Code', monospace; font-size: 0.75rem; cursor: pointer;
-            transition: 0.25s; letter-spacing: 1px;
-        }
-        #loader-skip:hover { border-color: #D1B280; color: #D1B280; }
     </style>
 </head>
 <body>
 
-    <!-- Page Loader -->
-    <div id="page-loader">
+    <a href="#main-content" class="skip-link" id="skip-link">Zum Inhalt springen</a>
+
+    <!-- Page Loader – wird bei wiederholten Besuchen übersprungen (sessionStorage) -->
+    <div id="page-loader" role="status" aria-label="Seite wird geladen">
         <div class="loader-terminal">
             <div class="loader-terminal-header">
-                <div class="dot red"></div>
-                <div class="dot yellow"></div>
-                <div class="dot green"></div>
+                <div class="dot red"></div><div class="dot yellow"></div><div class="dot green"></div>
                 <span class="loader-terminal-title">portfolio.init</span>
             </div>
             <div class="loader-terminal-body" id="loader-body"></div>
-            <div class="loader-progress-bar">
-                <div class="loader-progress-fill" id="loader-progress"></div>
-            </div>
+            <div class="loader-progress-bar"><div class="loader-progress-fill" id="loader-progress"></div></div>
         </div>
         <button id="loader-skip" onclick="skipLoader()">SKIP &rarr;</button>
     </div>
 
-    <!-- IMPROVEMENT 1: Mobile Drawer Menu -->
+    <button id="back-to-top" onclick="window.scrollTo({top:0,behavior:'smooth'})" aria-label="Zurück nach oben">
+        <i class="fas fa-chevron-up"></i>
+    </button>
+
     <div class="mobile-menu" id="mobile-menu" role="dialog" aria-modal="true" aria-label="Navigation">
         <button class="mobile-menu-close" onclick="closeMobileMenu()" aria-label="Menü schließen">&times;</button>
         <a href="#home"     class="nav-link" data-key="nav_home"     onclick="closeMobileMenu()">Home</a>
@@ -461,532 +425,537 @@
         <a href="#contact"  class="nav-link" data-key="nav_contact"  onclick="closeMobileMenu()">Kontakt</a>
     </div>
 
-    <nav>
+    <nav aria-label="Hauptnavigation">
         <a href="#home" class="logo" aria-label="Trimlind Maliqi – zurück zur Startseite">
             <svg class="logo-svg" viewBox="0 0 42 42" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                <!-- Äußerer Ring -->
                 <circle class="logo-ring" cx="21" cy="21" r="19" stroke-width="1.5"/>
-                <!-- Innerer dekorativer Ring (dünner, gedimmt) -->
                 <circle cx="21" cy="21" r="15.5" stroke="var(--accent-dim)" stroke-width="0.5" fill="none"/>
-                <!-- Monogramm "TM" – sorgfältig zentriert -->
-                <text
-                    x="21" y="26"
-                    text-anchor="middle"
-                    font-family="'Fira Code', monospace"
-                    font-weight="700"
-                    font-size="13"
-                    class="logo-letters"
-                    letter-spacing="-0.5">TM</text>
-                <!-- Dekorativer Unterstrich -->
+                <text x="21" y="26" text-anchor="middle" font-family="'Fira Code', monospace" font-weight="700" font-size="13" class="logo-letters" letter-spacing="-0.5">TM</text>
                 <line x1="14" y1="29" x2="28" y2="29" stroke="var(--accent)" stroke-width="1" stroke-linecap="round" opacity="0.4"/>
             </svg>
         </a>
 
         <div class="nav-links">
-            <a href="#home"     class="nav-link" data-key="nav_home">Home</a>
-            <a href="#skills"   class="nav-link" data-key="nav_skills">Skills</a>
-            <a href="#projects" class="nav-link" data-key="nav_projects">Projekte</a>
-            <a href="#roadmap"  class="nav-link" data-key="nav_roadmap">Roadmap</a>
-            <a href="#contact"  class="nav-link" data-key="nav_contact">Kontakt</a>
+            <a href="#home"     class="nav-link" data-key="nav_home"     data-section="home">Home</a>
+            <a href="#skills"   class="nav-link" data-key="nav_skills"   data-section="skills">Skills</a>
+            <a href="#projects" class="nav-link" data-key="nav_projects" data-section="projects">Projekte</a>
+            <a href="#roadmap"  class="nav-link" data-key="nav_roadmap"  data-section="roadmap">Roadmap</a>
+            <a href="#contact"  class="nav-link" data-key="nav_contact"  data-section="contact">Kontakt</a>
         </div>
 
         <div class="nav-right">
-            <!-- IMPROVEMENT 1: Hamburger Button -->
             <button class="hamburger" onclick="openMobileMenu()" aria-label="Menü öffnen" aria-expanded="false" id="hamburger-btn">
                 <i class="fas fa-bars"></i>
             </button>
-
             <button class="theme-toggle" onclick="toggleTheme()" aria-label="Theme wechseln">
                 <i class="fas fa-adjust"></i>
             </button>
-
-            <div class="lang-switch" style="display:flex; gap:5px;">
-                <!-- IMPROVEMENT 2: loading="lazy" auf Flaggen-Icons -->
+            <div class="lang-switch" style="display:flex;gap:5px;">
                 <button class="lang-btn" id="btn-de" onclick="setLanguage('de')" aria-label="Deutsch">
-                    <img src="https://flagcdn.com/w40/de.png" alt="DE" loading="lazy"> <span class="lang-label">DE</span>
+                    <img src="https://flagcdn.com/w40/de.png" alt="" loading="lazy"> <span class="lang-label">DE</span>
                 </button>
                 <button class="lang-btn" id="btn-en" onclick="setLanguage('en')" aria-label="English">
-                    <img src="https://flagcdn.com/w40/gb.png" alt="EN" loading="lazy"> <span class="lang-label">EN</span>
+                    <img src="https://flagcdn.com/w40/gb.png" alt="" loading="lazy"> <span class="lang-label">EN</span>
                 </button>
                 <button class="lang-btn" id="btn-sq" onclick="setLanguage('sq')" aria-label="Shqip">
-                    <img src="https://flagcdn.com/w40/al.png" alt="SQ" loading="lazy"> <span class="lang-label">SQ</span>
+                    <img src="https://flagcdn.com/w40/al.png" alt="" loading="lazy"> <span class="lang-label">SQ</span>
                 </button>
                 <button class="lang-btn" id="btn-it" onclick="setLanguage('it')" aria-label="Italiano">
-                    <img src="https://flagcdn.com/w40/it.png" alt="IT" loading="lazy"> <span class="lang-label">IT</span>
+                    <img src="https://flagcdn.com/w40/it.png" alt="" loading="lazy"> <span class="lang-label">IT</span>
                 </button>
             </div>
         </div>
     </nav>
 
-    <section id="home">
-        <h1 class="hero-title">
-            <span class="outline-text">Trimlind</span>
-            <span class="gradient-text" id="scramble-target">Maliqi</span>
-        </h1>
+    <main id="main-content">
+        <section id="home" aria-label="Hero">
+            <h1 class="hero-title">
+                <span class="outline-text">Trimlind</span>
+                <span class="gradient-text" id="scramble-target">Maliqi</span>
+            </h1>
+            <p class="hero-tagline" id="hero-tagline">
+                Software Developer &middot; Healthcare IT &middot; <span>PHP</span> &middot; <span>Python</span> &middot; <span>SvelteKit</span>
+            </p>
 
-        <p class="hero-tagline" id="hero-tagline">
-            Full-Stack Developer &middot; <span>React</span> &middot; <span>Node.js</span> &middot; <span>Cloud</span>
-        </p>
-
-        <div class="terminal-window">
-            <div class="terminal-header">
-                <div class="dot red"></div>
-                <div class="dot yellow"></div>
-                <div class="dot green"></div>
+            <!-- Beweise statt Behauptung: direkte Links zu Profilen -->
+            <div class="hero-socials">
+                <a href="https://github.com/DEIN-GITHUB" target="_blank" rel="noopener" aria-label="GitHub Profil"><i class="fa-brands fa-github"></i></a> <!-- TODO -->
+                <a href="https://www.linkedin.com/in/DEIN-LINKEDIN" target="_blank" rel="noopener" aria-label="LinkedIn Profil"><i class="fa-brands fa-linkedin-in"></i></a> <!-- TODO -->
+                <a href="#contact" aria-label="Kontakt"><i class="fa-solid fa-envelope"></i></a>
             </div>
-            <div class="terminal-body">
-                <div><span style="color:var(--accent)">user@portfolio</span>:~$ init profile</div>
-                <div style="margin-top:5px;">> Loading modules...</div>
-                <div style="color:#7ee787; margin-top:5px;">> [SUCCESS] Full-Stack Developer loaded.</div>
-                <div style="color:#7ee787; margin-top:5px;">> [SUCCESS] Creative Mindset active.</div>
-                <div style="margin-top:5px;">> <span class="cursor"></span></div>
+
+            <div class="terminal-window" aria-hidden="true">
+                <div class="terminal-header">
+                    <div class="dot red"></div><div class="dot yellow"></div><div class="dot green"></div>
+                </div>
+                <div class="terminal-body">
+                    <div><span style="color:var(--accent)">trimi@portfolio</span>:~$ whoami --verbose</div>
+                    <div style="margin-top:5px;">> Software Developer @ Healthcare IT</div>
+                    <div style="color:#7ee787;margin-top:5px;">> [OK] Lab analytics: Python · Oracle SQL · Plotly</div>
+                    <div style="color:#7ee787;margin-top:5px;">> [OK] Web: SvelteKit · Supabase · PHP/JS</div>
+                    <div style="margin-top:5px;">> <span class="cursor"></span></div>
+                </div>
             </div>
-        </div>
+            <button class="scroll-indicator" id="scroll-hint" aria-label="Zu Skills scrollen">
+                <span data-key="scroll_hint">Scroll</span>
+                <i class="fas fa-chevron-down"></i>
+            </button>
+        </section>
 
-        <div class="scroll-indicator" onclick="document.getElementById('skills').scrollIntoView({behavior:'smooth'})">
-            <span data-key="scroll_hint">Scroll</span>
-            <i class="fas fa-chevron-down"></i>
-        </div>
-    </section>
+        <!-- ============================================================
+             SKILLS – gruppiert nach echtem Stack, ohne Prozente
+        ============================================================ -->
+        <section id="skills" aria-labelledby="skills-heading">
+            <h2 id="skills-heading" class="section-title reveal" data-key="skills_title">Skills</h2>
+            <p class="section-subtitle reveal" data-key="skills_subtitle">Technologien mit denen ich täglich arbeite</p>
 
-    <section id="skills">
-        <h2 class="section-title reveal" data-key="skills_title">Skills</h2>
-        <p class="section-subtitle reveal" data-key="skills_subtitle">Technologien mit denen ich arbeite</p>
-        <div class="skills-grid">
-            <div class="skill-card reveal"><i class="fa-brands fa-react"></i><span>React</span></div>
-            <div class="skill-card reveal"><i class="fa-brands fa-node-js"></i><span>Node.js</span></div>
-            <div class="skill-card reveal"><i class="fa-brands fa-js"></i><span>JavaScript</span></div>
-            <div class="skill-card reveal"><i class="fa-brands fa-python"></i><span>Python</span></div>
-            <div class="skill-card reveal"><i class="fa-brands fa-docker"></i><span>Docker</span></div>
-            <div class="skill-card reveal"><i class="fa-brands fa-aws"></i><span>AWS</span></div>
-            <div class="skill-card reveal"><i class="fa-brands fa-git-alt"></i><span>Git</span></div>
-            <div class="skill-card reveal"><i class="fa-solid fa-database"></i><span>SQL / NoSQL</span></div>
-            <div class="skill-card reveal"><i class="fa-brands fa-html5"></i><span>HTML5</span></div>
-            <div class="skill-card reveal"><i class="fa-brands fa-css3-alt"></i><span>CSS3</span></div>
-            <div class="skill-card reveal"><i class="fa-solid fa-robot"></i><span>AI / LLMs</span></div>
-            <div class="skill-card reveal"><i class="fa-brands fa-linux"></i><span>Linux</span></div>
-        </div>
-    </section>
+            <div class="skills-wrapper">
+                <div class="skill-group reveal">
+                    <h3 data-key="skills_group_backend">Backend &amp; Daten</h3>
+                    <div class="skills-grid">
+                        <div class="skill-card"><i class="fa-brands fa-php"></i><span>PHP</span></div>
+                        <div class="skill-card"><i class="fa-brands fa-python"></i><span>Python</span></div>
+                        <div class="skill-card"><i class="fa-solid fa-database"></i><span>Oracle SQL</span></div>
+                        <div class="skill-card"><i class="fa-solid fa-table"></i><span>PostgreSQL</span></div>
+                    </div>
+                </div>
+                <div class="skill-group reveal">
+                    <h3 data-key="skills_group_frontend">Frontend &amp; Web</h3>
+                    <div class="skills-grid">
+                        <div class="skill-card"><i class="fa-brands fa-js"></i><span>JavaScript</span></div>
+                        <div class="skill-card"><i class="fa-solid fa-fire"></i><span>SvelteKit</span></div>
+                        <div class="skill-card"><i class="fa-brands fa-html5"></i><span>HTML5</span></div>
+                        <div class="skill-card"><i class="fa-brands fa-css3-alt"></i><span>CSS3</span></div>
+                    </div>
+                </div>
+                <div class="skill-group reveal">
+                    <h3 data-key="skills_group_tools">Analytics &amp; Tools</h3>
+                    <div class="skills-grid">
+                        <div class="skill-card"><i class="fa-solid fa-chart-line"></i><span>Jupyter / Plotly</span></div>
+                        <div class="skill-card"><i class="fa-solid fa-robot"></i><span>AI / LLMs</span></div>
+                        <div class="skill-card"><i class="fa-brands fa-git-alt"></i><span>Git</span></div>
+                        <div class="skill-card"><i class="fa-brands fa-linux"></i><span>Linux</span></div>
+                    </div>
+                </div>
+            </div>
+        </section>
 
-    <section id="projects">
-        <h2 class="section-title reveal" data-key="projects_title">Projekte</h2>
-        <p class="section-subtitle reveal" data-key="projects_subtitle">Ausgewählte Arbeiten</p>
-        <div class="projects-grid" id="projects-list"></div>
-    </section>
+        <!-- ============================================================
+             PROJEKTE – statisches HTML (SEO/Crawler-freundlich).
+             setLanguage() tauscht nur die Texte aus, kein JS-Rendering.
+        ============================================================ -->
+        <section id="projects" aria-labelledby="projects-heading">
+            <h2 id="projects-heading" class="section-title reveal" data-key="projects_title">Projekte</h2>
+            <p class="section-subtitle reveal" data-key="projects_subtitle">Echte Arbeit, keine Platzhalter</p>
+            <div class="projects-grid" id="projects-list">
 
-    <section id="roadmap">
-        <h2 class="section-title reveal" data-key="roadmap_title">Roadmap</h2>
-        <p class="section-subtitle reveal" data-key="roadmap_subtitle">Meine Entwicklung als Developer</p>
-        <div class="roadmap-container">
-            <div class="timeline" id="roadmap-list"></div>
-        </div>
-    </section>
+                <article class="project-card reveal spotlight-card" data-pid="p1" onclick="openProjectDetails('p1')">
+                    <span class="project-tag pc-tag">Healthcare Analytics</span>
+                    <h3 class="pc-title">Labor-Analytics-Dashboards</h3>
+                    <p class="pc-desc">Interaktive Dashboards für Abrechnungs- und Befunddaten eines Universitätsspitals – Jupyter/Voilà, Oracle SQL, Polars und Plotly, inkl. Excel-Export.</p>
+                    <div class="project-icons"><i class="fa-brands fa-python"></i><i class="fa-solid fa-database"></i><i class="fa-solid fa-chart-line"></i></div>
+                    <i class="fas fa-arrow-right project-arrow" aria-hidden="true"></i>
+                </article>
 
-    <section id="contact">
-        <h2 class="section-title reveal" data-key="nav_contact">Kontakt</h2>
-        <p class="section-subtitle reveal" data-key="contact_subtitle">Schreib mir eine Nachricht</p>
-        <div class="contact-wrapper reveal">
-            <form action="https://formspree.io/f/xnjqdepv" method="POST" class="contact-form">
-                <input type="text"  name="name"    id="p_name"  placeholder="Name"      required>
-                <input type="email" name="email"   id="p_email" placeholder="Email"     required>
-                <textarea name="message" id="p_msg" rows="5"   placeholder="Nachricht" required></textarea>
-                <!-- IMPROVEMENT 4: Honeypot gegen Spam-Bots -->
-                <input type="text" name="_gotcha" class="hp-field" tabindex="-1" autocomplete="off">
-                <button type="submit" class="email-btn" data-key="contact_btn">NACHRICHT SENDEN</button>
-            </form>
-        </div>
-    </section>
+                <article class="project-card reveal spotlight-card" data-pid="p2" onclick="openProjectDetails('p2')">
+                    <span class="project-tag pc-tag">Healthcare IT</span>
+                    <h3 class="pc-title">Laborinformationssystem (LIS)</h3>
+                    <p class="pc-desc">Entwicklung und Wartung von Bestell-Dialogen und Auftragslogik in einem produktiven Laborinformationssystem – PHP, JavaScript und Oracle.</p>
+                    <div class="project-icons"><i class="fa-brands fa-php"></i><i class="fa-brands fa-js"></i><i class="fa-solid fa-flask-vial"></i></div>
+                    <i class="fas fa-arrow-right project-arrow" aria-hidden="true"></i>
+                </article>
+
+                <article class="project-card reveal spotlight-card" data-pid="p3" onclick="openProjectDetails('p3')">
+                    <span class="project-tag pc-tag">Full-Stack Web App</span>
+                    <h3 class="pc-title">WM 2026 Tippspiel</h3>
+                    <p class="pc-desc">Komplettes Tippspiel zur Fussball-WM: SvelteKit, Supabase-Auth, PostgreSQL mit Row Level Security und Live-Ergebnisse via API.</p>
+                    <div class="project-icons"><i class="fa-solid fa-futbol"></i><i class="fa-solid fa-bolt"></i><i class="fa-solid fa-table"></i></div>
+                    <i class="fas fa-arrow-right project-arrow" aria-hidden="true"></i>
+                </article>
+
+                <article class="project-card reveal spotlight-card" data-pid="p4" onclick="openProjectDetails('p4')">
+                    <span class="project-tag pc-tag">AI / Automatisierung</span>
+                    <h3 class="pc-title">KI-Dokumentenextraktion</h3>
+                    <p class="pc-desc">POC für lokale OCR/LLM-Extraktion strukturierter Felder aus PDF-Dokumenten (Laboraufträge, Rechnungen) – offline-fähig auf moderater Hardware.</p>
+                    <div class="project-icons"><i class="fa-solid fa-robot"></i><i class="fa-solid fa-file-pdf"></i><i class="fa-brands fa-python"></i></div>
+                    <i class="fas fa-arrow-right project-arrow" aria-hidden="true"></i>
+                </article>
+
+                <article class="project-card reveal spotlight-card" data-pid="p5" onclick="openProjectDetails('p5')">
+                    <span class="project-tag pc-tag">Web App</span>
+                    <h3 class="pc-title">Developer Portfolio</h3>
+                    <p class="pc-desc">Diese Seite – eine einzige HTML-Datei mit 4-sprachiger UI, Dark/Light Mode, statischem SEO-Rendering und Vanilla JS ohne Framework.</p>
+                    <div class="project-icons"><i class="fa-brands fa-html5"></i><i class="fa-brands fa-css3-alt"></i><i class="fa-brands fa-js"></i></div>
+                    <i class="fas fa-arrow-right project-arrow" aria-hidden="true"></i>
+                </article>
+
+                <article class="project-card reveal spotlight-card" data-pid="p6" onclick="openProjectDetails('p6')">
+                    <span class="project-tag pc-tag">Side Project</span>
+                    <h3 class="pc-title">EU-Kennzeichen-Generator</h3>
+                    <p class="pc-desc">Interaktiver Generator für europäische Autokennzeichen mit länderspezifisch authentischen Designs – Typografie- und Detailarbeit pur.</p>
+                    <div class="project-icons"><i class="fa-solid fa-car"></i><i class="fa-solid fa-palette"></i><i class="fa-brands fa-js"></i></div>
+                    <i class="fas fa-arrow-right project-arrow" aria-hidden="true"></i>
+                </article>
+
+            </div>
+        </section>
+
+        <!-- ============================================================
+             ROADMAP – statisches HTML, Texte via setLanguage()
+             TODO: Jahreszahlen an deinen echten Werdegang anpassen!
+        ============================================================ -->
+        <section id="roadmap" aria-labelledby="roadmap-heading">
+            <h2 id="roadmap-heading" class="section-title reveal" data-key="roadmap_title">Roadmap</h2>
+            <p class="section-subtitle reveal" data-key="roadmap_subtitle">Meine Entwicklung als Developer</p>
+            <div class="roadmap-container">
+                <div class="timeline" id="roadmap-list">
+
+                    <div class="container reveal" data-rid="r26" onclick="openDetails('r26')">
+                        <div class="timeline-dot"></div>
+                        <div class="content spotlight-card">
+                            <span class="year-badge">2026</span>
+                            <h3 class="rm-title">AI &amp; Prozessautomatisierung</h3>
+                            <p class="rm-desc">OCR/LLM-Pipelines für Labordokumente, POC-Projekte im klinischen Umfeld.</p>
+                        </div>
+                    </div>
+
+                    <div class="container reveal" data-rid="r25" onclick="openDetails('r25')">
+                        <div class="timeline-dot"></div>
+                        <div class="content spotlight-card">
+                            <span class="year-badge">2025</span>
+                            <h3 class="rm-title">Data &amp; Analytics</h3>
+                            <p class="rm-desc">Jupyter/Voilà-Dashboards, Oracle-Query-Optimierung, Polars &amp; Plotly in Produktion.</p>
+                        </div>
+                    </div>
+
+                    <div class="container reveal" data-rid="r24" onclick="openDetails('r24')">
+                        <div class="timeline-dot"></div>
+                        <div class="content spotlight-card">
+                            <span class="year-badge">2024</span>
+                            <h3 class="rm-title">Healthcare IT</h3>
+                            <p class="rm-desc">Entwicklung am produktiven Laborinformationssystem eines Universitätsspitals.</p>
+                        </div>
+                    </div>
+
+                    <div class="container reveal" data-rid="r22" onclick="openDetails('r22')">
+                        <div class="timeline-dot"></div>
+                        <div class="content spotlight-card">
+                            <span class="year-badge">2022</span>
+                            <h3 class="rm-title">Full-Stack Foundations</h3>
+                            <p class="rm-desc">Moderne Web-Entwicklung mit SvelteKit, eigene Tools und Side Projects.</p>
+                        </div>
+                    </div>
+
+                    <div class="container reveal" data-rid="r19" onclick="openDetails('r19')">
+                        <div class="timeline-dot"></div>
+                        <div class="content spotlight-card">
+                            <span class="year-badge">2019</span>
+                            <h3 class="rm-title">Der Start</h3>
+                            <p class="rm-desc">Einstieg in die professionelle Softwareentwicklung.</p>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <section id="contact" aria-labelledby="contact-heading">
+            <h2 id="contact-heading" class="section-title reveal" data-key="nav_contact">Kontakt</h2>
+            <p class="section-subtitle reveal" data-key="contact_subtitle">Schreib mir eine Nachricht</p>
+            <div class="contact-wrapper reveal">
+                <div class="form-feedback" id="form-feedback" role="alert" aria-live="polite"></div>
+                <form id="contact-form" class="contact-form" novalidate>
+                    <input type="text"  name="name"    id="p_name"  placeholder="Name"      required autocomplete="name">
+                    <input type="email" name="email"   id="p_email" placeholder="Email"     required autocomplete="email">
+                    <textarea name="message" id="p_msg" rows="5"   placeholder="Nachricht" required></textarea>
+                    <input type="text" name="_gotcha" class="hp-field" tabindex="-1" autocomplete="off">
+                    <button type="submit" class="email-btn" id="submit-btn">
+                        <span id="btn-label" data-key="contact_btn">NACHRICHT SENDEN</span>
+                    </button>
+                </form>
+            </div>
+        </section>
+    </main>
 
     <div id="projectModal" class="modal" onclick="closeDetails(event)">
-        <div class="modal-content" onclick="event.stopPropagation()">
-            <span class="close-modal" onclick="closeModalFunc()">&times;</span>
-            <h2 id="modalTitle" style="font-size:1.8rem; color:var(--accent); margin-bottom:1rem; font-weight:700;"></h2>
-            <p id="modalBody" style="line-height:1.7; font-size:1rem; color:var(--text);"></p>
-            <div id="modalIcons" style="display:flex; gap:20px; font-size:2.5rem; color:var(--text-dim); margin-top:2rem; flex-wrap:wrap;"></div>
+        <div class="modal-content" onclick="event.stopPropagation()" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+            <button class="close-modal" onclick="closeModalFunc()" aria-label="Modal schließen">&times;</button>
+            <h2 id="modalTitle" style="font-size:1.8rem;color:var(--accent);margin-bottom:1rem;font-weight:700;"></h2>
+            <p id="modalBody" style="line-height:1.7;font-size:1rem;color:var(--text);"></p>
+            <div id="modalIcons" style="display:flex;gap:20px;font-size:2.5rem;color:var(--text-dim);margin-top:2rem;flex-wrap:wrap;" aria-hidden="true"></div>
         </div>
     </div>
 
-    <footer>&copy; 2026 Trimlind Maliqi | Built with code & passion ❤️</footer>
+    <footer>
+        <div class="footer-socials">
+            <a href="https://github.com/DEIN-GITHUB" target="_blank" rel="noopener" aria-label="GitHub"><i class="fa-brands fa-github"></i></a> <!-- TODO -->
+            <a href="https://www.linkedin.com/in/DEIN-LINKEDIN" target="_blank" rel="noopener" aria-label="LinkedIn"><i class="fa-brands fa-linkedin-in"></i></a> <!-- TODO -->
+        </div>
+        <p>&copy; 2026 Trimlind Maliqi | Built with code &amp; passion ❤️</p>
+    </footer>
 
     <script>
         /* ============================================================
-           DATEN – ROADMAP
-           IMPROVEMENT 6: IT-Übersetzungen vervollständigt
+           DATEN – PROJEKTE (Texte für alle Sprachen + Modal-Langtexte)
+           Das HTML oben ist die statische DE-Version (SEO).
+           setLanguage() schreibt nur die Texte um.
         ============================================================ */
-        const years = [
-            { id: 'r26', year: '2026',
-              title: { de: "Next Horizon", en: "Next Horizon", sq: "Horizonti i ardhshëm", it: "Prossimo Orizzonte" },
-              desc:  { de: "Web3 & Cloud Scaling.", en: "Web3 & Cloud Scaling.", sq: "Web3 & Skalimi i resë.", it: "Web3 & Scalabilità Cloud." },
-              icons: ['fa-brands fa-ethereum', 'fa-solid fa-cloud'],
-              long:  { de: "Die Vision für 2026 ist die vollständige Dezentralisierung. Ich plane die Integration von Smart Contracts in Unternehmensprozesse und den Aufbau hochskalierbarer Edge-Computing-Architekturen.",
-                       en: "The vision for 2026 is full decentralization. Planning smart contract integration and scalable edge computing architectures.",
-                       sq: "Vizioni për vitin 2026 është deçentralizimi i plotë. Planifikoj integrimin e kontratave inteligjente dhe arkitekturat edge computing.",
-                       it: "La visione per il 2026 è la completa decentralizzazione. In programma: integrazione di smart contract nei processi aziendali e architetture edge computing ad alta scalabilità." }
+        const projects = {
+            p1: {
+                tag:  {de:"Healthcare Analytics", en:"Healthcare Analytics", sq:"Analitikë Shëndetësore", it:"Analytics Sanitaria"},
+                title:{de:"Labor-Analytics-Dashboards", en:"Lab Analytics Dashboards", sq:"Dashboards Analitike Laboratori", it:"Dashboard Analytics di Laboratorio"},
+                desc: {de:"Interaktive Dashboards für Abrechnungs- und Befunddaten eines Universitätsspitals – Jupyter/Voilà, Oracle SQL, Polars und Plotly, inkl. Excel-Export.",
+                       en:"Interactive dashboards for billing and findings data at a university hospital – Jupyter/Voilà, Oracle SQL, Polars and Plotly, incl. Excel export.",
+                       sq:"Dashboards interaktive për të dhënat e faturimit dhe rezultateve të një spitali universitar – Jupyter/Voilà, Oracle SQL, Polars dhe Plotly.",
+                       it:"Dashboard interattive per dati di fatturazione e referti di un ospedale universitario – Jupyter/Voilà, Oracle SQL, Polars e Plotly, con export Excel."},
+                icons:['fa-brands fa-python','fa-solid fa-database','fa-solid fa-chart-line'],
+                long: {de:"Mehrere produktive Analytics-Dashboards für die Labormedizin: komplexe Oracle-SQL-Queries, Datenverarbeitung mit Polars, interaktive Plotly-Charts und Mehrblatt-Excel-Exporte. Deployed via Voilà, täglich im Einsatz bei Fachabteilungen.",
+                       en:"Multiple production analytics dashboards for laboratory medicine: complex Oracle SQL queries, data processing with Polars, interactive Plotly charts and multi-sheet Excel exports. Deployed via Voilà, used daily by specialist departments.",
+                       sq:"Dashboards analitike në prodhim për mjekësinë laboratorike: query komplekse Oracle SQL, përpunim të dhënash me Polars, grafikë interaktivë Plotly dhe eksporte Excel me shumë fletë.",
+                       it:"Diverse dashboard analytics in produzione per la medicina di laboratorio: query Oracle SQL complesse, elaborazione dati con Polars, grafici Plotly interattivi ed export Excel multi-foglio. In uso quotidiano nei reparti."}
             },
-            { id: 'r25', year: '2025',
-              title: { de: "AI & Scalability", en: "AI & Scalability", sq: "AI dhe Skalueshmëria", it: "AI & Scalabilità" },
-              desc:  { de: "KI-Workflows & RAG-Systeme.", en: "AI workflows & RAG systems.", sq: "Proceset AI & sistemet RAG.", it: "Flussi di lavoro AI & sistemi RAG." },
-              icons: ['fa-solid fa-robot', 'fa-solid fa-brain'],
-              long:  { de: "Zentrierung auf KI-Modelle und RAG-Systeme zur effizienten Datenverarbeitung in produktiven Umgebungen.",
-                       en: "Focusing on AI models and RAG systems for efficient data processing in production environments.",
-                       sq: "Fokusi në modelet AI dhe sistemet RAG për përpunim efikas të të dhënave.",
-                       it: "Specializzazione su modelli AI e sistemi RAG per l'elaborazione efficiente dei dati in ambienti di produzione." }
+            p2: {
+                tag:  {de:"Healthcare IT", en:"Healthcare IT", sq:"IT Shëndetësore", it:"IT Sanitaria"},
+                title:{de:"Laborinformationssystem (LIS)", en:"Laboratory Information System (LIS)", sq:"Sistemi Informativ i Laboratorit (LIS)", it:"Sistema Informativo di Laboratorio (LIS)"},
+                desc: {de:"Entwicklung und Wartung von Bestell-Dialogen und Auftragslogik in einem produktiven Laborinformationssystem – PHP, JavaScript und Oracle.",
+                       en:"Development and maintenance of ordering dialogs and order logic in a production laboratory information system – PHP, JavaScript and Oracle.",
+                       sq:"Zhvillim dhe mirëmbajtje e dialogëve të porosive dhe logjikës së porosive në një sistem laboratori në prodhim – PHP, JavaScript dhe Oracle.",
+                       it:"Sviluppo e manutenzione di dialoghi d'ordine e logica degli ordini in un sistema di laboratorio in produzione – PHP, JavaScript e Oracle."},
+                icons:['fa-brands fa-php','fa-brands fa-js','fa-solid fa-flask-vial'],
+                long: {de:"Tägliche Arbeit an einem geschäftskritischen LIS: dynamische Bestell-Dialoge für Spezialanalysen (u.a. Zelltherapien und Mikrobiologie), Materiallogik, Validierungen und Debugging tief im PHP/JS-Stack – mit hohem Anspruch an Stabilität im klinischen Betrieb.",
+                       en:"Daily work on a business-critical LIS: dynamic ordering dialogs for specialty analyses (incl. cell therapies and microbiology), material logic, validations and deep PHP/JS debugging – with high stability requirements in clinical operations.",
+                       sq:"Punë e përditshme në një LIS kritik: dialogë dinamikë porosish për analiza speciale, logjikë materialesh, validime dhe debugging i thellë në PHP/JS – me kërkesa të larta stabiliteti në mjedis klinik.",
+                       it:"Lavoro quotidiano su un LIS critico: dialoghi d'ordine dinamici per analisi speciali (incl. terapie cellulari e microbiologia), logica dei materiali, validazioni e debugging approfondito PHP/JS – con elevati requisiti di stabilità clinica."}
             },
-            { id: 'r1', year: '2024',
-              title: { de: "SaaS Innovation", en: "SaaS Innovation", sq: "SaaS Inovacion", it: "Innovazione SaaS" },
-              desc:  { de: "Cloud-native B2B Apps.", en: "Cloud-native B2B apps.", sq: "Aplikacione cloud-native B2B.", it: "App B2B cloud-native." },
-              icons: ['fa-brands fa-docker', 'fa-brands fa-aws'],
-              long:  { de: "Entwicklung hochverfügbarer SaaS-Lösungen mittels Docker und AWS für B2B-Kunden.",
-                       en: "Development of high-availability SaaS solutions using Docker and AWS for B2B clients.",
-                       sq: "Zhvillimi i zgjidhjeve SaaS me disponueshmëri të lartë duke përdorur Docker dhe AWS.",
-                       it: "Sviluppo di soluzioni SaaS ad alta disponibilità con Docker e AWS per clienti B2B." }
+            p3: {
+                tag:  {de:"Full-Stack Web App", en:"Full-Stack Web App", sq:"Aplikacion Full-Stack", it:"Web App Full-Stack"},
+                title:{de:"WM 2026 Tippspiel", en:"World Cup 2026 Prediction Game", sq:"Lojë Parashikimi Kupa e Botës 2026", it:"Gioco Pronostici Mondiali 2026"},
+                desc: {de:"Komplettes Tippspiel zur Fussball-WM: SvelteKit, Supabase-Auth, PostgreSQL mit Row Level Security und Live-Ergebnisse via API.",
+                       en:"Complete World Cup prediction game: SvelteKit, Supabase auth, PostgreSQL with row level security and live results via API.",
+                       sq:"Lojë e plotë parashikimi për Kupën e Botës: SvelteKit, Supabase auth, PostgreSQL me Row Level Security dhe rezultate live përmes API.",
+                       it:"Gioco di pronostici completo per i Mondiali: SvelteKit, autenticazione Supabase, PostgreSQL con row level security e risultati live via API."},
+                icons:['fa-solid fa-futbol','fa-solid fa-bolt','fa-solid fa-table'],
+                long: {de:"Von null gebaut: Auth-Flows mit Supabase, PostgreSQL-Schema mit Row Level Security, automatischer Ergebnis-Sync über die football-data.org API und eine eigene Scoring-Engine. Pünktlich zum WM-Start am 11. Juni 2026 live.",
+                       en:"Built from scratch: auth flows with Supabase, PostgreSQL schema with row level security, automatic result sync via the football-data.org API and a custom scoring engine. Live in time for the World Cup kickoff on June 11, 2026.",
+                       sq:"Ndërtuar nga zeroja: auth me Supabase, skemë PostgreSQL me RLS, sinkronizim automatik rezultatesh përmes football-data.org API dhe motor pikëzimi i personalizuar. Live për fillimin e Kupës së Botës.",
+                       it:"Costruito da zero: flussi di autenticazione con Supabase, schema PostgreSQL con RLS, sincronizzazione automatica dei risultati tramite l'API football-data.org e motore di punteggio personalizzato. Online per il calcio d'inizio dei Mondiali."}
             },
-            { id: 'r2', year: '2023',
-              title: { de: "E-Commerce Core", en: "E-Commerce Core", sq: "Baza e E-Commerce", it: "Core E-Commerce" },
-              desc:  { de: "API-Optimierung & Checkout-Flows.", en: "API optimization & checkout flows.", sq: "Optimizim API & procese checkout.", it: "Ottimizzazione API & flussi di checkout." },
-              icons: ['fa-solid fa-bolt', 'fa-solid fa-server'],
-              long:  { de: "Optimierung kritischer Checkout-Prozesse und API-Strukturen für maximale Conversion-Rate.",
-                       en: "Optimization of critical checkout processes and API structures for maximum conversion rates.",
-                       sq: "Optimizimi i proceseve kritike të arkëtimit dhe strukturave API.",
-                       it: "Ottimizzazione dei processi di checkout critici e delle strutture API per massimizzare la conversione." }
+            p4: {
+                tag:  {de:"AI / Automatisierung", en:"AI / Automation", sq:"AI / Automatizim", it:"AI / Automazione"},
+                title:{de:"KI-Dokumentenextraktion", en:"AI Document Extraction", sq:"Ekstraktim Dokumentesh me AI", it:"Estrazione Documenti con AI"},
+                desc: {de:"POC für lokale OCR/LLM-Extraktion strukturierter Felder aus PDF-Dokumenten (Laboraufträge, Rechnungen) – offline-fähig auf moderater Hardware.",
+                       en:"POC for local OCR/LLM extraction of structured fields from PDF documents (lab orders, invoices) – capable of running offline on modest hardware.",
+                       sq:"POC për ekstraktim lokal OCR/LLM të fushave të strukturuara nga dokumente PDF – funksionon offline në hardware modest.",
+                       it:"POC per l'estrazione locale OCR/LLM di campi strutturati da documenti PDF (ordini di laboratorio, fatture) – funzionante offline su hardware modesto."},
+                icons:['fa-solid fa-robot','fa-solid fa-file-pdf','fa-brands fa-python'],
+                long: {de:"Architektur und Umsetzung eines lokalen Extraktionssystems: OCR-Vorverarbeitung, LLM-basierte Feldextraktion und strukturierte Ausgabe – datenschutzkonform ohne Cloud, ausgelegt für den Betrieb im Spitalnetzwerk.",
+                       en:"Architecture and implementation of a local extraction system: OCR pre-processing, LLM-based field extraction and structured output – privacy-compliant without cloud, designed to run inside a hospital network.",
+                       sq:"Arkitekturë dhe zbatim i një sistemi lokal ekstraktimi: OCR, ekstraktim fushash me LLM dhe output i strukturuar – pa cloud, në përputhje me privatësinë.",
+                       it:"Architettura e implementazione di un sistema di estrazione locale: pre-elaborazione OCR, estrazione campi basata su LLM e output strutturato – conforme alla privacy senza cloud, progettato per la rete ospedaliera."}
             },
-            { id: 'r22', year: '2022',
-              title: { de: "Backend Excellence", en: "Backend Excellence", sq: "Ekselencë Backend", it: "Eccellenza Backend" },
-              desc:  { de: "Node.js & komplexe SQL-Architekturen.", en: "Node.js & complex SQL architectures.", sq: "Node.js & arkitektura komplekse SQL.", it: "Node.js & architetture SQL complesse." },
-              icons: ['fa-brands fa-node-js', 'fa-solid fa-database'],
-              long:  { de: "Vertiefung in komplexe Serverarchitekturen, Query-Optimierung und skalierbare Datenbankdesigns.",
-                       en: "Deep dive into complex server architectures, query optimization and scalable database designs.",
-                       sq: "Thellimi në arkitekturat komplekse të serverëve dhe optimizimin e bazave të të dhënave.",
-                       it: "Approfondimento delle architetture server complesse, ottimizzazione delle query e progettazione scalabile dei database." }
+            p5: {
+                tag:  {de:"Web App", en:"Web App", sq:"Aplikacion Web", it:"App Web"},
+                title:{de:"Developer Portfolio", en:"Developer Portfolio", sq:"Portfolio Developer", it:"Portfolio Developer"},
+                desc: {de:"Diese Seite – eine einzige HTML-Datei mit 4-sprachiger UI, Dark/Light Mode, statischem SEO-Rendering und Vanilla JS ohne Framework.",
+                       en:"This site – a single HTML file with a 4-language UI, dark/light mode, static SEO rendering and vanilla JS without a framework.",
+                       sq:"Kjo faqe – një skedar i vetëm HTML me UI 4-gjuhëshe, Dark/Light Mode, renderim statik SEO dhe Vanilla JS pa framework.",
+                       it:"Questo sito – un singolo file HTML con UI in 4 lingue, dark/light mode, rendering statico SEO e vanilla JS senza framework."},
+                icons:['fa-brands fa-html5','fa-brands fa-css3-alt','fa-brands fa-js'],
+                long: {de:"Bewusst ohne Framework gebaut: statisches HTML für Crawler, JS nur als Progressive Enhancement für Sprache, Theme und Animationen. Open-Graph-Tags, JSON-LD-Schema und Accessibility (Fokus-Styles, reduced-motion, Skip-Link) inklusive.",
+                       en:"Deliberately built without a framework: static HTML for crawlers, JS only as progressive enhancement for language, theme and animations. Open Graph tags, JSON-LD schema and accessibility (focus styles, reduced motion, skip link) included.",
+                       sq:"Ndërtuar qëllimisht pa framework: HTML statike për crawlers, JS vetëm si përmirësim progresiv. Me Open Graph, JSON-LD dhe aksesueshmëri.",
+                       it:"Costruito volutamente senza framework: HTML statico per i crawler, JS solo come progressive enhancement per lingua, tema e animazioni. Inclusi tag Open Graph, schema JSON-LD e accessibilità."}
             },
-            { id: 'r21', year: '2021',
-              title: { de: "Frontend Mastery", en: "Frontend Mastery", sq: "Zotërim i Frontend-it", it: "Maestria Frontend" },
-              desc:  { de: "React & modernes State Management.", en: "React & modern state management.", sq: "React & menaxhim modern i gjendjes.", it: "React & gestione moderna dello stato." },
-              icons: ['fa-brands fa-react', 'fa-brands fa-js'],
-              long:  { de: "Spezialisierung auf moderne Frontend-Entwicklung mit React, Redux und performanten UI-Patterns.",
-                       en: "Specialization in modern frontend development with React, Redux and performant UI patterns.",
-                       sq: "Specializimi në zhvillimin e frontend-it modern me React, Redux dhe patternë të performantë UI.",
-                       it: "Specializzazione nello sviluppo frontend moderno con React, Redux e pattern UI ad alte prestazioni." }
-            },
-            { id: 'r19', year: '2019',
-              title: { de: "The Start", en: "The Start", sq: "Fillimi", it: "L'Inizio" },
-              desc:  { de: "Einstieg in professionelle Softwareentwicklung.", en: "Entry into professional software development.", sq: "Hyrja në zhvillimin profesional të softuerit.", it: "Ingresso nello sviluppo software professionale." },
-              icons: ['fa-solid fa-code', 'fa-solid fa-terminal'],
-              long:  { de: "Erste Schritte in der professionellen Softwareentwicklung — der Beginn einer leidenschaftlichen Reise.",
-                       en: "First steps in professional software development — the beginning of a passionate journey.",
-                       sq: "Hapat e parë në zhvillimin profesional të softuerit — fillimi i një udhëtimi me pasion.",
-                       it: "I primi passi nello sviluppo software professionale — l'inizio di un appassionato percorso." }
-            }
-        ];
-
-        /* ============================================================
-           DATEN – PROJEKTE
-           IMPROVEMENT 6: IT-Übersetzungen vervollständigt
-        ============================================================ */
-        const projects = [
-            {
-                id: 'p1',
-                tag:  { de: "Web App", en: "Web App", sq: "Aplikacion Web", it: "App Web" },
-                title:{ de: "Developer Portfolio", en: "Developer Portfolio", sq: "Portfolio Developer", it: "Portfolio Developer" },
-                desc: { de: "Dieses Portfolio — gebaut mit reinem HTML, CSS & JS. Animationen, Mehrsprachigkeit und Dark Mode.",
-                        en: "This portfolio — built with pure HTML, CSS & JS. Animations, multilanguage and dark mode.",
-                        sq: "Ky portfolio — ndërtuar me HTML, CSS & JS të pastër. Animacione, shumëgjuhësi dhe Dark Mode.",
-                        it: "Questo portfolio — realizzato con HTML, CSS & JS puri. Animazioni, supporto multilingua e Dark Mode." },
-                icons: ['fa-brands fa-html5', 'fa-brands fa-css3-alt', 'fa-brands fa-js'],
-                long: { de: "Ein vollständig selbst entwickeltes Portfolio. Features: Scramble-Text-Effekt, Spotlight-Karten, Dark/Light Mode, 4-sprachige UI (DE/EN/SQ/IT) und animierte Roadmap-Timeline.",
-                        en: "A fully self-developed portfolio. Features: scramble text effect, spotlight cards, dark/light mode, 4-language UI (DE/EN/SQ/IT) and animated roadmap timeline.",
-                        sq: "Portfolio i zhvilluar plotësisht vetë. Veçori: efekt teksti scramble, karta spotlight, Dark/Light Mode, UI 4-gjuhëshe dhe timeline roadmap animated.",
-                        it: "Portfolio sviluppato interamente in proprio. Features: effetto scramble sul testo, spotlight sulle card, Dark/Light Mode, UI in 4 lingue (DE/EN/SQ/IT) e roadmap animata." }
-            },
-            {
-                id: 'p2',
-                tag:  { de: "SaaS Plattform", en: "SaaS Platform", sq: "Platformë SaaS", it: "Piattaforma SaaS" },
-                title:{ de: "E-Commerce Backend", en: "E-Commerce Backend", sq: "Backend E-Commerce", it: "Backend E-Commerce" },
-                desc: { de: "Hochperformantes Backend für Online-Shops mit REST API, Auth und Zahlungsintegration.",
-                        en: "High-performance backend for online shops with REST API, auth and payment integration.",
-                        sq: "Backend me performancë të lartë për dyqane online me REST API, autentifikim dhe integrim pagesash.",
-                        it: "Backend ad alte prestazioni per shop online con REST API, autenticazione e integrazione pagamenti." },
-                icons: ['fa-brands fa-node-js', 'fa-solid fa-database', 'fa-solid fa-bolt'],
-                long: { de: "Skalierbare E-Commerce-Infrastruktur mit Node.js und PostgreSQL. Features: JWT-Auth, Stripe-Integration, Redis-Caching und Docker-Deployment.",
-                        en: "Scalable e-commerce infrastructure with Node.js and PostgreSQL. Features: JWT auth, Stripe integration, Redis caching and Docker deployment.",
-                        sq: "Infrastrukturë e-commerce e skaluar me Node.js dhe PostgreSQL. Veçori: JWT-Auth, integrim Stripe, Redis caching dhe deployment Docker.",
-                        it: "Infrastruttura e-commerce scalabile con Node.js e PostgreSQL. Features: JWT auth, integrazione Stripe, Redis caching e deployment con Docker." }
-            },
-            {
-                id: 'p3',
-                tag:  { de: "KI Projekt", en: "AI Project", sq: "Projekt AI", it: "Progetto AI" },
-                title:{ de: "AI Dashboard", en: "AI Dashboard", sq: "Dashboard AI", it: "Dashboard AI" },
-                desc: { de: "React-Dashboard zur Visualisierung und Steuerung von KI-Modellen und RAG-Pipelines.",
-                        en: "React dashboard for visualizing and controlling AI models and RAG pipelines.",
-                        sq: "Dashboard React për vizualizimin dhe kontrollin e modeleve AI dhe pipeline RAG.",
-                        it: "Dashboard React per la visualizzazione e il controllo di modelli AI e pipeline RAG." },
-                icons: ['fa-brands fa-react', 'fa-solid fa-robot', 'fa-brands fa-python'],
-                long: { de: "Modernes Dashboard für KI-Workflows. Echtzeit-Visualisierung mit Chart.js, Integration von OpenAI und Anthropic APIs, Python-Backend mit FastAPI.",
-                        en: "Modern dashboard for AI workflows. Real-time visualization with Chart.js, OpenAI and Anthropic API integration, Python backend with FastAPI.",
-                        sq: "Dashboard modern për rrjedhat e punës AI. Vizualizim në kohë reale me Chart.js, integrim API OpenAI dhe Anthropic, backend Python me FastAPI.",
-                        it: "Dashboard moderno per flussi di lavoro AI. Visualizzazione in tempo reale con Chart.js, integrazione delle API OpenAI e Anthropic, backend Python con FastAPI." }
-            }
-        ];
-
-        /* ============================================================
-           ÜBERSETZUNGEN (i18n)
-        ============================================================ */
-        const translations = {
-            de: {
-                nav_home: "Home", nav_skills: "Skills", nav_projects: "Projekte", nav_roadmap: "Roadmap", nav_contact: "Kontakt",
-                roadmap_title: "Roadmap", roadmap_subtitle: "Meine Entwicklung als Developer",
-                skills_title: "Skills", skills_subtitle: "Technologien mit denen ich arbeite",
-                projects_title: "Projekte", projects_subtitle: "Ausgewählte Arbeiten",
-                contact_btn: "NACHRICHT SENDEN", contact_subtitle: "Schreib mir eine Nachricht",
-                p_name: "Name", p_email: "Email", p_msg: "Deine Nachricht...",
-                scroll_hint: "Scroll"
-            },
-            en: {
-                nav_home: "Home", nav_skills: "Skills", nav_projects: "Projects", nav_roadmap: "Roadmap", nav_contact: "Contact",
-                roadmap_title: "Roadmap", roadmap_subtitle: "My journey as a developer",
-                skills_title: "Skills", skills_subtitle: "Technologies I work with",
-                projects_title: "Projects", projects_subtitle: "Selected works",
-                contact_btn: "SEND MESSAGE", contact_subtitle: "Send me a message",
-                p_name: "Name", p_email: "Email", p_msg: "Your message...",
-                scroll_hint: "Scroll"
-            },
-            sq: {
-                nav_home: "Kryefaqja", nav_skills: "Aftësitë", nav_projects: "Projektet", nav_roadmap: "Ecuria", nav_contact: "Kontakt",
-                roadmap_title: "Ecuria", roadmap_subtitle: "Udhëtimi im si developer",
-                skills_title: "Aftësitë", skills_subtitle: "Teknologjitë që përdor",
-                projects_title: "Projektet", projects_subtitle: "Punime të zgjedhura",
-                contact_btn: "DËRGO MESAZH", contact_subtitle: "Më dërgo një mesazh",
-                p_name: "Emri", p_email: "Email", p_msg: "Mesazhi juaj...",
-                scroll_hint: "Scroll"
-            },
-            it: {
-                nav_home: "Home", nav_skills: "Competenze", nav_projects: "Progetti", nav_roadmap: "Roadmap", nav_contact: "Contatti",
-                roadmap_title: "Roadmap", roadmap_subtitle: "Il mio percorso da developer",
-                skills_title: "Competenze", skills_subtitle: "Tecnologie con cui lavoro",
-                projects_title: "Progetti", projects_subtitle: "Lavori selezionati",
-                contact_btn: "INVIA MESSAGGIO", contact_subtitle: "Scrivimi un messaggio",
-                p_name: "Nome", p_email: "Email", p_msg: "Il tuo messaggio...",
-                scroll_hint: "Scorri"
+            p6: {
+                tag:  {de:"Side Project", en:"Side Project", sq:"Projekt Anësor", it:"Side Project"},
+                title:{de:"EU-Kennzeichen-Generator", en:"EU License Plate Generator", sq:"Gjenerues Targash Evropiane", it:"Generatore Targhe Europee"},
+                desc: {de:"Interaktiver Generator für europäische Autokennzeichen mit länderspezifisch authentischen Designs – Typografie- und Detailarbeit pur.",
+                       en:"Interactive generator for European license plates with country-specific authentic designs – pure typography and detail work.",
+                       sq:"Gjenerues interaktiv për targa evropiane me dizajne autentike specifike për çdo vend – tipografi dhe detaje të pastra.",
+                       it:"Generatore interattivo di targhe europee con design autentici per ogni paese – puro lavoro di tipografia e dettaglio."},
+                icons:['fa-solid fa-car','fa-solid fa-palette','fa-brands fa-js'],
+                long: {de:"Ein Spass-Projekt mit Tiefgang: authentische Schriftarten, Farbcodes und Layouts pro Land, alles im Browser generiert. Zeigt, dass gute Software auch im Detail Freude machen darf.",
+                       en:"A fun project with depth: authentic fonts, color codes and layouts per country, all generated in the browser. Proof that good software can also delight in the details.",
+                       sq:"Një projekt argëtues me thellësi: fonte autentike, kode ngjyrash dhe layout për çdo vend, gjithçka e gjeneruar në browser.",
+                       it:"Un progetto divertente con profondità: font autentici, codici colore e layout per ogni paese, tutto generato nel browser."}
             }
         };
 
         /* ============================================================
-           OBSERVER (Bug #2 Fix: sauberes disconnect vor Neuinstanz)
+           DATEN – ROADMAP (TODO: Jahre/Inhalte an echten Werdegang anpassen)
+        ============================================================ */
+        const years = {
+            r26: { title:{de:"AI & Prozessautomatisierung",en:"AI & Process Automation",sq:"AI & Automatizim Procesesh",it:"AI & Automazione dei Processi"},
+                   desc:{de:"OCR/LLM-Pipelines für Labordokumente, POC-Projekte im klinischen Umfeld.",en:"OCR/LLM pipelines for lab documents, POC projects in a clinical setting.",sq:"Pipeline OCR/LLM për dokumente laboratori, projekte POC.",it:"Pipeline OCR/LLM per documenti di laboratorio, progetti POC in ambito clinico."},
+                   icons:['fa-solid fa-robot','fa-solid fa-file-pdf'],
+                   long:{de:"Fokus auf KI-gestützte Prozessautomatisierung im Labor: lokale Dokumentenextraktion, Evaluation elektronischer Bestellprozesse und Integration von LLM-Workflows in bestehende Systeme.",en:"Focus on AI-powered process automation in the lab: local document extraction, evaluation of electronic ordering processes and integration of LLM workflows into existing systems.",sq:"Fokus në automatizimin e proceseve me AI: ekstraktim lokal dokumentesh dhe integrim i LLM në sisteme ekzistuese.",it:"Focus sull'automazione dei processi con AI in laboratorio: estrazione locale di documenti e integrazione di flussi LLM nei sistemi esistenti."} },
+            r25: { title:{de:"Data & Analytics",en:"Data & Analytics",sq:"Të Dhëna & Analitikë",it:"Data & Analytics"},
+                   desc:{de:"Jupyter/Voilà-Dashboards, Oracle-Query-Optimierung, Polars & Plotly in Produktion.",en:"Jupyter/Voilà dashboards, Oracle query optimization, Polars & Plotly in production.",sq:"Dashboards Jupyter/Voilà, optimizim query Oracle, Polars & Plotly.",it:"Dashboard Jupyter/Voilà, ottimizzazione query Oracle, Polars & Plotly in produzione."},
+                   icons:['fa-solid fa-chart-line','fa-solid fa-database'],
+                   long:{de:"Aufbau produktiver Analytics-Dashboards für die Labormedizin: von der komplexen Oracle-Query über performante Datenverarbeitung bis zur interaktiven Visualisierung für Fachabteilungen.",en:"Building production analytics dashboards for laboratory medicine: from complex Oracle queries through performant data processing to interactive visualization for specialist departments.",sq:"Ndërtim dashboards analitike në prodhim: nga query komplekse Oracle deri te vizualizimi interaktiv.",it:"Costruzione di dashboard analytics in produzione: dalle query Oracle complesse alla visualizzazione interattiva per i reparti."} },
+            r24: { title:{de:"Healthcare IT",en:"Healthcare IT",sq:"IT Shëndetësore",it:"IT Sanitaria"},
+                   desc:{de:"Entwicklung am produktiven Laborinformationssystem eines Universitätsspitals.",en:"Development on the production laboratory information system of a university hospital.",sq:"Zhvillim në sistemin e laboratorit të një spitali universitar.",it:"Sviluppo sul sistema di laboratorio in produzione di un ospedale universitario."},
+                   icons:['fa-brands fa-php','fa-solid fa-flask-vial'],
+                   long:{de:"Tiefes Domänenwissen in der Labormedizin aufgebaut: Bestell-Dialoge, Auftragslogik und Schnittstellen in einem System, auf das sich täglich klinisches Personal verlässt.",en:"Built deep domain knowledge in laboratory medicine: ordering dialogs, order logic and interfaces in a system clinical staff rely on every day.",sq:"Njohuri të thella të domenit në mjekësinë laboratorike: dialogë porosish dhe ndërfaqe në një sistem kritik.",it:"Acquisita una profonda conoscenza del dominio della medicina di laboratorio: dialoghi d'ordine, logica e interfacce in un sistema su cui il personale clinico fa affidamento ogni giorno."} },
+            r22: { title:{de:"Full-Stack Foundations",en:"Full-Stack Foundations",sq:"Themelet Full-Stack",it:"Fondamenta Full-Stack"},
+                   desc:{de:"Moderne Web-Entwicklung mit SvelteKit, eigene Tools und Side Projects.",en:"Modern web development with SvelteKit, own tools and side projects.",sq:"Zhvillim modern web me SvelteKit, mjete dhe projekte personale.",it:"Sviluppo web moderno con SvelteKit, strumenti propri e side project."},
+                   icons:['fa-solid fa-fire','fa-brands fa-js'],
+                   long:{de:"Vertiefung in moderne Web-Stacks: SvelteKit, Supabase, API-Integrationen und der Aufbau eigener Dashboard- und Widget-Apps als Spielwiese für neue Technologien.",en:"Deep dive into modern web stacks: SvelteKit, Supabase, API integrations and building own dashboard and widget apps as a playground for new technologies.",sq:"Thellim në stack-et moderne web: SvelteKit, Supabase dhe aplikacione personale dashboard.",it:"Approfondimento degli stack web moderni: SvelteKit, Supabase, integrazioni API e creazione di app dashboard personali come palestra per nuove tecnologie."} },
+            r19: { title:{de:"Der Start",en:"The Start",sq:"Fillimi",it:"L'Inizio"},
+                   desc:{de:"Einstieg in die professionelle Softwareentwicklung.",en:"Entry into professional software development.",sq:"Hyrja në zhvillimin profesional të softuerit.",it:"Ingresso nello sviluppo software professionale."},
+                   icons:['fa-solid fa-code','fa-solid fa-terminal'],
+                   long:{de:"Erste Schritte in der professionellen Softwareentwicklung — der Beginn einer leidenschaftlichen Reise.",en:"First steps in professional software development — the beginning of a passionate journey.",sq:"Hapat e parë në zhvillimin profesional — fillimi i një udhëtimi.",it:"I primi passi nello sviluppo software — l'inizio di un percorso appassionante."} }
+        };
+
+        /* ============================================================
+           ÜBERSETZUNGEN (UI-Texte)
+        ============================================================ */
+        const translations = {
+            de: { nav_home:"Home", nav_skills:"Skills", nav_projects:"Projekte", nav_roadmap:"Roadmap", nav_contact:"Kontakt", roadmap_title:"Roadmap", roadmap_subtitle:"Meine Entwicklung als Developer", skills_title:"Skills", skills_subtitle:"Technologien mit denen ich täglich arbeite", skills_group_backend:"Backend & Daten", skills_group_frontend:"Frontend & Web", skills_group_tools:"Analytics & Tools", projects_title:"Projekte", projects_subtitle:"Echte Arbeit, keine Platzhalter", contact_btn:"NACHRICHT SENDEN", contact_subtitle:"Schreib mir eine Nachricht", p_name:"Name", p_email:"Email", p_msg:"Deine Nachricht...", scroll_hint:"Scroll", form_success:"Nachricht gesendet! Ich melde mich bald.", form_error:"Fehler beim Senden. Bitte versuche es erneut.", skip:"Zum Inhalt springen" },
+            en: { nav_home:"Home", nav_skills:"Skills", nav_projects:"Projects", nav_roadmap:"Roadmap", nav_contact:"Contact", roadmap_title:"Roadmap", roadmap_subtitle:"My journey as a developer", skills_title:"Skills", skills_subtitle:"Technologies I work with every day", skills_group_backend:"Backend & Data", skills_group_frontend:"Frontend & Web", skills_group_tools:"Analytics & Tools", projects_title:"Projects", projects_subtitle:"Real work, no placeholders", contact_btn:"SEND MESSAGE", contact_subtitle:"Send me a message", p_name:"Name", p_email:"Email", p_msg:"Your message...", scroll_hint:"Scroll", form_success:"Message sent! I'll get back to you soon.", form_error:"Error sending. Please try again.", skip:"Skip to content" },
+            sq: { nav_home:"Kryefaqja", nav_skills:"Aftësitë", nav_projects:"Projektet", nav_roadmap:"Ecuria", nav_contact:"Kontakt", roadmap_title:"Ecuria", roadmap_subtitle:"Udhëtimi im si developer", skills_title:"Aftësitë", skills_subtitle:"Teknologjitë që përdor çdo ditë", skills_group_backend:"Backend & Të Dhëna", skills_group_frontend:"Frontend & Web", skills_group_tools:"Analitikë & Mjete", projects_title:"Projektet", projects_subtitle:"Punë e vërtetë, jo placeholder", contact_btn:"DËRGO MESAZH", contact_subtitle:"Më dërgo një mesazh", p_name:"Emri", p_email:"Email", p_msg:"Mesazhi juaj...", scroll_hint:"Scroll", form_success:"Mesazh dërguar! Do të përgjigjem së shpejti.", form_error:"Gabim gjatë dërgimit. Provo përsëri.", skip:"Kalo tek përmbajtja" },
+            it: { nav_home:"Home", nav_skills:"Competenze", nav_projects:"Progetti", nav_roadmap:"Roadmap", nav_contact:"Contatti", roadmap_title:"Roadmap", roadmap_subtitle:"Il mio percorso da developer", skills_title:"Competenze", skills_subtitle:"Tecnologie con cui lavoro ogni giorno", skills_group_backend:"Backend & Dati", skills_group_frontend:"Frontend & Web", skills_group_tools:"Analytics & Strumenti", projects_title:"Progetti", projects_subtitle:"Lavoro reale, niente placeholder", contact_btn:"INVIA MESSAGGIO", contact_subtitle:"Scrivimi un messaggio", p_name:"Nome", p_email:"Email", p_msg:"Il tuo messaggio...", scroll_hint:"Scorri", form_success:"Messaggio inviato! Ti risponderò presto.", form_error:"Errore nell'invio. Riprova.", skip:"Vai al contenuto" }
+        };
+
+        /* ============================================================
+           REVEAL OBSERVER
         ============================================================ */
         let activeObserver = null;
-
         function initObserver() {
             if (activeObserver) activeObserver.disconnect();
-
-            activeObserver = new IntersectionObserver((entries) => {
+            activeObserver = new IntersectionObserver(entries => {
                 entries.forEach(entry => {
                     if (entry.isIntersecting) entry.target.classList.add('active');
                 });
             }, { threshold: 0.1 });
-
             document.querySelectorAll('.reveal').forEach(el => activeObserver.observe(el));
         }
 
         /* ============================================================
-           RENDER PROJECTS
+           ACTIVE NAV SECTION INDICATOR
         ============================================================ */
-        function renderProjects(lang) {
-            const list = document.getElementById('projects-list');
-            list.innerHTML = '';
-
-            projects.forEach((p, index) => {
-                // IMPROVEMENT 3: Delay nur für Elemente die noch nicht .active sind
-                const delay = index * 120;
-                const iconsHtml = p.icons.map(i => `<i class="${i}"></i>`).join('');
-                list.innerHTML += `
-                <div class="project-card reveal spotlight-project" data-delay="${delay}" onclick="openProjectDetails('${p.id}')">
-                    <span class="project-tag">${p.tag[lang]}</span>
-                    <h3>${p.title[lang]}</h3>
-                    <p>${p.desc[lang]}</p>
-                    <div class="project-icons">${iconsHtml}</div>
-                    <i class="fas fa-arrow-up-right project-arrow"></i>
-                </div>`;
-            });
-
-            applyRevealDelays('#projects-list .reveal');
-            initProjectSpotlight();
-            initObserver();
+        function initSectionObserver() {
+            const navLinks = document.querySelectorAll('.nav-link[data-section]');
+            const sectionObserver = new IntersectionObserver(entries => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const id = entry.target.id;
+                        navLinks.forEach(link => link.classList.toggle('active-section', link.dataset.section === id));
+                    }
+                });
+            }, { threshold: 0.4 });
+            document.querySelectorAll('section[id]').forEach(s => sectionObserver.observe(s));
         }
 
         /* ============================================================
-           RENDER ROADMAP
+           SPRACHE – tauscht nur Texte im statischen DOM aus.
+           Kein Re-Rendering → Crawler sehen vollständiges HTML,
+           Reveal-States und Spotlight-Listener bleiben erhalten.
         ============================================================ */
-        function renderRoadmap(lang) {
-            const list = document.getElementById('roadmap-list');
-            list.innerHTML = '';
+        function setLanguage(lang) {
+            localStorage.setItem('preferredLang', lang);
+            document.documentElement.lang = lang;
+            document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById('btn-' + lang).classList.add('active');
 
-            years.forEach((y, index) => {
-                const delay = index * 100;
-                list.innerHTML += `
-                <div class="container reveal" data-delay="${delay}" onclick="openDetails('${y.id}')">
-                    <div class="timeline-dot"></div>
-                    <div class="content spotlight-card">
-                        <span class="year-badge">${y.year}</span>
-                        <h3>${y.title[lang]}</h3>
-                        <p style="font-size:0.95rem; color:var(--text-dim);">${y.desc[lang]}</p>
-                    </div>
-                </div>`;
+            // UI-Texte
+            document.querySelectorAll('[data-key]').forEach(el => {
+                const key = el.getAttribute('data-key');
+                if (translations[lang]?.[key]) el.innerText = translations[lang][key];
+            });
+            document.getElementById('p_name').placeholder  = translations[lang].p_name;
+            document.getElementById('p_email').placeholder = translations[lang].p_email;
+            document.getElementById('p_msg').placeholder   = translations[lang].p_msg;
+            document.getElementById('skip-link').textContent = translations[lang].skip;
+
+            // Projekt-Karten
+            Object.entries(projects).forEach(([id, p]) => {
+                const card = document.querySelector(`[data-pid="${id}"]`);
+                if (!card) return;
+                card.querySelector('.pc-tag').innerText   = p.tag[lang];
+                card.querySelector('.pc-title').innerText = p.title[lang];
+                card.querySelector('.pc-desc').innerText  = p.desc[lang];
             });
 
-            applyRevealDelays('#roadmap-list .reveal');
-            initSpotlight();
-            initObserver();
-        }
-
-        /* ============================================================
-           IMPROVEMENT 3: transition-delay nur auf Elemente anwenden
-           die noch nicht aktiv sind (beim Sprachwechsel bereits
-           sichtbare Elemente bekommen delay=0).
-        ============================================================ */
-        function applyRevealDelays(selector) {
-            document.querySelectorAll(selector).forEach(el => {
-                const delay = el.getAttribute('data-delay') || 0;
-                // Wenn schon sichtbar (z.B. nach Sprachwechsel): kein Delay
-                el.style.transitionDelay = el.classList.contains('active') ? '0ms' : `${delay}ms`;
+            // Roadmap-Karten
+            Object.entries(years).forEach(([id, y]) => {
+                const item = document.querySelector(`[data-rid="${id}"]`);
+                if (!item) return;
+                item.querySelector('.rm-title').innerText = y.title[lang];
+                item.querySelector('.rm-desc').innerText  = y.desc[lang];
             });
         }
 
         /* ============================================================
-           SPOTLIGHT EFFEKTE
+           SPOTLIGHT – einmalig initialisieren (statisches DOM)
         ============================================================ */
         function initSpotlight() {
             document.querySelectorAll('.spotlight-card').forEach(card => {
                 card.addEventListener('mousemove', e => {
-                    const rect = card.getBoundingClientRect();
-                    card.style.setProperty('--mouse-x', `${e.clientX - rect.left}px`);
-                    card.style.setProperty('--mouse-y', `${e.clientY - rect.top}px`);
-                });
-            });
-        }
-
-        function initProjectSpotlight() {
-            document.querySelectorAll('.spotlight-project').forEach(card => {
-                card.addEventListener('mousemove', e => {
-                    const rect = card.getBoundingClientRect();
-                    card.style.setProperty('--mouse-x', `${e.clientX - rect.left}px`);
-                    card.style.setProperty('--mouse-y', `${e.clientY - rect.top}px`);
+                    const r = card.getBoundingClientRect();
+                    card.style.setProperty('--mouse-x', `${e.clientX - r.left}px`);
+                    card.style.setProperty('--mouse-y', `${e.clientY - r.top}px`);
                 });
             });
         }
 
         /* ============================================================
-           SCRAMBLE TEXT
-           IMPROVEMENT 5: prefers-reduced-motion respektieren
+           BACK TO TOP
         ============================================================ */
-        function scrambleText(elementId, finalSubText) {
-            const element = document.getElementById(elementId);
-            // Kein Scramble wenn User reduzierte Bewegung bevorzugt
-            if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-                element.innerText = finalSubText || element.innerText;
-                return;
-            }
+        window.addEventListener('scroll', () => {
+            document.getElementById('back-to-top').classList.toggle('visible', window.scrollY > 300);
+        }, { passive: true });
+
+        /* ============================================================
+           SCRAMBLE TEXT
+        ============================================================ */
+        function scrambleText(elementId, finalText) {
+            const el = document.getElementById(elementId);
+            if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) { el.innerText = finalText; return; }
             const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%&";
-            let iterations = 0;
-            const finalText = finalSubText || element.innerText;
-            const interval = setInterval(() => {
-                element.innerText = finalText.split("").map((letter, index) => {
-                    if (index < iterations) return finalText[index];
-                    return chars[Math.floor(Math.random() * chars.length)];
-                }).join("");
-                if (iterations >= finalText.length) clearInterval(interval);
-                iterations += 1/3;
+            let iter = 0;
+            const iv = setInterval(() => {
+                el.innerText = finalText.split('').map((c, i) => i < iter ? c : chars[Math.floor(Math.random()*chars.length)]).join('');
+                if (iter >= finalText.length) clearInterval(iv);
+                iter += 1/3;
             }, 30);
         }
 
         /* ============================================================
-           THEME + SPRACHE
-           IMPROVEMENT 2: html lang-Attribut dynamisch setzen
-           IMPROVEMENT 7: Theme-Präferenz in localStorage speichern
+           THEME
         ============================================================ */
         function toggleTheme() {
             document.body.classList.toggle('light-mode');
-            // IMPROVEMENT 7: Theme-Zustand persistieren
             localStorage.setItem('preferredTheme', document.body.classList.contains('light-mode') ? 'light' : 'dark');
         }
 
-        function setLanguage(lang) {
-            localStorage.setItem('preferredLang', lang);
-
-            // IMPROVEMENT 2: html[lang] korrekt setzen für Screen-Reader & SEO
-            document.documentElement.lang = lang;
-
-            document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
-            document.getElementById('btn-'+lang).classList.add('active');
-
-            document.querySelectorAll('[data-key]').forEach(el => {
-                const key = el.getAttribute('data-key');
-                if (translations[lang] && translations[lang][key]) el.innerText = translations[lang][key];
-            });
-
-            document.getElementById('p_name').placeholder  = translations[lang].p_name;
-            document.getElementById('p_email').placeholder = translations[lang].p_email;
-            document.getElementById('p_msg').placeholder   = translations[lang].p_msg;
-
-            renderProjects(lang);
-            renderRoadmap(lang);
-        }
-
         /* ============================================================
-           IMPROVEMENT 1: Hamburger / Mobile Menu
+           MOBILE MENU
         ============================================================ */
         function openMobileMenu() {
-            const menu = document.getElementById('mobile-menu');
-            const btn = document.getElementById('hamburger-btn');
-            menu.classList.add('open');
-            btn.setAttribute('aria-expanded', 'true');
+            document.getElementById('mobile-menu').classList.add('open');
+            document.getElementById('hamburger-btn').setAttribute('aria-expanded','true');
             document.body.style.overflow = 'hidden';
         }
-
         function closeMobileMenu() {
-            const menu = document.getElementById('mobile-menu');
-            const btn = document.getElementById('hamburger-btn');
-            menu.classList.remove('open');
-            btn.setAttribute('aria-expanded', 'false');
+            document.getElementById('mobile-menu').classList.remove('open');
+            document.getElementById('hamburger-btn').setAttribute('aria-expanded','false');
             document.body.style.overflow = '';
         }
 
-        // Escape schließt auch das Mobile-Menu
-        document.addEventListener('keydown', e => {
-            if (e.key === 'Escape') {
-                closeModalFunc();
-                closeMobileMenu();
-            }
-        });
-
         /* ============================================================
-           MODAL-FUNKTIONEN
+           MODAL
         ============================================================ */
-        function openDetails(id) {
-            const lang = localStorage.getItem('preferredLang') || 'de';
-            const item = years.find(y => y.id === id);
+        function showModal(item, lang) {
             document.getElementById('modalTitle').innerText = item.title[lang];
             document.getElementById('modalBody').innerText  = item.long[lang];
-            const iconContainer = document.getElementById('modalIcons');
-            iconContainer.innerHTML = '';
-            item.icons.forEach(i => { iconContainer.innerHTML += `<i class="${i}"></i>`; });
+            document.getElementById('modalIcons').innerHTML = item.icons.map(i => `<i class="${i}"></i>`).join('');
             const modal = document.getElementById('projectModal');
             modal.style.display = 'flex';
-            setTimeout(() => modal.classList.add('show'), 10);
+            requestAnimationFrame(() => modal.classList.add('show'));
         }
-
-        function openProjectDetails(id) {
-            const lang = localStorage.getItem('preferredLang') || 'de';
-            const item = projects.find(p => p.id === id);
-            document.getElementById('modalTitle').innerText = item.title[lang];
-            document.getElementById('modalBody').innerText  = item.long[lang];
-            const iconContainer = document.getElementById('modalIcons');
-            iconContainer.innerHTML = '';
-            item.icons.forEach(i => { iconContainer.innerHTML += `<i class="${i}"></i>`; });
-            const modal = document.getElementById('projectModal');
-            modal.style.display = 'flex';
-            setTimeout(() => modal.classList.add('show'), 10);
-        }
-
+        function openDetails(id)        { showModal(years[id],    localStorage.getItem('preferredLang') || 'de'); }
+        function openProjectDetails(id) { showModal(projects[id], localStorage.getItem('preferredLang') || 'de'); }
         function closeModalFunc() {
             const modal = document.getElementById('projectModal');
             modal.classList.remove('show');
@@ -994,31 +963,75 @@
         }
         function closeDetails(e) { if (e.target.id === 'projectModal') closeModalFunc(); }
 
+        document.addEventListener('keydown', e => {
+            if (e.key === 'Escape') { closeModalFunc(); closeMobileMenu(); }
+        });
+
         /* ============================================================
-           PAGE LOADER
+           SCROLL-INDICATOR – jetzt <button>, Tastatur funktioniert nativ
+        ============================================================ */
+        document.getElementById('scroll-hint').addEventListener('click', () => {
+            document.getElementById('skills').scrollIntoView({ behavior: 'smooth' });
+        });
+
+        /* ============================================================
+           KONTAKT-FORMULAR – fetch() mit Feedback
+        ============================================================ */
+        document.getElementById('contact-form').addEventListener('submit', async e => {
+            e.preventDefault();
+            const lang     = localStorage.getItem('preferredLang') || 'de';
+            const form     = e.target;
+            const btn      = document.getElementById('submit-btn');
+            const label    = document.getElementById('btn-label');
+            const feedback = document.getElementById('form-feedback');
+
+            if (form._gotcha.value) return; // Honeypot
+
+            btn.disabled = true;
+            label.textContent = '...';
+            feedback.className = 'form-feedback';
+            feedback.textContent = '';
+
+            try {
+                const res = await fetch('https://formspree.io/f/xnjqdepv', {
+                    method: 'POST',
+                    headers: { 'Accept': 'application/json' },
+                    body: new FormData(form)
+                });
+                if (!res.ok) throw new Error('Server error');
+                feedback.className = 'form-feedback success';
+                feedback.textContent = translations[lang].form_success;
+                form.reset();
+            } catch {
+                feedback.className = 'form-feedback error';
+                feedback.textContent = translations[lang].form_error;
+            } finally {
+                btn.disabled = false;
+                label.textContent = translations[lang].contact_btn;
+            }
+        });
+
+        /* ============================================================
+           PAGE LOADER – nur beim ERSTEN Besuch pro Session.
+           Wiederholte Besuche: sofort durchlassen (kein 3s-Intro).
         ============================================================ */
         const loaderLines = [
-            { text: '> system.boot()',                    color: null,      delay: 150  },
-            { text: '> Loading Trimlind Maliqi...',       color: null,      delay: 700  },
-            { text: '> Compiling assets...',              color: null,      delay: 1200 },
-            { text: '> [████████████████████] 100%',      color: '#7ee787', delay: 1800 },
-            { text: '> [SUCCESS] Portfolio ready.',       color: '#7ee787', delay: 2250 },
+            { text:'> system.boot()',               color:null,      delay:100  },
+            { text:'> Loading Trimlind Maliqi...',  color:null,      delay:500  },
+            { text:'> [████████████████] 100%',     color:'#7ee787', delay:1000 },
+            { text:'> [SUCCESS] Portfolio ready.',  color:'#7ee787', delay:1400 },
         ];
-
         let loaderDone = false;
 
         function onLoaderComplete() {
-            initObserver();
-            setTimeout(() => scrambleText("scramble-target", "Maliqi"), 200);
-
-
+            sessionStorage.setItem('tm_visited', '1');
+            setTimeout(() => scrambleText('scramble-target', 'Maliqi'), 200);
         }
 
         function runLoader() {
             document.body.style.overflow = 'hidden';
-            const body     = document.getElementById('loader-body');
-            const progress = document.getElementById('loader-progress');
-
+            const body = document.getElementById('loader-body');
+            const prog = document.getElementById('loader-progress');
             loaderLines.forEach(line => {
                 setTimeout(() => {
                     const el = document.createElement('div');
@@ -1029,14 +1042,12 @@
                     requestAnimationFrame(() => requestAnimationFrame(() => el.classList.add('visible')));
                 }, line.delay);
             });
-
-            setTimeout(() => { progress.style.width = '35%';  }, 500);
-            setTimeout(() => { progress.style.width = '70%';  }, 1100);
-            setTimeout(() => { progress.style.width = '100%'; }, 1700);
-            setTimeout(() => dismissLoader(onLoaderComplete), 2900);
+            setTimeout(() => { prog.style.width = '45%';  }, 350);
+            setTimeout(() => { prog.style.width = '100%'; }, 1100);
+            setTimeout(() => dismissLoader(onLoaderComplete), 1900);
         }
 
-        function dismissLoader(onComplete) {
+        function dismissLoader(cb) {
             if (loaderDone) return;
             loaderDone = true;
             const loader = document.getElementById('page-loader');
@@ -1044,25 +1055,33 @@
             document.body.style.overflow = '';
             setTimeout(() => {
                 loader.style.display = 'none';
-                if (typeof onComplete === 'function') onComplete();
-            }, 900);
+                if (typeof cb === 'function') cb();
+            }, 700);
         }
 
-        function skipLoader() {
-            dismissLoader(onLoaderComplete);
-        }
+        function skipLoader() { dismissLoader(onLoaderComplete); }
 
         /* ============================================================
            INITIALISIERUNG
         ============================================================ */
         window.onload = () => {
-            const savedLang  = localStorage.getItem('preferredLang')  || 'de';
-            // IMPROVEMENT 7: gespeichertes Theme beim Laden wiederherstellen
-            const savedTheme = localStorage.getItem('preferredTheme') || 'dark';
-            if (savedTheme === 'light') document.body.classList.add('light-mode');
+            const lang  = localStorage.getItem('preferredLang')  || 'de';
+            const theme = localStorage.getItem('preferredTheme') || 'dark';
+            if (theme === 'light') document.body.classList.add('light-mode');
 
-            setLanguage(savedLang);
-            runLoader();
+            setLanguage(lang);
+            initSpotlight();
+            initObserver();
+            initSectionObserver();
+
+            // Loader nur beim ersten Besuch pro Browser-Session
+            if (sessionStorage.getItem('tm_visited')) {
+                document.getElementById('page-loader').classList.add('instant-hide');
+                loaderDone = true;
+                scrambleText('scramble-target', 'Maliqi');
+            } else {
+                runLoader();
+            }
         };
     </script>
 </body>
