@@ -1,1046 +1,353 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="de">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Trimlind Maliqi | Software Developer – Healthcare IT, Data & Web</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="Dein Name in Bubble-Buchstaben: jeden Buchstaben einzeln in Farbe und Textur gestalten.">
+<meta name="theme-color" content="#f1f2ef">
+<title>Bubble Buchstaben</title>
+<style>
+@font-face{font-family:"Fredoka";font-style:normal;font-weight:700;font-display:swap;src:url("fonts/fredoka-latin-700-normal.woff2") format("woff2")}
+@font-face{font-family:"Instrument Serif";font-style:italic;font-weight:400;font-display:swap;src:url("fonts/instrument-serif-latin-400-italic.woff2") format("woff2")}
+@font-face{font-family:"Figtree";font-style:normal;font-weight:400;font-display:swap;src:url("fonts/figtree-latin-400-normal.woff2") format("woff2")}
+@font-face{font-family:"Figtree";font-style:normal;font-weight:500;font-display:swap;src:url("fonts/figtree-latin-500-normal.woff2") format("woff2")}
+@font-face{font-family:"Figtree";font-style:normal;font-weight:600;font-display:swap;src:url("fonts/figtree-latin-600-normal.woff2") format("woff2")}
+@font-face{font-family:"Figtree";font-style:normal;font-weight:700;font-display:swap;src:url("fonts/figtree-latin-700-normal.woff2") format("woff2")}
+@font-face{font-family:"DM Mono";font-style:normal;font-weight:400;font-display:swap;src:url("fonts/dm-mono-latin-400-normal.woff2") format("woff2")}
+@font-face{font-family:"DM Mono";font-style:normal;font-weight:500;font-display:swap;src:url("fonts/dm-mono-latin-500-normal.woff2") format("woff2")}
+/* Layout: eine Spalte wie ein Bestellzettel; die Vorschau klebt oben, darunter Schritt für Schritt die Optionen */
+:root{
+  --bg:#f1f2ef; --surface:#ffffff; --ink:#23272a; --muted:#646a6d; --line:#dcdfdb;
+  --accent:#2e6e72; --accent-soft:#d8e8e6; --accent-ink:#ffffff; --stage:#e7e9e5;
+  --f-display:"Instrument Serif", Georgia, serif;
+  --f-body:"Figtree", "Segoe UI", system-ui, sans-serif;
+  --f-mono:"DM Mono", ui-monospace, Menlo, monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#151819; --surface:#1e2223; --ink:#eceeed; --muted:#9ca3a3; --line:#2f3537;
+  --accent:#7cc3c2; --accent-soft:#203839; --accent-ink:#0f1414; --stage:#252a2b; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#151819; --surface:#1e2223; --ink:#eceeed; --muted:#9ca3a3; --line:#2f3537;
+  --accent:#7cc3c2; --accent-soft:#203839; --accent-ink:#0f1414; --stage:#252a2b; color-scheme:dark}
 
-    <!-- ============ SEO ============ -->
-    <meta name="description" content="Trimlind Maliqi – Software Developer mit Fokus auf Healthcare IT, Labordaten-Analytics (Python, Oracle SQL, Jupyter) und moderne Web-Apps mit SvelteKit. Portfolio mit echten Projekten.">
-    <meta name="author" content="Trimlind Maliqi">
-    <link rel="canonical" href="https://trimlind-maliqi.dev/"> <!-- TODO: echte Domain eintragen -->
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0}
+img{max-width:100%}
+[hidden]{display:none!important}
+body{background:var(--bg);color:var(--ink);font:400 15px/1.5 var(--f-body);
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--bg)}
+.wrap{max-width:640px;margin:0 auto;padding-block:20px 32px;display:flex;flex-direction:column;gap:22px}
+header{display:flex;justify-content:space-between;align-items:center;gap:12px}
+.brand{font:italic 26px/1 var(--f-display);color:var(--accent)}
+.mono{font-family:var(--f-mono);font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+h1{font:italic clamp(34px,7vw,46px)/1 var(--f-display);margin:6px 0 8px;text-wrap:balance}
+.lead{margin:0;color:var(--muted);max-width:58ch}
+.from{font:600 18px var(--f-body);margin-top:10px;font-variant-numeric:tabular-nums}
 
-    <!-- Open Graph (LinkedIn, WhatsApp, Slack ...) -->
-    <meta property="og:type" content="website">
-    <meta property="og:title" content="Trimlind Maliqi | Software Developer">
-    <meta property="og:description" content="Healthcare IT · Data Analytics · Full-Stack Web. Projekte mit PHP, Python, Oracle SQL und SvelteKit.">
-    <meta property="og:url" content="https://trimlind-maliqi.dev/"> <!-- TODO: echte Domain -->
-    <meta property="og:image" content="https://trimlind-maliqi.dev/og-image.png"> <!-- TODO: 1200x630px Bild hochladen -->
-    <meta property="og:locale" content="de_CH">
+section.step{display:flex;flex-direction:column;gap:12px;border-top:1px solid var(--line);padding-top:18px}
+.step-h{display:flex;justify-content:space-between;align-items:baseline;gap:10px}
+.step-h .t{font-family:var(--f-mono);font-size:13px;letter-spacing:.08em;text-transform:uppercase}
+.step-h .t b{color:var(--muted);font-weight:400;margin-right:8px}
+.step-h .t i{color:var(--accent);font-style:normal}
+.step-h .v{font-family:var(--f-mono);font-size:12px;color:var(--muted)}
 
-    <!-- Twitter Card -->
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Trimlind Maliqi | Software Developer">
-    <meta name="twitter:description" content="Healthcare IT · Data Analytics · Full-Stack Web.">
+.sizes{display:flex;gap:10px;flex-wrap:wrap}
+.size{appearance:none;border:1px solid var(--line);background:var(--surface);color:var(--ink);font:500 14px var(--f-body);padding:10px 16px;border-radius:4px;cursor:pointer;font-variant-numeric:tabular-nums}
+.size small{color:var(--muted);margin-left:6px}
+.size[aria-pressed="true"]{border-color:var(--ink);box-shadow:inset 0 0 0 1px var(--ink)}
+#name{width:100%;font:italic 24px var(--f-display);color:var(--ink);background:var(--surface);border:1px solid var(--line);border-radius:999px;padding:12px 20px}
+.note{font-family:var(--f-mono);font-size:12.5px;color:var(--muted);margin:0}
 
-    <!-- JSON-LD: Person Schema -->
-    <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "Person",
-      "name": "Trimlind Maliqi",
-      "jobTitle": "Software Developer",
-      "url": "https://trimlind-maliqi.dev/",
-      "knowsAbout": ["PHP", "JavaScript", "Python", "Oracle SQL", "SvelteKit", "Healthcare IT", "Data Analytics"],
-      "sameAs": [
-        "https://github.com/DEIN-GITHUB",
-        "https://www.linkedin.com/in/DEIN-LINKEDIN"
-      ]
-    }
-    </script>
+.preview{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);padding-block:8px;display:flex;flex-direction:column;gap:8px}
+.stage{background:var(--stage);border:1px solid var(--line);border-radius:6px;min-height:150px;display:flex;align-items:center;justify-content:center;padding:18px 10px;overflow:hidden}
+.letters{display:flex;align-items:flex-end;justify-content:center}
+.lt{appearance:none;border:2px solid transparent;background:none;padding:0;cursor:pointer;border-radius:6px;position:relative;display:block;flex:none}
+.lt canvas{width:100%;height:100%;display:block;filter:drop-shadow(0 5px 5px rgba(25,30,32,.22))}
+.lt[aria-current="true"]{border-color:var(--accent);z-index:2;background:color-mix(in srgb,var(--accent) 7%,transparent)}
+.lt:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.sp{flex:none}
+.empty{font-family:var(--f-mono);font-size:13px;color:var(--muted)}
+details.how summary{cursor:pointer;font-size:14px;list-style:none}
+details.how summary::before{content:"+ ";color:var(--accent)}
+details.how[open] summary::before{content:"– "}
+details.how p{margin:6px 0 0;font-size:14px;color:var(--muted);max-width:60ch}
 
-    <link rel="icon" href="https://fav.farm/💻">
+.nav{display:flex;align-items:center;gap:12px;border:1px solid var(--line);background:var(--surface);border-radius:10px;padding:10px}
+.arrow{appearance:none;width:36px;height:36px;border-radius:50%;border:1px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer;font-size:16px;flex:none}
+.arrow:disabled{opacity:.35;cursor:default}
+.thumb{width:44px;height:44px;border-radius:8px;background:var(--stage);display:flex;align-items:center;justify-content:center;flex:none}
+.thumb canvas{width:34px;height:auto}
+.nav-txt{flex:1;min-width:0}
+.nav-txt strong{display:block;font-weight:600}
+.nav-txt span{font-size:12.5px;color:var(--muted)}
 
-    <!-- ============ FONTS ============
-         Space Grotesk: Display (Charakter statt Default)
-         Inter: Body | Fira Code: Mono/Terminal -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Inter:wght@400;600&family=Fira+Code:wght@400;600&display=swap">
-    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Inter:wght@400;600&family=Fira+Code:wght@400;600&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+.tabs{display:grid;grid-template-columns:1fr 1fr;background:var(--accent-soft);border-radius:999px;padding:4px}
+.tab{appearance:none;border:0;background:transparent;color:var(--ink);font:500 14px var(--f-body);padding:10px;border-radius:999px;cursor:pointer}
+.tab[aria-selected="true"]{background:var(--accent);color:var(--accent-ink)}
+.swatches{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:14px 8px}
+.sw{appearance:none;border:0;background:none;padding:0;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:5px;color:var(--muted);font:500 11.5px var(--f-body)}
+.sw i{width:40px;height:40px;max-width:100%;border-radius:50%;border:1px solid rgba(0,0,0,.12);position:relative;display:block}
+.sw[aria-pressed="true"]{color:var(--ink);font-weight:700}
+.sw[aria-pressed="true"] i{box-shadow:0 0 0 2px var(--surface),0 0 0 4px var(--ink)}
+.sw[aria-pressed="true"] i::after{content:"✓";position:absolute;inset:0;display:grid;place-items:center;font-size:16px;color:#fff;text-shadow:0 0 3px rgba(0,0,0,.5)}
+.textures{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+.tx{appearance:none;border:1px solid var(--line);background:var(--surface);border-radius:8px;padding:6px 6px 4px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:4px;color:var(--muted);font:500 12px var(--f-body);min-width:0}
+.tx .box{width:100%;aspect-ratio:1;max-width:100%;background:var(--stage);border-radius:6px;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.tx canvas{height:82%;width:auto;max-width:90%}
+.tx[aria-pressed="true"]{border-color:var(--ink);box-shadow:inset 0 0 0 1px var(--ink);color:var(--ink);font-weight:700}
+.all{appearance:none;border:1px solid var(--accent);background:transparent;color:var(--accent);font:600 14px var(--f-body);padding:12px;border-radius:999px;cursor:pointer}
+.all:hover{background:var(--accent-soft)}
 
-    <style>
-        /* ============================================================
-           TOKENS – ein Theme, dafür richtig (Light Mode entfernt)
-        ============================================================ */
-        :root {
-            --bg: #080706;
-            --bg-alt: #120f0d;
-            --accent: #D1B280;
-            --accent-soft: #E8D5A3;
-            --accent-dim: #594D46;
-            --text: #EFEFEF;
-            --text-dim: #8a7d72;
-            --accent-glow: rgba(209, 178, 128, 0.25);
-            --line: rgba(89, 77, 70, 0.55);
-
-            --font-display: 'Space Grotesk', sans-serif;
-            --font-body: 'Inter', sans-serif;
-            --font-mono: 'Fira Code', monospace;
-
-            /* Vertikaler Rhythmus statt 100vh-Slides */
-            --section-pad-top: 140px;
-            --section-pad-bottom: 110px;
-        }
-
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-
-        html { scroll-behavior: smooth; }
-
-        body {
-            font-family: var(--font-body); background-color: var(--bg);
-            color: var(--text); line-height: 1.6; overflow-x: hidden;
-            -webkit-tap-highlight-color: transparent;
-        }
-        body::after {
-            content: ""; position: fixed; inset: 0;
-            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
-            pointer-events: none; z-index: 0; opacity: 0.35;
-        }
-
-        .skip-link {
-            position: absolute; top: -100px; left: 1rem;
-            background: var(--accent); color: #080706;
-            padding: 8px 16px; border-radius: 0 0 8px 8px;
-            font-weight: 700; font-size: 0.85rem; text-decoration: none;
-            transition: top 0.2s; z-index: 9998;
-        }
-        .skip-link:focus { top: 0; }
-
-        :focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 4px; }
-
-        /* ============ NAVIGATION ============ */
-        nav {
-            display: flex; justify-content: space-between; align-items: center;
-            padding: 1rem 5%; position: fixed; width: 100%;
-            background: rgba(8,7,6,0.92); backdrop-filter: blur(8px); z-index: 1000;
-            border-bottom: 1px solid var(--line);
-        }
-
-        .logo { text-decoration: none; display: flex; align-items: center; }
-        .logo-svg { width: 42px; height: 42px; transition: transform 0.3s ease; }
-        .logo:hover .logo-svg { transform: scale(1.08) rotate(-3deg); }
-        .logo-ring { stroke: var(--accent); fill: none; }
-        .logo-letters { fill: var(--accent); }
-
-        .nav-links { display: flex; align-items: center; gap: 0.2rem; }
-        .nav-link {
-            color: var(--text-dim); text-decoration: none; font-size: 0.82rem;
-            font-weight: 600; padding: 6px 12px;
-            transition: color 0.2s, border-color 0.2s; letter-spacing: 0.3px;
-            border-bottom: 2px solid transparent;
-        }
-        .nav-link:hover,
-        .nav-link.active-section { color: var(--accent); border-bottom-color: var(--accent); }
-
-        .nav-right { display: flex; align-items: center; gap: 1rem; }
-
-        .hamburger {
-            display: none; background: transparent; border: 1px solid var(--line);
-            color: var(--text-dim); padding: 6px 10px; border-radius: 8px;
-            cursor: pointer; font-size: 1rem; transition: 0.3s;
-        }
-        .hamburger:hover { border-color: var(--accent); color: var(--accent); }
-
-        .mobile-menu {
-            display: none; position: fixed; inset: 0;
-            background: rgba(8,7,6,0.97); z-index: 999;
-            flex-direction: column; align-items: center; justify-content: center;
-            gap: 2rem; opacity: 0; transition: opacity 0.3s;
-        }
-        .mobile-menu.open { display: flex; opacity: 1; }
-        .mobile-menu .nav-link { font-size: 1.5rem; padding: 12px 24px; font-family: var(--font-display); }
-        .mobile-menu-close {
-            position: absolute; top: 1.5rem; right: 1.5rem;
-            background: transparent; border: none; color: var(--text-dim);
-            font-size: 1.8rem; cursor: pointer; transition: 0.2s;
-        }
-        .mobile-menu-close:hover { color: var(--accent); transform: rotate(90deg); }
-
-        /* Sprach-Buttons: reiner Text statt Flaggen (Flaggen ≠ Sprachen) */
-        .lang-switch { display: flex; border: 1px solid var(--line); border-radius: 8px; overflow: hidden; }
-        .lang-btn {
-            background: transparent; border: none; color: var(--text-dim);
-            padding: 7px 11px; cursor: pointer; font-size: 0.72rem; font-weight: 600;
-            font-family: var(--font-mono); letter-spacing: 0.5px; transition: 0.2s;
-        }
-        .lang-btn + .lang-btn { border-left: 1px solid var(--line); }
-        .lang-btn:hover { color: var(--accent); }
-        .lang-btn.active { background: var(--accent); color: #080706; }
-
-        #back-to-top {
-            position: fixed; bottom: 2rem; right: 2rem; z-index: 500;
-            background: var(--accent); color: #080706;
-            border: none; width: 42px; height: 42px; border-radius: 50%;
-            cursor: pointer; font-size: 1rem;
-            display: flex; align-items: center; justify-content: center;
-            opacity: 0; transform: translateY(10px);
-            transition: opacity 0.3s, transform 0.3s;
-            pointer-events: none;
-        }
-        #back-to-top.visible { opacity: 1; transform: translateY(0); pointer-events: auto; }
-        #back-to-top:hover { filter: brightness(1.15); }
-
-        /* ============================================================
-           SECTIONS – natürliche Höhe, konsistenter Rhythmus
-        ============================================================ */
-        section {
-            position: relative; z-index: 2;
-            padding: var(--section-pad-top) 7% var(--section-pad-bottom);
-            display: flex; flex-direction: column; align-items: center; width: 100%;
-        }
-
-        /* Hero darf als einzige Section den Viewport füllen */
-        #home { min-height: 100vh; justify-content: center; padding-top: 100px; }
-
-        h1, h2, h3 { font-family: var(--font-display); }
-
-        .hero-title {
-            font-size: clamp(3.2rem, 13vw, 9.5rem); font-weight: 700;
-            text-transform: uppercase; line-height: 0.95; text-align: center;
-            width: 100%; margin-bottom: 1.4rem;
-            letter-spacing: -0.035em; /* relativ statt -4px → kein Mobile-Overlap */
-        }
-        .hero-tagline {
-            font-size: clamp(0.9rem, 2vw, 1.05rem); color: var(--text-dim);
-            text-align: center; margin-bottom: 1.6rem; letter-spacing: 1px;
-        }
-        .hero-tagline span { color: var(--accent); font-weight: 600; }
-
-        .hero-socials { display: flex; gap: 1rem; margin-bottom: 3rem; }
-        .hero-socials a {
-            color: var(--text-dim); border: 1px solid var(--line);
-            width: 44px; height: 44px; border-radius: 50%;
-            display: flex; align-items: center; justify-content: center;
-            font-size: 1.2rem; text-decoration: none; transition: 0.25s;
-        }
-        .hero-socials a:hover { color: var(--accent); border-color: var(--accent); }
-
-        .gradient-text {
-            background: linear-gradient(135deg, var(--accent) 0%, var(--accent-soft) 60%, var(--text) 100%);
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-        }
-        .outline-text { color: transparent; -webkit-text-stroke: 1.5px var(--accent-dim); opacity: 0.65; display: block; }
-
-        /* ============================================================
-           TERMINAL – die Signatur des Hero. Typing-Effekt via JS,
-           statischer Inhalt als Fallback. Kein Float, kein Loader mehr.
-        ============================================================ */
-        .terminal-window {
-            background: #0d1117; border-radius: 12px; border: 1px solid #30363d;
-            box-shadow: 0 20px 50px -10px rgba(0,0,0,0.5); max-width: 620px; width: 100%;
-            font-family: var(--font-mono); overflow: hidden;
-        }
-        .terminal-header { background: #161b22; padding: 12px 18px; display: flex; gap: 8px; align-items: center; border-bottom: 1px solid #30363d; }
-        .terminal-title { margin-left: auto; font-size: 0.72rem; color: #484f58; }
-        .dot { width: 12px; height: 12px; border-radius: 50%; }
-        .red { background: #ff5f56; } .yellow { background: #ffbd2e; } .green { background: #27c93f; }
-        .terminal-body { padding: 22px; font-size: 0.9rem; color: #c9d1d9; text-align: left; line-height: 1.9; min-height: 150px; }
-        .terminal-body .prompt { color: var(--accent); }
-        .terminal-body .ok { color: #7ee787; }
-        .cursor { display: inline-block; width: 8px; height: 15px; background: var(--accent); animation: blink 1s infinite; vertical-align: middle; }
-        @keyframes blink { 50% { opacity: 0; } }
-
-        .scroll-indicator {
-            margin-top: 3.5rem;
-            display: flex; flex-direction: column; align-items: center; gap: 6px;
-            color: var(--text-dim); font-size: 0.75rem; letter-spacing: 1px; cursor: pointer;
-            background: none; border: none; font-family: var(--font-body);
-        }
-        .scroll-indicator:hover { color: var(--accent); }
-        .scroll-indicator i { font-size: 1.1rem; animation: bounce 2s ease-in-out infinite; }
-        @keyframes bounce { 0%,100% { transform: translateY(0); } 50% { transform: translateY(6px); } }
-
-        .section-title { font-size: clamp(2rem, 5vw, 3.2rem); font-weight: 700; margin-bottom: 0.5rem; text-align: center; letter-spacing: -0.02em; }
-        .section-subtitle { color: var(--text-dim); font-size: 1rem; margin-bottom: 3.5rem; text-align: center; }
-
-        /* ============================================================
-           SKILLS – gruppiert, ruhige Hover (nur Border + Icon-Farbe)
-        ============================================================ */
-        .skills-wrapper { width: 100%; max-width: 850px; display: flex; flex-direction: column; gap: 2.5rem; }
-        .skill-group h3 {
-            font-family: var(--font-mono); font-size: 0.82rem; font-weight: 600;
-            color: var(--accent); letter-spacing: 2px; text-transform: uppercase;
-            margin-bottom: 1rem; display: flex; align-items: center; gap: 10px;
-        }
-        .skill-group h3::after { content: ""; flex: 1; height: 1px; background: var(--line); }
-
-        .skills-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: 1rem; width: 100%; }
-        .skill-card {
-            background: var(--bg-alt); border: 1px solid var(--line);
-            border-radius: 14px; padding: 1.4rem 1rem;
-            display: flex; flex-direction: column; align-items: center; gap: 0.5rem;
-            transition: border-color 0.25s;
-        }
-        .skill-card:hover { border-color: var(--accent); }
-        .skill-card i { font-size: 2rem; color: var(--text-dim); transition: color 0.25s; }
-        .skill-card:hover i { color: var(--accent); }
-        .skill-card span { font-size: 0.75rem; font-weight: 600; color: var(--text-dim); letter-spacing: 0.5px; text-align: center; }
-
-        /* ============================================================
-           PROJEKTE – Bento-Grid mit Featured-Karte.
-           Spotlight bleibt als einzige Effekt-Signatur.
-        ============================================================ */
-        #projects { background: var(--bg-alt); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
-
-        .projects-grid {
-            display: grid; grid-template-columns: repeat(2, 1fr);
-            gap: 1.5rem; width: 100%; max-width: 1000px;
-        }
-
-        .project-card {
-            background: var(--bg); border: 1px solid var(--line);
-            border-radius: 16px; padding: 2.2rem; cursor: pointer;
-            transition: border-color 0.25s; position: relative; overflow: hidden; text-align: left;
-        }
-        .project-card::before {
-            content: ""; position: absolute; inset: 0;
-            background: radial-gradient(600px circle at var(--mouse-x) var(--mouse-y), rgba(209,178,128,0.08), transparent 40%);
-            z-index: 1; opacity: 0; transition: opacity 0.5s; pointer-events: none;
-        }
-        .project-card:hover::before { opacity: 1; }
-        .project-card:hover { border-color: var(--accent); }
-        .project-card > * { position: relative; z-index: 2; }
-
-        .project-tag { display: inline-block; background: rgba(209,178,128,0.1); color: var(--accent); padding: 3px 10px; border-radius: 20px; font-size: 0.72rem; font-weight: 700; margin-bottom: 0.8rem; border: 1px solid rgba(209,178,128,0.25); }
-        .project-card h3 { font-size: 1.2rem; color: var(--text); margin-bottom: 0.5rem; letter-spacing: -0.01em; }
-        .project-card p { font-size: 0.9rem; color: var(--text-dim); line-height: 1.6; margin-bottom: 1.2rem; }
-        .project-icons { display: flex; gap: 12px; font-size: 1.3rem; color: var(--text-dim); flex-wrap: wrap; }
-        .project-arrow { position: absolute; bottom: 1.5rem; right: 1.5rem; color: var(--accent); font-size: 0.9rem; transform: rotate(-45deg); transition: transform 0.2s; z-index: 2; }
-        .project-card:hover .project-arrow { transform: rotate(-45deg) translateX(4px); }
-
-        /* Featured-Karte: volle Breite, zweispaltig, mit Tech-Highlights */
-        .project-card.featured {
-            grid-column: 1 / -1;
-            display: grid; grid-template-columns: 1.25fr 0.75fr; gap: 2.5rem;
-            padding: 3rem; align-items: center;
-            border-color: var(--accent-dim);
-        }
-        .featured-badge {
-            display: inline-flex; align-items: center; gap: 8px;
-            font-family: var(--font-mono); font-size: 0.7rem; font-weight: 600;
-            color: var(--accent); letter-spacing: 2px; text-transform: uppercase;
-            margin-bottom: 1rem;
-        }
-        .featured-badge::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: #7ee787; box-shadow: 0 0 8px rgba(126,231,135,0.7); }
-        .project-card.featured h3 { font-size: clamp(1.5rem, 3vw, 2rem); }
-        .project-card.featured p { font-size: 1rem; max-width: 56ch; }
-
-        .featured-highlights { display: flex; flex-direction: column; gap: 0.8rem; }
-        .highlight-chip {
-            font-family: var(--font-mono); font-size: 0.82rem; color: var(--text);
-            background: var(--bg-alt); border: 1px solid var(--line);
-            border-left: 3px solid var(--accent);
-            padding: 0.8rem 1rem; border-radius: 8px;
-        }
-        .highlight-chip small { display: block; color: var(--text-dim); font-size: 0.72rem; margin-top: 2px; font-family: var(--font-body); }
-
-        /* ============ ROADMAP ============ */
-        .roadmap-container { width: 100%; max-width: 900px; margin: 0 auto; }
-        .timeline { border-left: 2px solid var(--line); padding-left: 30px; }
-
-        .container { position: relative; margin-bottom: 2rem; width: 100%; }
-        .timeline-dot {
-            position: absolute; width: 18px; height: 18px;
-            background: var(--bg); border: 2px solid var(--accent);
-            left: -40px; top: 24px; border-radius: 50%;
-            z-index: 5; transition: background 0.3s;
-        }
-        .container:hover .timeline-dot { background: var(--accent); }
-
-        .content {
-            background: var(--bg-alt); padding: 1.8rem; border-radius: 16px;
-            border: 1px solid var(--line); transition: border-color 0.25s;
-            position: relative; overflow: hidden; text-align: left; cursor: pointer;
-        }
-        .content::before {
-            content: ""; position: absolute; inset: 0;
-            background: radial-gradient(800px circle at var(--mouse-x) var(--mouse-y), rgba(209,178,128,0.07), transparent 40%);
-            z-index: 1; opacity: 0; transition: opacity 0.5s; pointer-events: none;
-        }
-        .content:hover::before { opacity: 1; }
-        .content:hover { border-color: var(--accent); }
-        .content h3 { font-size: 1.25rem; margin-bottom: 0.5rem; color: var(--text); position: relative; z-index: 2; }
-        .content p { font-size: 0.95rem; color: var(--text-dim); position: relative; z-index: 2; }
-        .year-badge { display: inline-block; background: rgba(209,178,128,0.1); color: var(--accent); padding: 4px 10px; border-radius: 20px; font-size: 0.75rem; font-weight: 800; margin-bottom: 10px; border: 1px solid rgba(209,178,128,0.25); font-family: var(--font-mono); position: relative; z-index: 2; }
-
-        .reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.7s ease-out, transform 0.7s ease-out; }
-        .reveal.active { opacity: 1; transform: translateY(0); }
-
-        /* ============ CONTACT ============ */
-        #contact { background: linear-gradient(180deg, var(--bg) 0%, var(--bg-alt) 100%); border-top: 1px solid var(--line); }
-        .contact-wrapper { background: var(--bg-alt); padding: 3rem; border-radius: 20px; border: 1px solid var(--line); width: 100%; max-width: 600px; }
-        .contact-form { display: flex; flex-direction: column; gap: 1rem; }
-        .contact-form input, .contact-form textarea {
-            background: rgba(0,0,0,0.3); border: 1px solid var(--line);
-            padding: 1.2rem; color: var(--text); border-radius: 8px; outline: none;
-            font-size: 1rem; width: 100%; transition: border-color 0.3s; font-family: var(--font-body);
-        }
-        .contact-form input:focus, .contact-form textarea:focus { border-color: var(--accent); }
-        .hp-field { display: none !important; visibility: hidden; }
-
-        .email-btn {
-            background: var(--accent); color: #080706; padding: 1.2rem; border: none;
-            font-weight: 800; cursor: pointer; border-radius: 8px; width: 100%;
-            transition: filter 0.25s; letter-spacing: 1px; margin-top: 10px;
-            display: flex; align-items: center; justify-content: center; gap: 8px;
-            font-family: var(--font-display); font-size: 0.95rem;
-        }
-        .email-btn:hover:not(:disabled) { filter: brightness(1.12); }
-        .email-btn:disabled { opacity: 0.7; cursor: not-allowed; }
-
-        .form-feedback {
-            display: none; padding: 1rem 1.2rem; border-radius: 8px;
-            font-size: 0.9rem; font-weight: 600; text-align: center; margin-bottom: 1rem;
-        }
-        .form-feedback.success { display: block; background: rgba(126,231,135,0.15); border: 1px solid #7ee787; color: #7ee787; }
-        .form-feedback.error   { display: block; background: rgba(255,95,86,0.15);  border: 1px solid #ff5f56; color: #ff5f56; }
-
-        /* ============ MODAL ============ */
-        .modal { display: none; position: fixed; z-index: 2000; inset: 0; background: rgba(0,0,0,0.8); backdrop-filter: blur(8px); align-items: center; justify-content: center; padding: 20px; opacity: 0; transition: opacity 0.3s; }
-        .modal.show { opacity: 1; }
-        .modal-content { background: #161b22; padding: 2.5rem; width: 100%; max-width: 550px; border-radius: 16px; border: 1px solid rgba(255,255,255,0.1); position: relative; text-align: left; transform: scale(0.95); transition: transform 0.3s cubic-bezier(0.34,1.56,0.64,1); }
-        .modal.show .modal-content { transform: scale(1); }
-        .close-modal { position: absolute; top: 1.2rem; right: 1.2rem; font-size: 1.5rem; color: var(--text-dim); cursor: pointer; transition: 0.3s; background: none; border: none; }
-        .close-modal:hover { color: var(--accent); transform: rotate(90deg); }
-
-        footer { z-index: 2; position: relative; padding: 3rem 5%; text-align: center; background: var(--bg); font-size: 0.85rem; color: var(--text-dim); border-top: 1px solid var(--line); }
-        .footer-socials { display: flex; justify-content: center; gap: 1.2rem; margin-bottom: 1rem; font-size: 1.3rem; }
-        .footer-socials a { color: var(--text-dim); transition: color 0.25s; }
-        .footer-socials a:hover { color: var(--accent); }
-
-        @media (prefers-reduced-motion: reduce) {
-            *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
-            .reveal { opacity: 1; transform: none; }
-            html { scroll-behavior: auto; }
-        }
-
-        @media (max-width: 850px) {
-            .project-card.featured { grid-template-columns: 1fr; padding: 2.2rem; }
-        }
-        @media (max-width: 768px) {
-            :root { --section-pad-top: 100px; --section-pad-bottom: 80px; }
-            .nav-links { display: none; }
-            .hamburger { display: flex; align-items: center; }
-            .projects-grid { grid-template-columns: 1fr; }
-            .skills-grid { grid-template-columns: repeat(auto-fill, minmax(90px, 1fr)); }
-            #back-to-top { bottom: 1.2rem; right: 1.2rem; }
-        }
-        @media (max-width: 400px) {
-            .hero-title { font-size: 2.8rem; }
-            .content { padding: 1.5rem; }
-        }
-    </style>
+.total{position:sticky;bottom:0;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:14px 16px calc(14px + env(safe-area-inset-bottom,0px));display:flex;flex-direction:column;gap:10px;z-index:6}
+.row{display:flex;justify-content:space-between;align-items:baseline;gap:10px;flex-wrap:wrap}
+.row .calc{font-family:var(--f-mono);font-size:12.5px;color:var(--muted);font-variant-numeric:tabular-nums}
+.row .amt{font:700 24px var(--f-body);font-variant-numeric:tabular-nums}
+.cta{appearance:none;border:0;background:var(--accent);color:var(--accent-ink);font:700 16px var(--f-body);padding:14px;border-radius:999px;cursor:pointer}
+.err{margin:0;font-size:13px;color:var(--accent)}
+.done{border:1px dashed var(--accent);border-radius:8px;padding:12px;display:flex;flex-direction:column;gap:8px}
+.done pre{margin:0;white-space:pre-wrap;font:12.5px/1.55 var(--f-mono)}
+.ghost{appearance:none;align-self:flex-start;border:1px solid var(--line);background:transparent;color:var(--ink);font:600 13px var(--f-body);padding:7px 12px;border-radius:999px;cursor:pointer}
+button:focus-visible,input:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+footer{font-family:var(--f-mono);font-size:11.5px;color:var(--muted);text-align:center}
+</style>
 </head>
 <body>
+<div class="wrap">
+  <header><div class="brand">trimify</div><span class="mono">Vorschau</span></header>
 
-    <a href="#main-content" class="skip-link" id="skip-link">Zum Inhalt springen</a>
+  <div>
+    <div class="mono">Personalisiert · Bubble-Buchstaben</div>
+    <h1>Dein Name in Bubble-Buchstaben</h1>
+    <p class="lead">Weiche, aufgeblasene 3D-Buchstaben für Kinderzimmer, Regal oder Tür. Jeder Buchstabe bekommt seine eigene Farbe und Textur.</p>
+    <div class="from" id="from">ab CHF 13.00 pro Buchstabe</div>
+  </div>
 
-    <button id="back-to-top" onclick="window.scrollTo({top:0,behavior:'smooth'})" aria-label="Zurück nach oben">
-        <i class="fas fa-chevron-up"></i>
-    </button>
+  <section class="step">
+    <div class="step-h"><span class="t"><b>01</b>Grösse <i>*</i></span><span class="v" id="sizeV"></span></div>
+    <div class="sizes" id="sizes"></div>
+  </section>
 
-    <div class="mobile-menu" id="mobile-menu" role="dialog" aria-modal="true" aria-label="Navigation">
-        <button class="mobile-menu-close" onclick="closeMobileMenu()" aria-label="Menü schließen">&times;</button>
-        <a href="#home"     class="nav-link" data-key="nav_home"     onclick="closeMobileMenu()">Home</a>
-        <a href="#skills"   class="nav-link" data-key="nav_skills"   onclick="closeMobileMenu()">Skills</a>
-        <a href="#projects" class="nav-link" data-key="nav_projects" onclick="closeMobileMenu()">Projekte</a>
-        <a href="#roadmap"  class="nav-link" data-key="nav_roadmap"  onclick="closeMobileMenu()">Roadmap</a>
-        <a href="#contact"  class="nav-link" data-key="nav_contact"  onclick="closeMobileMenu()">Kontakt</a>
+  <section class="step">
+    <div class="step-h"><span class="t"><b>02</b>Name <i>*</i></span><span class="v" id="nameV"></span></div>
+    <input id="name" type="text" maxlength="15" value="Mila" placeholder="Name eingeben …" autocomplete="off" aria-label="Name">
+    <p class="note" id="count"></p>
+  </section>
+
+  <div class="preview">
+    <div class="mono">Vorschau · dein Name in Bubble-Buchstaben</div>
+    <div class="stage" id="stage"><div class="letters" id="letters"></div></div>
+    <details class="how"><summary>Wie gross sind <span id="howSize">10 cm</span>?</summary>
+      <p id="howTxt"></p></details>
+    <p class="note">Bildschirmfarben sind ein Richtwert. Das fertige Stück kann in natura anders wirken.</p>
+  </div>
+
+  <section class="step">
+    <div class="step-h"><span class="t"><b>03</b>Farbe &amp; Textur <i>*</i></span></div>
+    <div class="nav">
+      <button type="button" class="arrow" id="prev" aria-label="Vorheriger Buchstabe">‹</button>
+      <div class="thumb" id="thumb"></div>
+      <div class="nav-txt"><strong id="navT"></strong><span>Tippe auf die Pfeile oder auf einen Buchstaben oben.</span></div>
+      <button type="button" class="arrow" id="next" aria-label="Nächster Buchstabe">›</button>
     </div>
-
-    <nav aria-label="Hauptnavigation">
-        <a href="#home" class="logo" aria-label="Trimlind Maliqi – zurück zur Startseite">
-            <svg class="logo-svg" viewBox="0 0 42 42" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                <circle class="logo-ring" cx="21" cy="21" r="19" stroke-width="1.5"/>
-                <circle cx="21" cy="21" r="15.5" stroke="var(--accent-dim)" stroke-width="0.5" fill="none"/>
-                <text x="21" y="26" text-anchor="middle" font-family="'Fira Code', monospace" font-weight="700" font-size="13" class="logo-letters" letter-spacing="-0.5">TM</text>
-                <line x1="14" y1="29" x2="28" y2="29" stroke="var(--accent)" stroke-width="1" stroke-linecap="round" opacity="0.4"/>
-            </svg>
-        </a>
-
-        <div class="nav-links">
-            <a href="#home"     class="nav-link" data-key="nav_home"     data-section="home">Home</a>
-            <a href="#skills"   class="nav-link" data-key="nav_skills"   data-section="skills">Skills</a>
-            <a href="#projects" class="nav-link" data-key="nav_projects" data-section="projects">Projekte</a>
-            <a href="#roadmap"  class="nav-link" data-key="nav_roadmap"  data-section="roadmap">Roadmap</a>
-            <a href="#contact"  class="nav-link" data-key="nav_contact"  data-section="contact">Kontakt</a>
-        </div>
-
-        <div class="nav-right">
-            <button class="hamburger" onclick="openMobileMenu()" aria-label="Menü öffnen" aria-expanded="false" id="hamburger-btn">
-                <i class="fas fa-bars"></i>
-            </button>
-            <div class="lang-switch" role="group" aria-label="Sprache wählen">
-                <button class="lang-btn" id="btn-de" onclick="setLanguage('de')" aria-label="Deutsch">DE</button>
-                <button class="lang-btn" id="btn-en" onclick="setLanguage('en')" aria-label="English">EN</button>
-                <button class="lang-btn" id="btn-sq" onclick="setLanguage('sq')" aria-label="Shqip">SQ</button>
-                <button class="lang-btn" id="btn-it" onclick="setLanguage('it')" aria-label="Italiano">IT</button>
-            </div>
-        </div>
-    </nav>
-
-    <main id="main-content">
-        <section id="home" aria-label="Hero">
-            <h1 class="hero-title">
-                <span class="outline-text">Trimlind</span>
-                <span class="gradient-text">Maliqi</span>
-            </h1>
-            <p class="hero-tagline">
-                Software Developer &middot; Healthcare IT &middot; <span>PHP</span> &middot; <span>Python</span> &middot; <span>SvelteKit</span>
-            </p>
-
-            <div class="hero-socials">
-                <a href="https://github.com/DEIN-GITHUB" target="_blank" rel="noopener" aria-label="GitHub Profil"><i class="fa-brands fa-github"></i></a> <!-- TODO -->
-                <a href="https://www.linkedin.com/in/DEIN-LINKEDIN" target="_blank" rel="noopener" aria-label="LinkedIn Profil"><i class="fa-brands fa-linkedin-in"></i></a> <!-- TODO -->
-                <a href="#contact" aria-label="Kontakt"><i class="fa-solid fa-envelope"></i></a>
-            </div>
-
-            <!-- Signatur: Terminal mit Typing-Effekt.
-                 Statischer Inhalt als Fallback, JS tippt ihn live. -->
-            <div class="terminal-window" aria-hidden="true">
-                <div class="terminal-header">
-                    <div class="dot red"></div><div class="dot yellow"></div><div class="dot green"></div>
-                    <span class="terminal-title">trimi@portfolio</span>
-                </div>
-                <div class="terminal-body" id="terminal-body"><div><span class="prompt">trimi@portfolio</span>:~$ whoami --verbose</div><div>&gt; Software Developer @ Healthcare IT</div><div class="ok">&gt; [OK] Lab analytics: Python · Oracle SQL · Plotly</div><div class="ok">&gt; [OK] Web: SvelteKit · Supabase · PHP/JS</div><div>&gt; <span class="cursor"></span></div></div>
-            </div>
-
-            <button class="scroll-indicator" id="scroll-hint" aria-label="Zu Skills scrollen">
-                <span data-key="scroll_hint">Scroll</span>
-                <i class="fas fa-chevron-down"></i>
-            </button>
-        </section>
-
-        <section id="skills" aria-labelledby="skills-heading">
-            <h2 id="skills-heading" class="section-title reveal" data-key="skills_title">Skills</h2>
-            <p class="section-subtitle reveal" data-key="skills_subtitle">Technologien mit denen ich täglich arbeite</p>
-
-            <div class="skills-wrapper">
-                <div class="skill-group reveal">
-                    <h3 data-key="skills_group_backend">Backend &amp; Daten</h3>
-                    <div class="skills-grid">
-                        <div class="skill-card"><i class="fa-brands fa-php"></i><span>PHP</span></div>
-                        <div class="skill-card"><i class="fa-brands fa-python"></i><span>Python</span></div>
-                        <div class="skill-card"><i class="fa-solid fa-database"></i><span>Oracle SQL</span></div>
-                        <div class="skill-card"><i class="fa-solid fa-table"></i><span>PostgreSQL</span></div>
-                    </div>
-                </div>
-                <div class="skill-group reveal">
-                    <h3 data-key="skills_group_frontend">Frontend &amp; Web</h3>
-                    <div class="skills-grid">
-                        <div class="skill-card"><i class="fa-brands fa-js"></i><span>JavaScript</span></div>
-                        <div class="skill-card"><i class="fa-solid fa-fire"></i><span>SvelteKit</span></div>
-                        <div class="skill-card"><i class="fa-brands fa-html5"></i><span>HTML5</span></div>
-                        <div class="skill-card"><i class="fa-brands fa-css3-alt"></i><span>CSS3</span></div>
-                    </div>
-                </div>
-                <div class="skill-group reveal">
-                    <h3 data-key="skills_group_tools">Analytics &amp; Tools</h3>
-                    <div class="skills-grid">
-                        <div class="skill-card"><i class="fa-solid fa-chart-line"></i><span>Jupyter / Plotly</span></div>
-                        <div class="skill-card"><i class="fa-solid fa-robot"></i><span>AI / LLMs</span></div>
-                        <div class="skill-card"><i class="fa-brands fa-git-alt"></i><span>Git</span></div>
-                        <div class="skill-card"><i class="fa-brands fa-linux"></i><span>Linux</span></div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- ============================================================
-             PROJEKTE – Bento: 1 Featured (volle Breite) + 5 normale.
-             Statisches HTML, setLanguage() tauscht nur Texte.
-        ============================================================ -->
-        <section id="projects" aria-labelledby="projects-heading">
-            <h2 id="projects-heading" class="section-title reveal" data-key="projects_title">Projekte</h2>
-            <p class="section-subtitle reveal" data-key="projects_subtitle">Echte Arbeit, keine Platzhalter</p>
-            <div class="projects-grid">
-
-                <!-- FEATURED: das stärkste Projekt bekommt die Bühne -->
-                <article class="project-card featured reveal spotlight-card" data-pid="p1" onclick="openProjectDetails('p1')">
-                    <div>
-                        <span class="featured-badge" data-key="featured_badge">Täglich im klinischen Einsatz</span>
-                        <h3 class="pc-title">Labor-Analytics-Dashboards</h3>
-                        <p class="pc-desc">Interaktive Dashboards für Abrechnungs- und Befunddaten eines Universitätsspitals – von der komplexen Oracle-Query bis zur Visualisierung für Fachabteilungen, inkl. Mehrblatt-Excel-Export.</p>
-                        <div class="project-icons"><i class="fa-brands fa-python"></i><i class="fa-solid fa-database"></i><i class="fa-solid fa-chart-line"></i></div>
-                    </div>
-                    <div class="featured-highlights" aria-hidden="true">
-                        <div class="highlight-chip">Oracle SQL<small class="hl-1">Komplexe Abfragen auf Produktionsdaten</small></div>
-                        <div class="highlight-chip">Polars + Plotly<small class="hl-2">Schnelle Verarbeitung, interaktive Charts</small></div>
-                        <div class="highlight-chip">Jupyter / Voilà<small class="hl-3">Deployment als Web-App im Spitalnetz</small></div>
-                    </div>
-                    <i class="fas fa-arrow-right project-arrow" aria-hidden="true"></i>
-                </article>
-
-                <article class="project-card reveal spotlight-card" data-pid="p2" onclick="openProjectDetails('p2')">
-                    <span class="project-tag pc-tag">Healthcare IT</span>
-                    <h3 class="pc-title">Laborinformationssystem (LIS)</h3>
-                    <p class="pc-desc">Entwicklung und Wartung von Bestell-Dialogen und Auftragslogik in einem produktiven Laborinformationssystem – PHP, JavaScript und Oracle.</p>
-                    <div class="project-icons"><i class="fa-brands fa-php"></i><i class="fa-brands fa-js"></i><i class="fa-solid fa-flask-vial"></i></div>
-                    <i class="fas fa-arrow-right project-arrow" aria-hidden="true"></i>
-                </article>
-
-                <article class="project-card reveal spotlight-card" data-pid="p3" onclick="openProjectDetails('p3')">
-                    <span class="project-tag pc-tag">Full-Stack Web App</span>
-                    <h3 class="pc-title">WM 2026 Tippspiel</h3>
-                    <p class="pc-desc">Komplettes Tippspiel zur Fussball-WM: SvelteKit, Supabase-Auth, PostgreSQL mit Row Level Security und Live-Ergebnisse via API.</p>
-                    <div class="project-icons"><i class="fa-solid fa-futbol"></i><i class="fa-solid fa-bolt"></i><i class="fa-solid fa-table"></i></div>
-                    <i class="fas fa-arrow-right project-arrow" aria-hidden="true"></i>
-                </article>
-
-                <article class="project-card reveal spotlight-card" data-pid="p4" onclick="openProjectDetails('p4')">
-                    <span class="project-tag pc-tag">AI / Automatisierung</span>
-                    <h3 class="pc-title">KI-Dokumentenextraktion</h3>
-                    <p class="pc-desc">POC für lokale OCR/LLM-Extraktion strukturierter Felder aus PDF-Dokumenten (Laboraufträge, Rechnungen) – offline-fähig auf moderater Hardware.</p>
-                    <div class="project-icons"><i class="fa-solid fa-robot"></i><i class="fa-solid fa-file-pdf"></i><i class="fa-brands fa-python"></i></div>
-                    <i class="fas fa-arrow-right project-arrow" aria-hidden="true"></i>
-                </article>
-
-                <article class="project-card reveal spotlight-card" data-pid="p5" onclick="openProjectDetails('p5')">
-                    <span class="project-tag pc-tag">Web App</span>
-                    <h3 class="pc-title">Developer Portfolio</h3>
-                    <p class="pc-desc">Diese Seite – eine einzige HTML-Datei mit 4-sprachiger UI, statischem SEO-Rendering und Vanilla JS ohne Framework.</p>
-                    <div class="project-icons"><i class="fa-brands fa-html5"></i><i class="fa-brands fa-css3-alt"></i><i class="fa-brands fa-js"></i></div>
-                    <i class="fas fa-arrow-right project-arrow" aria-hidden="true"></i>
-                </article>
-
-                <article class="project-card reveal spotlight-card" data-pid="p6" onclick="openProjectDetails('p6')">
-                    <span class="project-tag pc-tag">Side Project</span>
-                    <h3 class="pc-title">EU-Kennzeichen-Generator</h3>
-                    <p class="pc-desc">Interaktiver Generator für europäische Autokennzeichen mit länderspezifisch authentischen Designs – Typografie- und Detailarbeit pur.</p>
-                    <div class="project-icons"><i class="fa-solid fa-car"></i><i class="fa-solid fa-palette"></i><i class="fa-brands fa-js"></i></div>
-                    <i class="fas fa-arrow-right project-arrow" aria-hidden="true"></i>
-                </article>
-
-            </div>
-        </section>
-
-        <!-- TODO: Jahreszahlen an deinen echten Werdegang anpassen -->
-        <section id="roadmap" aria-labelledby="roadmap-heading">
-            <h2 id="roadmap-heading" class="section-title reveal" data-key="roadmap_title">Roadmap</h2>
-            <p class="section-subtitle reveal" data-key="roadmap_subtitle">Meine Entwicklung als Developer</p>
-            <div class="roadmap-container">
-                <div class="timeline">
-
-                    <div class="container reveal" data-rid="r26" onclick="openDetails('r26')">
-                        <div class="timeline-dot"></div>
-                        <div class="content spotlight-card">
-                            <span class="year-badge">2026</span>
-                            <h3 class="rm-title">AI &amp; Prozessautomatisierung</h3>
-                            <p class="rm-desc">OCR/LLM-Pipelines für Labordokumente, POC-Projekte im klinischen Umfeld.</p>
-                        </div>
-                    </div>
-
-                    <div class="container reveal" data-rid="r25" onclick="openDetails('r25')">
-                        <div class="timeline-dot"></div>
-                        <div class="content spotlight-card">
-                            <span class="year-badge">2025</span>
-                            <h3 class="rm-title">Data &amp; Analytics</h3>
-                            <p class="rm-desc">Jupyter/Voilà-Dashboards, Oracle-Query-Optimierung, Polars &amp; Plotly in Produktion.</p>
-                        </div>
-                    </div>
-
-                    <div class="container reveal" data-rid="r24" onclick="openDetails('r24')">
-                        <div class="timeline-dot"></div>
-                        <div class="content spotlight-card">
-                            <span class="year-badge">2024</span>
-                            <h3 class="rm-title">Healthcare IT</h3>
-                            <p class="rm-desc">Entwicklung am produktiven Laborinformationssystem eines Universitätsspitals.</p>
-                        </div>
-                    </div>
-
-                    <div class="container reveal" data-rid="r22" onclick="openDetails('r22')">
-                        <div class="timeline-dot"></div>
-                        <div class="content spotlight-card">
-                            <span class="year-badge">2022</span>
-                            <h3 class="rm-title">Full-Stack Foundations</h3>
-                            <p class="rm-desc">Moderne Web-Entwicklung mit SvelteKit, eigene Tools und Side Projects.</p>
-                        </div>
-                    </div>
-
-                    <div class="container reveal" data-rid="r19" onclick="openDetails('r19')">
-                        <div class="timeline-dot"></div>
-                        <div class="content spotlight-card">
-                            <span class="year-badge">2019</span>
-                            <h3 class="rm-title">Der Start</h3>
-                            <p class="rm-desc">Einstieg in die professionelle Softwareentwicklung.</p>
-                        </div>
-                    </div>
-
-                </div>
-            </div>
-        </section>
-
-        <section id="contact" aria-labelledby="contact-heading">
-            <h2 id="contact-heading" class="section-title reveal" data-key="nav_contact">Kontakt</h2>
-            <p class="section-subtitle reveal" data-key="contact_subtitle">Schreib mir eine Nachricht</p>
-            <div class="contact-wrapper reveal">
-                <div class="form-feedback" id="form-feedback" role="alert" aria-live="polite"></div>
-                <form id="contact-form" class="contact-form" novalidate>
-                    <input type="text"  name="name"    id="p_name"  placeholder="Name"      required autocomplete="name">
-                    <input type="email" name="email"   id="p_email" placeholder="Email"     required autocomplete="email">
-                    <textarea name="message" id="p_msg" rows="5"   placeholder="Nachricht" required></textarea>
-                    <input type="text" name="_gotcha" class="hp-field" tabindex="-1" autocomplete="off">
-                    <button type="submit" class="email-btn" id="submit-btn">
-                        <span id="btn-label" data-key="contact_btn">NACHRICHT SENDEN</span>
-                    </button>
-                </form>
-            </div>
-        </section>
-    </main>
-
-    <div id="projectModal" class="modal" onclick="closeDetails(event)">
-        <div class="modal-content" onclick="event.stopPropagation()" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
-            <button class="close-modal" onclick="closeModalFunc()" aria-label="Modal schließen">&times;</button>
-            <h2 id="modalTitle" style="font-size:1.8rem;color:var(--accent);margin-bottom:1rem;font-weight:700;"></h2>
-            <p id="modalBody" style="line-height:1.7;font-size:1rem;color:var(--text);"></p>
-            <div id="modalIcons" style="display:flex;gap:20px;font-size:2.5rem;color:var(--text-dim);margin-top:2rem;flex-wrap:wrap;" aria-hidden="true"></div>
-        </div>
+    <div class="tabs" role="tablist">
+      <button type="button" class="tab" role="tab" id="tabC" aria-selected="true">Farbe</button>
+      <button type="button" class="tab" role="tab" id="tabT" aria-selected="false">Textur</button>
     </div>
+    <div class="swatches" id="swatches"></div>
+    <div class="textures" id="textures" hidden></div>
+    <button type="button" class="all" id="all">Farbe &amp; Textur auf alle Buchstaben anwenden</button>
+  </section>
 
-    <footer>
-        <div class="footer-socials">
-            <a href="https://github.com/DEIN-GITHUB" target="_blank" rel="noopener" aria-label="GitHub"><i class="fa-brands fa-github"></i></a> <!-- TODO -->
-            <a href="https://www.linkedin.com/in/DEIN-LINKEDIN" target="_blank" rel="noopener" aria-label="LinkedIn"><i class="fa-brands fa-linkedin-in"></i></a> <!-- TODO -->
-        </div>
-        <p>&copy; 2026 Trimlind Maliqi | Built with code &amp; passion ❤️</p>
-    </footer>
+  <div class="total">
+    <div class="row"><span class="calc" id="calc"></span><span class="amt" id="amt"></span></div>
+  </div>
+  <footer>Testversion · Bestellung folgt später</footer>
+</div>
 
-    <script>
-        /* ============================================================
-           DATEN – PROJEKTE (alle Sprachen + Modal-Langtexte)
-        ============================================================ */
-        const projects = {
-            p1: {
-                title:{de:"Labor-Analytics-Dashboards", en:"Lab Analytics Dashboards", sq:"Dashboards Analitike Laboratori", it:"Dashboard Analytics di Laboratorio"},
-                desc: {de:"Interaktive Dashboards für Abrechnungs- und Befunddaten eines Universitätsspitals – von der komplexen Oracle-Query bis zur Visualisierung für Fachabteilungen, inkl. Mehrblatt-Excel-Export.",
-                       en:"Interactive dashboards for billing and findings data at a university hospital – from complex Oracle queries to visualizations for specialist departments, incl. multi-sheet Excel export.",
-                       sq:"Dashboards interaktive për të dhënat e faturimit dhe rezultateve të një spitali universitar – nga query komplekse Oracle deri te vizualizimi, me eksport Excel.",
-                       it:"Dashboard interattive per dati di fatturazione e referti di un ospedale universitario – dalle query Oracle complesse alla visualizzazione per i reparti, con export Excel multi-foglio."},
-                icons:['fa-brands fa-python','fa-solid fa-database','fa-solid fa-chart-line'],
-                highlights:{
-                    de:["Komplexe Abfragen auf Produktionsdaten","Schnelle Verarbeitung, interaktive Charts","Deployment als Web-App im Spitalnetz"],
-                    en:["Complex queries on production data","Fast processing, interactive charts","Deployed as web app in the hospital network"],
-                    sq:["Query komplekse mbi të dhëna prodhimi","Përpunim i shpejtë, grafikë interaktivë","Web-app në rrjetin e spitalit"],
-                    it:["Query complesse su dati di produzione","Elaborazione rapida, grafici interattivi","Deploy come web app nella rete ospedaliera"]
-                },
-                long: {de:"Mehrere produktive Analytics-Dashboards für die Labormedizin: komplexe Oracle-SQL-Queries, Datenverarbeitung mit Polars, interaktive Plotly-Charts und Mehrblatt-Excel-Exporte. Deployed via Voilà, täglich im Einsatz bei Fachabteilungen.",
-                       en:"Multiple production analytics dashboards for laboratory medicine: complex Oracle SQL queries, data processing with Polars, interactive Plotly charts and multi-sheet Excel exports. Deployed via Voilà, used daily by specialist departments.",
-                       sq:"Dashboards analitike në prodhim për mjekësinë laboratorike: query komplekse Oracle SQL, përpunim me Polars, grafikë Plotly dhe eksporte Excel. Në përdorim të përditshëm.",
-                       it:"Diverse dashboard analytics in produzione per la medicina di laboratorio: query Oracle SQL complesse, elaborazione con Polars, grafici Plotly interattivi ed export Excel multi-foglio. In uso quotidiano nei reparti."}
-            },
-            p2: {
-                tag:  {de:"Healthcare IT", en:"Healthcare IT", sq:"IT Shëndetësore", it:"IT Sanitaria"},
-                title:{de:"Laborinformationssystem (LIS)", en:"Laboratory Information System (LIS)", sq:"Sistemi Informativ i Laboratorit (LIS)", it:"Sistema Informativo di Laboratorio (LIS)"},
-                desc: {de:"Entwicklung und Wartung von Bestell-Dialogen und Auftragslogik in einem produktiven Laborinformationssystem – PHP, JavaScript und Oracle.",
-                       en:"Development and maintenance of ordering dialogs and order logic in a production laboratory information system – PHP, JavaScript and Oracle.",
-                       sq:"Zhvillim dhe mirëmbajtje e dialogëve të porosive dhe logjikës së porosive në një sistem laboratori në prodhim – PHP, JavaScript dhe Oracle.",
-                       it:"Sviluppo e manutenzione di dialoghi d'ordine e logica degli ordini in un sistema di laboratorio in produzione – PHP, JavaScript e Oracle."},
-                icons:['fa-brands fa-php','fa-brands fa-js','fa-solid fa-flask-vial'],
-                long: {de:"Tägliche Arbeit an einem geschäftskritischen LIS: dynamische Bestell-Dialoge für Spezialanalysen (u.a. Zelltherapien und Mikrobiologie), Materiallogik, Validierungen und Debugging tief im PHP/JS-Stack – mit hohem Anspruch an Stabilität im klinischen Betrieb.",
-                       en:"Daily work on a business-critical LIS: dynamic ordering dialogs for specialty analyses (incl. cell therapies and microbiology), material logic, validations and deep PHP/JS debugging – with high stability requirements in clinical operations.",
-                       sq:"Punë e përditshme në një LIS kritik: dialogë dinamikë porosish për analiza speciale, logjikë materialesh, validime dhe debugging i thellë në PHP/JS – me kërkesa të larta stabiliteti.",
-                       it:"Lavoro quotidiano su un LIS critico: dialoghi d'ordine dinamici per analisi speciali (incl. terapie cellulari e microbiologia), logica dei materiali, validazioni e debugging approfondito PHP/JS – con elevati requisiti di stabilità clinica."}
-            },
-            p3: {
-                tag:  {de:"Full-Stack Web App", en:"Full-Stack Web App", sq:"Aplikacion Full-Stack", it:"Web App Full-Stack"},
-                title:{de:"WM 2026 Tippspiel", en:"World Cup 2026 Prediction Game", sq:"Lojë Parashikimi Kupa e Botës 2026", it:"Gioco Pronostici Mondiali 2026"},
-                desc: {de:"Komplettes Tippspiel zur Fussball-WM: SvelteKit, Supabase-Auth, PostgreSQL mit Row Level Security und Live-Ergebnisse via API.",
-                       en:"Complete World Cup prediction game: SvelteKit, Supabase auth, PostgreSQL with row level security and live results via API.",
-                       sq:"Lojë e plotë parashikimi për Kupën e Botës: SvelteKit, Supabase auth, PostgreSQL me Row Level Security dhe rezultate live.",
-                       it:"Gioco di pronostici completo per i Mondiali: SvelteKit, autenticazione Supabase, PostgreSQL con row level security e risultati live via API."},
-                icons:['fa-solid fa-futbol','fa-solid fa-bolt','fa-solid fa-table'],
-                long: {de:"Von null gebaut: Auth-Flows mit Supabase, PostgreSQL-Schema mit Row Level Security, automatischer Ergebnis-Sync über die football-data.org API und eine eigene Scoring-Engine. Pünktlich zum WM-Start am 11. Juni 2026 live.",
-                       en:"Built from scratch: auth flows with Supabase, PostgreSQL schema with row level security, automatic result sync via the football-data.org API and a custom scoring engine. Live in time for the World Cup kickoff on June 11, 2026.",
-                       sq:"Ndërtuar nga zeroja: auth me Supabase, skemë PostgreSQL me RLS, sinkronizim automatik rezultatesh dhe motor pikëzimi i personalizuar. Live për fillimin e Kupës së Botës.",
-                       it:"Costruito da zero: autenticazione Supabase, schema PostgreSQL con RLS, sincronizzazione automatica dei risultati tramite football-data.org e motore di punteggio personalizzato. Online per il calcio d'inizio dei Mondiali."}
-            },
-            p4: {
-                tag:  {de:"AI / Automatisierung", en:"AI / Automation", sq:"AI / Automatizim", it:"AI / Automazione"},
-                title:{de:"KI-Dokumentenextraktion", en:"AI Document Extraction", sq:"Ekstraktim Dokumentesh me AI", it:"Estrazione Documenti con AI"},
-                desc: {de:"POC für lokale OCR/LLM-Extraktion strukturierter Felder aus PDF-Dokumenten (Laboraufträge, Rechnungen) – offline-fähig auf moderater Hardware.",
-                       en:"POC for local OCR/LLM extraction of structured fields from PDF documents (lab orders, invoices) – capable of running offline on modest hardware.",
-                       sq:"POC për ekstraktim lokal OCR/LLM të fushave të strukturuara nga dokumente PDF – funksionon offline në hardware modest.",
-                       it:"POC per l'estrazione locale OCR/LLM di campi strutturati da documenti PDF (ordini di laboratorio, fatture) – funzionante offline su hardware modesto."},
-                icons:['fa-solid fa-robot','fa-solid fa-file-pdf','fa-brands fa-python'],
-                long: {de:"Architektur und Umsetzung eines lokalen Extraktionssystems: OCR-Vorverarbeitung, LLM-basierte Feldextraktion und strukturierte Ausgabe – datenschutzkonform ohne Cloud, ausgelegt für den Betrieb im Spitalnetzwerk.",
-                       en:"Architecture and implementation of a local extraction system: OCR pre-processing, LLM-based field extraction and structured output – privacy-compliant without cloud, designed to run inside a hospital network.",
-                       sq:"Arkitekturë dhe zbatim i një sistemi lokal ekstraktimi: OCR, ekstraktim fushash me LLM dhe output i strukturuar – pa cloud.",
-                       it:"Architettura e implementazione di un sistema di estrazione locale: pre-elaborazione OCR, estrazione campi basata su LLM e output strutturato – conforme alla privacy senza cloud."}
-            },
-            p5: {
-                tag:  {de:"Web App", en:"Web App", sq:"Aplikacion Web", it:"App Web"},
-                title:{de:"Developer Portfolio", en:"Developer Portfolio", sq:"Portfolio Developer", it:"Portfolio Developer"},
-                desc: {de:"Diese Seite – eine einzige HTML-Datei mit 4-sprachiger UI, statischem SEO-Rendering und Vanilla JS ohne Framework.",
-                       en:"This site – a single HTML file with a 4-language UI, static SEO rendering and vanilla JS without a framework.",
-                       sq:"Kjo faqe – një skedar i vetëm HTML me UI 4-gjuhëshe, renderim statik SEO dhe Vanilla JS pa framework.",
-                       it:"Questo sito – un singolo file HTML con UI in 4 lingue, rendering statico SEO e vanilla JS senza framework."},
-                icons:['fa-brands fa-html5','fa-brands fa-css3-alt','fa-brands fa-js'],
-                long: {de:"Bewusst ohne Framework gebaut: statisches HTML für Crawler, JS nur als Progressive Enhancement für Sprache und Animationen. Open-Graph-Tags, JSON-LD-Schema und Accessibility (Fokus-Styles, reduced-motion, Skip-Link) inklusive.",
-                       en:"Deliberately built without a framework: static HTML for crawlers, JS only as progressive enhancement for language and animations. Open Graph tags, JSON-LD schema and accessibility (focus styles, reduced motion, skip link) included.",
-                       sq:"Ndërtuar qëllimisht pa framework: HTML statike për crawlers, JS vetëm si përmirësim progresiv. Me Open Graph, JSON-LD dhe aksesueshmëri.",
-                       it:"Costruito volutamente senza framework: HTML statico per i crawler, JS solo come progressive enhancement. Inclusi tag Open Graph, schema JSON-LD e accessibilità."}
-            },
-            p6: {
-                tag:  {de:"Side Project", en:"Side Project", sq:"Projekt Anësor", it:"Side Project"},
-                title:{de:"EU-Kennzeichen-Generator", en:"EU License Plate Generator", sq:"Gjenerues Targash Evropiane", it:"Generatore Targhe Europee"},
-                desc: {de:"Interaktiver Generator für europäische Autokennzeichen mit länderspezifisch authentischen Designs – Typografie- und Detailarbeit pur.",
-                       en:"Interactive generator for European license plates with country-specific authentic designs – pure typography and detail work.",
-                       sq:"Gjenerues interaktiv për targa evropiane me dizajne autentike specifike për çdo vend.",
-                       it:"Generatore interattivo di targhe europee con design autentici per ogni paese – puro lavoro di tipografia e dettaglio."},
-                icons:['fa-solid fa-car','fa-solid fa-palette','fa-brands fa-js'],
-                long: {de:"Ein Spass-Projekt mit Tiefgang: authentische Schriftarten, Farbcodes und Layouts pro Land, alles im Browser generiert. Zeigt, dass gute Software auch im Detail Freude machen darf.",
-                       en:"A fun project with depth: authentic fonts, color codes and layouts per country, all generated in the browser. Proof that good software can also delight in the details.",
-                       sq:"Një projekt argëtues me thellësi: fonte autentike, kode ngjyrash dhe layout për çdo vend, gjithçka në browser.",
-                       it:"Un progetto divertente con profondità: font autentici, codici colore e layout per ogni paese, tutto generato nel browser."}
-            }
-        };
+<script>
+const SIZES=[{cm:10,p:13,how:"10 cm entsprechen etwa der kurzen Seite einer Postkarte (10.5 cm). Ein Name mit 5 Buchstaben ist rund 40 cm breit."},
+             {cm:15,p:19,how:"15 cm entsprechen etwa der Höhe eines Smartphones. Ein Name mit 5 Buchstaben ist rund 60 cm breit."}];
+const COLORS=[["Weiss","#f4f2ef"],["Biskuit","#d9b48f"],["Kakao","#5a3018"],["Stahl","#9c9c9e"],["Schwarz","#262427"],
+ ["Banane","#ecdc8c"],["Olive","#2f4a22"],["Koralle","#e0782a"],["Kirsche","#c4161c"],["Bonbon","#ef4f9a"],
+ ["Blüte","#e8a0a8"],["Sakura","#f2bcc8"],["Puder","#d99aa8"],["Altrosa","#9b6b70"],["Lavendel","#b7b2e6"],
+ ["Flieder","#c69be0"],["Violett","#5a3c9c"],["Schiefer","#9ea8d8"],["Himmel","#8fc4e8"],["Frost","#9fe0e6"]];
+const TEX=[["plain","Glatt"],["stars","Sterne"],["knit","Strick"],["daisy","Blümchen"],["polka","Punkte"],["hearts","Herzen"],["teddy","Teddy"]];
+const HEART=new Path2D("M50 88 C20 66 4 50 4 30 C4 14 16 4 30 4 C40 4 47 10 50 18 C53 10 60 4 70 4 C84 4 96 14 96 30 C96 50 80 66 50 88Z");
 
-        /* ============================================================
-           DATEN – ROADMAP (TODO: Jahre an echten Werdegang anpassen)
-        ============================================================ */
-        const years = {
-            r26: { title:{de:"AI & Prozessautomatisierung",en:"AI & Process Automation",sq:"AI & Automatizim Procesesh",it:"AI & Automazione dei Processi"},
-                   desc:{de:"OCR/LLM-Pipelines für Labordokumente, POC-Projekte im klinischen Umfeld.",en:"OCR/LLM pipelines for lab documents, POC projects in a clinical setting.",sq:"Pipeline OCR/LLM për dokumente laboratori, projekte POC.",it:"Pipeline OCR/LLM per documenti di laboratorio, progetti POC in ambito clinico."},
-                   icons:['fa-solid fa-robot','fa-solid fa-file-pdf'],
-                   long:{de:"Fokus auf KI-gestützte Prozessautomatisierung im Labor: lokale Dokumentenextraktion, Evaluation elektronischer Bestellprozesse und Integration von LLM-Workflows in bestehende Systeme.",en:"Focus on AI-powered process automation in the lab: local document extraction, evaluation of electronic ordering processes and integration of LLM workflows into existing systems.",sq:"Fokus në automatizimin e proceseve me AI: ekstraktim lokal dokumentesh dhe integrim i LLM në sisteme ekzistuese.",it:"Focus sull'automazione dei processi con AI in laboratorio: estrazione locale di documenti e integrazione di flussi LLM nei sistemi esistenti."} },
-            r25: { title:{de:"Data & Analytics",en:"Data & Analytics",sq:"Të Dhëna & Analitikë",it:"Data & Analytics"},
-                   desc:{de:"Jupyter/Voilà-Dashboards, Oracle-Query-Optimierung, Polars & Plotly in Produktion.",en:"Jupyter/Voilà dashboards, Oracle query optimization, Polars & Plotly in production.",sq:"Dashboards Jupyter/Voilà, optimizim query Oracle, Polars & Plotly.",it:"Dashboard Jupyter/Voilà, ottimizzazione query Oracle, Polars & Plotly in produzione."},
-                   icons:['fa-solid fa-chart-line','fa-solid fa-database'],
-                   long:{de:"Aufbau produktiver Analytics-Dashboards für die Labormedizin: von der komplexen Oracle-Query über performante Datenverarbeitung bis zur interaktiven Visualisierung für Fachabteilungen.",en:"Building production analytics dashboards for laboratory medicine: from complex Oracle queries through performant data processing to interactive visualization for specialist departments.",sq:"Ndërtim dashboards analitike në prodhim: nga query komplekse Oracle deri te vizualizimi interaktiv.",it:"Costruzione di dashboard analytics in produzione: dalle query Oracle complesse alla visualizzazione interattiva per i reparti."} },
-            r24: { title:{de:"Healthcare IT",en:"Healthcare IT",sq:"IT Shëndetësore",it:"IT Sanitaria"},
-                   desc:{de:"Entwicklung am produktiven Laborinformationssystem eines Universitätsspitals.",en:"Development on the production laboratory information system of a university hospital.",sq:"Zhvillim në sistemin e laboratorit të një spitali universitar.",it:"Sviluppo sul sistema di laboratorio in produzione di un ospedale universitario."},
-                   icons:['fa-brands fa-php','fa-solid fa-flask-vial'],
-                   long:{de:"Tiefes Domänenwissen in der Labormedizin aufgebaut: Bestell-Dialoge, Auftragslogik und Schnittstellen in einem System, auf das sich täglich klinisches Personal verlässt.",en:"Built deep domain knowledge in laboratory medicine: ordering dialogs, order logic and interfaces in a system clinical staff rely on every day.",sq:"Njohuri të thella të domenit në mjekësinë laboratorike: dialogë porosish dhe ndërfaqe në një sistem kritik.",it:"Acquisita una profonda conoscenza del dominio della medicina di laboratorio: dialoghi d'ordine, logica e interfacce in un sistema critico."} },
-            r22: { title:{de:"Full-Stack Foundations",en:"Full-Stack Foundations",sq:"Themelet Full-Stack",it:"Fondamenta Full-Stack"},
-                   desc:{de:"Moderne Web-Entwicklung mit SvelteKit, eigene Tools und Side Projects.",en:"Modern web development with SvelteKit, own tools and side projects.",sq:"Zhvillim modern web me SvelteKit, mjete dhe projekte personale.",it:"Sviluppo web moderno con SvelteKit, strumenti propri e side project."},
-                   icons:['fa-solid fa-fire','fa-brands fa-js'],
-                   long:{de:"Vertiefung in moderne Web-Stacks: SvelteKit, Supabase, API-Integrationen und der Aufbau eigener Dashboard- und Widget-Apps als Spielwiese für neue Technologien.",en:"Deep dive into modern web stacks: SvelteKit, Supabase, API integrations and building own dashboard and widget apps as a playground for new technologies.",sq:"Thellim në stack-et moderne web: SvelteKit, Supabase dhe aplikacione personale dashboard.",it:"Approfondimento degli stack web moderni: SvelteKit, Supabase, integrazioni API e creazione di app dashboard personali."} },
-            r19: { title:{de:"Der Start",en:"The Start",sq:"Fillimi",it:"L'Inizio"},
-                   desc:{de:"Einstieg in die professionelle Softwareentwicklung.",en:"Entry into professional software development.",sq:"Hyrja në zhvillimin profesional të softuerit.",it:"Ingresso nello sviluppo software professionale."},
-                   icons:['fa-solid fa-code','fa-solid fa-terminal'],
-                   long:{de:"Erste Schritte in der professionellen Softwareentwicklung — der Beginn einer leidenschaftlichen Reise.",en:"First steps in professional software development — the beginning of a passionate journey.",sq:"Hapat e parë në zhvillimin profesional — fillimi i një udhëtimi.",it:"I primi passi nello sviluppo software — l'inizio di un percorso appassionante."} }
-        };
+const st={size:10,tab:"color",sel:0,cfg:[]};
+const DEFAULTS=[["#d99aa8","plain"],["#f4f2ef","teddy"],["#d99aa8","knit"],["#f2bcc8","hearts"]];
+const $=id=>document.getElementById(id);
+const chf=n=>"CHF "+n.toFixed(2);
+const nameOf=h=>(COLORS.find(c=>c[1]===h)||[h])[0];
+const texName=t=>TEX.find(x=>x[0]===t)[1];
 
-        /* ============================================================
-           ÜBERSETZUNGEN (UI)
-        ============================================================ */
-        const translations = {
-            de: { nav_home:"Home", nav_skills:"Skills", nav_projects:"Projekte", nav_roadmap:"Roadmap", nav_contact:"Kontakt", roadmap_title:"Roadmap", roadmap_subtitle:"Meine Entwicklung als Developer", skills_title:"Skills", skills_subtitle:"Technologien mit denen ich täglich arbeite", skills_group_backend:"Backend & Daten", skills_group_frontend:"Frontend & Web", skills_group_tools:"Analytics & Tools", projects_title:"Projekte", projects_subtitle:"Echte Arbeit, keine Platzhalter", featured_badge:"Täglich im klinischen Einsatz", contact_btn:"NACHRICHT SENDEN", contact_subtitle:"Schreib mir eine Nachricht", p_name:"Name", p_email:"Email", p_msg:"Deine Nachricht...", scroll_hint:"Scroll", form_success:"Nachricht gesendet! Ich melde mich bald.", form_error:"Fehler beim Senden. Bitte versuche es erneut.", skip:"Zum Inhalt springen" },
-            en: { nav_home:"Home", nav_skills:"Skills", nav_projects:"Projects", nav_roadmap:"Roadmap", nav_contact:"Contact", roadmap_title:"Roadmap", roadmap_subtitle:"My journey as a developer", skills_title:"Skills", skills_subtitle:"Technologies I work with every day", skills_group_backend:"Backend & Data", skills_group_frontend:"Frontend & Web", skills_group_tools:"Analytics & Tools", projects_title:"Projects", projects_subtitle:"Real work, no placeholders", featured_badge:"In daily clinical use", contact_btn:"SEND MESSAGE", contact_subtitle:"Send me a message", p_name:"Name", p_email:"Email", p_msg:"Your message...", scroll_hint:"Scroll", form_success:"Message sent! I'll get back to you soon.", form_error:"Error sending. Please try again.", skip:"Skip to content" },
-            sq: { nav_home:"Kryefaqja", nav_skills:"Aftësitë", nav_projects:"Projektet", nav_roadmap:"Ecuria", nav_contact:"Kontakt", roadmap_title:"Ecuria", roadmap_subtitle:"Udhëtimi im si developer", skills_title:"Aftësitë", skills_subtitle:"Teknologjitë që përdor çdo ditë", skills_group_backend:"Backend & Të Dhëna", skills_group_frontend:"Frontend & Web", skills_group_tools:"Analitikë & Mjete", projects_title:"Projektet", projects_subtitle:"Punë e vërtetë, jo placeholder", featured_badge:"Në përdorim të përditshëm klinik", contact_btn:"DËRGO MESAZH", contact_subtitle:"Më dërgo një mesazh", p_name:"Emri", p_email:"Email", p_msg:"Mesazhi juaj...", scroll_hint:"Scroll", form_success:"Mesazh dërguar! Do të përgjigjem së shpejti.", form_error:"Gabim gjatë dërgimit. Provo përsëri.", skip:"Kalo tek përmbajtja" },
-            it: { nav_home:"Home", nav_skills:"Competenze", nav_projects:"Progetti", nav_roadmap:"Roadmap", nav_contact:"Contatti", roadmap_title:"Roadmap", roadmap_subtitle:"Il mio percorso da developer", skills_title:"Competenze", skills_subtitle:"Tecnologie con cui lavoro ogni giorno", skills_group_backend:"Backend & Dati", skills_group_frontend:"Frontend & Web", skills_group_tools:"Analytics & Strumenti", projects_title:"Progetti", projects_subtitle:"Lavoro reale, niente placeholder", featured_badge:"In uso clinico quotidiano", contact_btn:"INVIA MESSAGGIO", contact_subtitle:"Scrivimi un messaggio", p_name:"Nome", p_email:"Email", p_msg:"Il tuo messaggio...", scroll_hint:"Scorri", form_success:"Messaggio inviato! Ti risponderò presto.", form_error:"Errore nell'invio. Riprova.", skip:"Vai al contenuto" }
-        };
+/* ---------- Bubble-Renderer ---------- */
+const H=210, FS=180, SW=26, PAD=14, R=22;
+const hex2rgb=h=>[parseInt(h.slice(1,3),16),parseInt(h.slice(3,5),16),parseInt(h.slice(5,7),16)];
+const lum=c=>(0.2126*c[0]+0.7152*c[1]+0.0722*c[2])/255;
+const mix=(a,b,t)=>a.map((v,i)=>Math.round(v+(b[i]-v)*t));
+const css=c=>`rgb(${c[0]},${c[1]},${c[2]})`;
+function rng(seed){let s=seed>>>0||1;return()=>((s=Math.imul(s^s>>>15,1|s)+0x6D2B79F5|0,(s>>>0)%100000)/100000)}
 
-        /* ============================================================
-           REVEAL OBSERVER
-        ============================================================ */
-        const revealObserver = new IntersectionObserver(entries => {
-            entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('active'); });
-        }, { threshold: 0.1 });
+function dt1d(f,n,d,v,z){let k=0;v[0]=0;z[0]=-1e20;z[1]=1e20;
+  for(let q=1;q<n;q++){let s=((f[q]+q*q)-(f[v[k]]+v[k]*v[k]))/(2*q-2*v[k]);
+    while(s<=z[k]){k--;s=((f[q]+q*q)-(f[v[k]]+v[k]*v[k]))/(2*q-2*v[k])}
+    k++;v[k]=q;z[k]=s;z[k+1]=1e20}
+  k=0;for(let q=0;q<n;q++){while(z[k+1]<q)k++;d[q]=(q-v[k])*(q-v[k])+f[v[k]]}}
+function edt(inside,w,h){
+  const g=new Float64Array(w*h);for(let i=0;i<w*h;i++)g[i]=inside[i]?1e20:0;
+  const n=Math.max(w,h),f=new Float64Array(n),d=new Float64Array(n),v=new Int32Array(n),z=new Float64Array(n+1);
+  for(let x=0;x<w;x++){for(let y=0;y<h;y++)f[y]=g[y*w+x];dt1d(f,h,d,v,z);for(let y=0;y<h;y++)g[y*w+x]=d[y]}
+  for(let y=0;y<h;y++){for(let x=0;x<w;x++)f[x]=g[y*w+x];dt1d(f,w,d,v,z);for(let x=0;x<w;x++)g[y*w+x]=Math.sqrt(d[x])}
+  return g}
+function blur(a,w,h,r){const t=new Float32Array(w*h);
+  for(let y=0;y<h;y++)for(let x=0;x<w;x++){let s=0,c=0;for(let k=-r;k<=r;k++){const xx=x+k;if(xx>=0&&xx<w){s+=a[y*w+xx];c++}}t[y*w+x]=s/c}
+  for(let y=0;y<h;y++)for(let x=0;x<w;x++){let s=0,c=0;for(let k=-r;k<=r;k++){const yy=y+k;if(yy>=0&&yy<h){s+=t[yy*w+x];c++}}a[y*w+x]=s/c}}
 
-        /* ============================================================
-           ACTIVE NAV SECTION
-        ============================================================ */
-        function initSectionObserver() {
-            const navLinks = document.querySelectorAll('.nav-link[data-section]');
-            const obs = new IntersectionObserver(entries => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        navLinks.forEach(l => l.classList.toggle('active-section', l.dataset.section === entry.target.id));
-                    }
-                });
-            }, { threshold: 0.4 });
-            document.querySelectorAll('section[id]').forEach(s => obs.observe(s));
-        }
+function star(c,x,y,r,rot){c.beginPath();for(let i=0;i<10;i++){const a=rot+i*Math.PI/5-Math.PI/2,rr=i%2?r*.45:r;c.lineTo(x+Math.cos(a)*rr,y+Math.sin(a)*rr)}c.closePath();c.fill()}
+function motifs(tex,w,h,base){
+  const cv=document.createElement("canvas");cv.width=w;cv.height=h;const c=cv.getContext("2d");
+  const L=lum(base),rnd=rng(w*31+h);
+  const S={stars:30,hearts:30,daisy:38,polka:24}[tex];
+  for(let row=0,y=8;y<h+S;y+=S*0.87,row++)for(let x=(row%2?S/2:0)-S;x<w+S;x+=S){
+    const jx=x+(rnd()-.5)*4,jy=y+(rnd()-.5)*4,rot=(rnd()-.5)*0.9;
+    if(tex==="stars"){c.fillStyle=L>.62?css(mix(base,[0,0,0],.38)):"#fff4cf";star(c,jx,jy,8.5,rot)}
+    else if(tex==="hearts"){c.fillStyle=L>.5?"#e0245e":"#ffd3e2";c.save();c.translate(jx,jy);c.rotate(rot);c.scale(.17,.17);c.translate(-50,-48);c.fill(HEART);c.restore()}
+    else if(tex==="polka"){c.fillStyle=L>.78?css(mix(base,[0,0,0],.32)):"#ffffff";c.beginPath();c.arc(jx,jy,5.2,0,7);c.fill()}
+    else if(tex==="daisy"){c.fillStyle=L>.85?"#f7f7f7":"#ffffff";for(let i=0;i<6;i++){const a=rot+i*Math.PI/3;c.beginPath();c.ellipse(jx+Math.cos(a)*5.5,jy+Math.sin(a)*5.5,4.4,2.7,a,0,7);c.fill()}
+      c.fillStyle="#f2b705";c.beginPath();c.arc(jx,jy,3.3,0,7);c.fill()}
+  }
+  return c.getImageData(0,0,w,h).data}
+function valueNoise(w,h,cell,seed){const r=rng(seed),gw=Math.ceil(w/cell)+2,gh=Math.ceil(h/cell)+2,g=new Float32Array(gw*gh).map(()=>r());
+  const out=new Float32Array(w*h);for(let y=0;y<h;y++)for(let x=0;x<w;x++){const gx=x/cell,gy=y/cell,ix=gx|0,iy=gy|0,fx=gx-ix,fy=gy-iy;
+    const sx=fx*fx*(3-2*fx),sy=fy*fy*(3-2*fy),a=g[iy*gw+ix],b=g[iy*gw+ix+1],c=g[(iy+1)*gw+ix],d=g[(iy+1)*gw+ix+1];
+    out[y*w+x]=(a+(b-a)*sx)+((c+(d-c)*sx)-(a+(b-a)*sx))*sy}return out}
 
-        /* ============================================================
-           SPRACHE – tauscht nur Texte im statischen DOM
-        ============================================================ */
-        function setLanguage(lang) {
-            localStorage.setItem('preferredLang', lang);
-            document.documentElement.lang = lang;
-            document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
-            document.getElementById('btn-' + lang).classList.add('active');
+const cache=new Map();
+function renderLetter(ch,color,tex){
+  const key=ch+"|"+color+"|"+tex;if(cache.has(key))return cache.get(key);
+  const m=document.createElement("canvas").getContext("2d");m.font=`700 ${FS}px Fredoka`;
+  const w=Math.ceil(m.measureText(ch).width+SW+PAD*2),h=H;
+  const cv=document.createElement("canvas");cv.width=w;cv.height=h;const c=cv.getContext("2d");
+  c.font=`700 ${FS}px Fredoka, "Arial Rounded MT Bold", sans-serif`;c.textAlign="center";c.textBaseline="alphabetic";
+  c.lineJoin="round";c.lineWidth=SW;c.fillStyle=c.strokeStyle="#000";
+  c.fillText(ch,w/2,h-26);
+  const N=w*h,Af=new Uint8ClampedArray(N);{const fd=c.getImageData(0,0,w,h).data;for(let i=0;i<N;i++)Af[i]=fd[i*4+3]}
+  c.strokeText(ch,w/2,h-26);
+  const img=c.getImageData(0,0,w,h),D=img.data,A=new Uint8ClampedArray(N),inside=new Uint8Array(N);
+  /* Innenöffnungen (A, R, O, P …) finden: Hintergrund der reinen Füllung, der nicht mit dem Rand verbunden ist */
+  const out=new Uint8Array(N),stack=[];
+  for(let x=0;x<w;x++){stack.push(x,(h-1)*w+x)}for(let y=0;y<h;y++){stack.push(y*w,y*w+w-1)}
+  while(stack.length){const i=stack.pop();if(out[i]||Af[i]>=128)continue;out[i]=1;const x=i%w;
+    if(x>0)stack.push(i-1);if(x<w-1)stack.push(i+1);if(i>=w)stack.push(i-w);if(i<N-w)stack.push(i+w)}
+  for(let i=0;i<N;i++){A[i]=(Af[i]<128&&!out[i])?Af[i]:D[i*4+3];inside[i]=A[i]>127}
+  const dist=edt(inside,w,h),hm=new Float32Array(N);
+  for(let i=0;i<N;i++){const d=Math.min(dist[i],R)/R;hm[i]=inside[i]?R*Math.sqrt(1-(1-d)*(1-d)):0}
+  blur(hm,w,h,2);
+  const base=hex2rgb(color);
+  let pat=null,noise=null,fine=null;
+  if(["stars","hearts","daisy","polka"].includes(tex))pat=motifs(tex,w,h,base);
+  if(tex==="teddy"){noise=valueNoise(w,h,3,w*7+1);fine=valueNoise(w,h,1.3,w*3+5)}
+  const alb=new Float32Array(N*3);
+  for(let y=0;y<h;y++)for(let x=0;x<w;x++){const i=y*w+x;if(!A[i])continue;
+    let col=base, add=0; const edge=Math.min(1,dist[i]/5);
+    if(pat){const a=pat[i*4+3]/255;if(a>0){col=mix(base,[pat[i*4],pat[i*4+1],pat[i*4+2]],a);add=a*1.6*edge}}
+    else if(tex==="knit"){const lx=x%12,off=Math.abs(lx-6)/6*5,f=(((y-off)%9)+9)%9/9,b=Math.pow(Math.sin(Math.PI*f),.7)*(0.55+0.45*Math.sin(Math.PI*lx/12));
+      add=b*2.4*edge;col=base.map(v=>v*(0.84+0.16*b))}
+    else if(tex==="teddy"){const nz=noise[i]*.65+fine[i]*.35;add=nz*3.2*edge;col=mix(base,[255,255,255],0.06+nz*0.1)}
+    hm[i]+=add;alb[i*3]=col[0];alb[i*3+1]=col[1];alb[i*3+2]=col[2]}
+  const ks={plain:.38,stars:.3,knit:.06,daisy:.3,polka:.32,hearts:.3,teddy:0}[tex],sh=tex==="plain"?36:24;
+  let lx=-.45,ly=-.65,lz=.95;{const l=Math.hypot(lx,ly,lz);lx/=l;ly/=l;lz/=l}
+  let hx=lx,hy=ly,hz=lz+1;{const l=Math.hypot(hx,hy,hz);hx/=l;hy/=l;hz/=l}
+  const rf=tex==="teddy"?rng(99):null;
+  for(let y=0;y<h;y++)for(let x=0;x<w;x++){const i=y*w+x;if(!A[i]){D[i*4+3]=0;continue}
+    const gx=(hm[y*w+Math.min(w-1,x+1)]-hm[y*w+Math.max(0,x-1)])/2,gy=(hm[Math.min(h-1,y+1)*w+x]-hm[Math.max(0,y-1)*w+x])/2;
+    let nx=-gx,ny=-gy,nz=1;const l=Math.hypot(nx,ny,nz);nx/=l;ny/=l;nz/=l;
+    const ndl=Math.max(0,nx*lx+ny*ly+nz*lz),ndh=Math.max(0,nx*hx+ny*hy+nz*hz);
+    const ao=0.72+0.28*Math.min(1,dist[i]/(R*.6));
+    const shade=(0.42+0.66*ndl)*ao,spec=ks*Math.pow(ndh,sh)*255;
+    D[i*4]=alb[i*3]*shade+spec;D[i*4+1]=alb[i*3+1]*shade+spec;D[i*4+2]=alb[i*3+2]*shade+spec;
+    let a=A[i];if(rf&&dist[i]<3)a*=0.55+0.45*rf();D[i*4+3]=a}
+  c.putImageData(img,0,0);
+  cache.set(key,cv);if(cache.size>400)cache.delete(cache.keys().next().value);
+  return cv}
+function copyCanvas(src,cls){const c=document.createElement("canvas");c.width=src.width;c.height=src.height;c.getContext("2d").drawImage(src,0,0);if(cls)c.className=cls;return c}
 
-            document.querySelectorAll('[data-key]').forEach(el => {
-                const key = el.getAttribute('data-key');
-                if (translations[lang]?.[key]) el.innerText = translations[lang][key];
-            });
-            document.getElementById('p_name').placeholder  = translations[lang].p_name;
-            document.getElementById('p_email').placeholder = translations[lang].p_email;
-            document.getElementById('p_msg').placeholder   = translations[lang].p_msg;
-            document.getElementById('skip-link').textContent = translations[lang].skip;
+/* ---------- Zustand & UI ---------- */
+function chars(){return [...$("name").value.toUpperCase()]}
+function letterIdx(){return chars().map((ch,i)=>ch===" "?null:i).filter(i=>i!==null)}
+function syncCfg(){const cs=chars();while(st.cfg.length<cs.length){const d=DEFAULTS[st.cfg.length],prev=st.cfg[st.cfg.length-1];st.cfg.push(d?{color:d[0],tex:d[1]}:prev?{...prev}:{color:DEFAULTS[0][0],tex:DEFAULTS[0][1]})}st.cfg.length=cs.length}
+function selPos(){const L=letterIdx();if(!L.length)return -1;if(!L.includes(st.sel))st.sel=L[Math.min(L.length-1,L.findIndex(i=>i>st.sel)<0?L.length-1:L.findIndex(i=>i>st.sel))];return st.sel}
 
-            Object.entries(projects).forEach(([id, p]) => {
-                const card = document.querySelector(`[data-pid="${id}"]`);
-                if (!card) return;
-                const tag = card.querySelector('.pc-tag');
-                if (tag && p.tag) tag.innerText = p.tag[lang];
-                card.querySelector('.pc-title').innerText = p.title[lang];
-                card.querySelector('.pc-desc').innerText  = p.desc[lang];
-                // Featured-Highlights übersetzen
-                if (p.highlights) {
-                    p.highlights[lang].forEach((txt, i) => {
-                        const el = card.querySelector('.hl-' + (i + 1));
-                        if (el) el.innerText = txt;
-                    });
-                }
-            });
+function renderPreview(){
+  const cs=chars(),box=$("letters");box.innerHTML="";
+  const L=letterIdx();
+  if(!L.length){box.innerHTML='<span class="empty">Tippe oben einen Namen ein, dann erscheint er hier.</span>';return}
+  const items=cs.map((ch,i)=>ch===" "?{sp:true}:{i,cv:renderLetter(ch,st.cfg[i].color,st.cfg[i].tex)});
+  const OV=PAD+6,SPW=70;
+  let total=0;items.forEach((it,k)=>{total+=it.sp?SPW:it.cv.width-(k>0&&!items[k-1].sp?OV:0)});
+  const avail=$("stage").clientWidth-24,s=Math.min(150/H,avail/total);
+  items.forEach((it,k)=>{
+    if(it.sp){const d=document.createElement("span");d.className="sp";d.style.width=SPW*s+"px";box.appendChild(d);return}
+    const b=document.createElement("button");b.type="button";b.className="lt";
+    b.style.width=it.cv.width*s+"px";b.style.height=H*s+"px";
+    if(k>0&&!items[k-1].sp)b.style.marginLeft=-OV*s+"px";
+    b.setAttribute("aria-label",`Buchstabe ${cs[it.i]} bearbeiten`);
+    b.setAttribute("aria-current",it.i===st.sel);
+    b.appendChild(copyCanvas(it.cv));b.onclick=()=>{st.sel=it.i;update()};box.appendChild(b)});
+}
+function renderControls(){
+  const cs=chars(),L=letterIdx(),pos=selPos(),has=pos>=0;
+  const k=L.indexOf(pos);
+  $("prev").disabled=!has||k<=0;$("next").disabled=!has||k>=L.length-1;
+  $("thumb").innerHTML="";
+  if(has){const cfg=st.cfg[pos];$("thumb").appendChild(copyCanvas(renderLetter(cs[pos],cfg.color,cfg.tex)));
+    $("navT").textContent=`Buchstabe ${k+1} von ${L.length} · ${cs[pos]}`}
+  else $("navT").textContent="Noch kein Buchstabe";
+  const cfg=has?st.cfg[pos]:{color:"",tex:""};
+  const sw=$("swatches");sw.innerHTML="";
+  COLORS.forEach(([n,h])=>{const b=document.createElement("button");b.type="button";b.className="sw";b.disabled=!has;
+    b.innerHTML=`<i style="background:${h}"></i>${n}`;b.setAttribute("aria-pressed",cfg.color===h);
+    b.onclick=()=>{st.cfg[pos].color=h;update()};sw.appendChild(b)});
+  const tx=$("textures");tx.innerHTML="";
+  TEX.forEach(([id,n])=>{const b=document.createElement("button");b.type="button";b.className="tx";b.disabled=!has;
+    const box=document.createElement("div");box.className="box";
+    if(has)box.appendChild(copyCanvas(renderLetter(cs[pos],cfg.color,id)));
+    b.appendChild(box);b.append(n);b.setAttribute("aria-pressed",cfg.tex===id);
+    b.onclick=()=>{st.cfg[pos].tex=id;update()};tx.appendChild(b)});
+  $("tabC").setAttribute("aria-selected",st.tab==="color");$("tabT").setAttribute("aria-selected",st.tab==="tex");
+  sw.hidden=st.tab!=="color";tx.hidden=st.tab!=="tex";$("all").disabled=!has;
+}
+function renderMeta(){
+  const s=SIZES.find(x=>x.cm===st.size),n=letterIdx().length;
+  const sz=$("sizes");sz.innerHTML="";
+  SIZES.forEach(o=>{const b=document.createElement("button");b.type="button";b.className="size";
+    b.innerHTML=`${o.cm} cm hoch<small>CHF ${o.p}/Bst.</small>`;b.setAttribute("aria-pressed",o.cm===st.size);
+    b.onclick=()=>{st.size=o.cm;update()};sz.appendChild(b)});
+  $("sizeV").textContent=`${s.cm} cm hoch`;
+  $("nameV").textContent=$("name").value.trim()?`«${$("name").value.trim()}»`:"";
+  $("count").textContent=`${n} Buchstabe${n===1?"":"n"}, Preis pro Buchstabe. Leerzeichen sind gratis. Max. 15 Zeichen.`;
+  $("howSize").textContent=`${s.cm} cm`;$("howTxt").textContent=s.how;
+  $("calc").textContent=`${n} × CHF ${s.p.toFixed(2)}`;$("amt").textContent=chf(n*s.p);
+  $("from").textContent=`ab CHF ${s.p.toFixed(2)} pro Buchstabe`;
+}
+function update(){syncCfg();selPos();renderMeta();renderPreview();renderControls()}
 
-            Object.entries(years).forEach(([id, y]) => {
-                const item = document.querySelector(`[data-rid="${id}"]`);
-                if (!item) return;
-                item.querySelector('.rm-title').innerText = y.title[lang];
-                item.querySelector('.rm-desc').innerText  = y.desc[lang];
-            });
-        }
+$("name").addEventListener("input",e=>{
+  const v=e.target.value.replace(/[^A-Za-zÄÖÜäöüÉÈÀéèà0-9 &!?]/g,"");if(v!==e.target.value)e.target.value=v;
+  update()});
+$("prev").onclick=()=>{const L=letterIdx(),k=L.indexOf(st.sel);if(k>0){st.sel=L[k-1];update()}};
+$("next").onclick=()=>{const L=letterIdx(),k=L.indexOf(st.sel);if(k<L.length-1){st.sel=L[k+1];update()}};
+$("tabC").onclick=()=>{st.tab="color";renderControls()};
+$("tabT").onclick=()=>{st.tab="tex";renderControls()};
+$("all").onclick=()=>{const c=st.cfg[st.sel];if(!c)return;st.cfg=st.cfg.map(()=>({color:c.color,tex:c.tex}));update()};
+let rt;addEventListener("resize",()=>{clearTimeout(rt);rt=setTimeout(renderPreview,120)});
 
-        /* ============================================================
-           SPOTLIGHT – die eine Effekt-Signatur der Karten
-        ============================================================ */
-        function initSpotlight() {
-            document.querySelectorAll('.spotlight-card, .project-card').forEach(card => {
-                card.addEventListener('mousemove', e => {
-                    const r = card.getBoundingClientRect();
-                    card.style.setProperty('--mouse-x', `${e.clientX - r.left}px`);
-                    card.style.setProperty('--mouse-y', `${e.clientY - r.top}px`);
-                });
-            });
-        }
+update();
+(document.fonts?document.fonts.load("700 180px Fredoka"):Promise.resolve()).then(()=>{cache.clear();update()},()=>{});
+</script>
 
-        /* ============================================================
-           TERMINAL TYPING – Signatur des Hero.
-           Statischer Inhalt bleibt für no-JS/Crawler; JS tippt live.
-        ============================================================ */
-        function initTerminalTyping() {
-            if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-
-            const body = document.getElementById('terminal-body');
-            const lines = [
-                { html: '<span class="prompt">trimi@portfolio</span>:~$ ', type: 'whoami --verbose', cls: '' },
-                { html: '&gt; ', type: 'Software Developer @ Healthcare IT', cls: '' },
-                { html: '&gt; ', type: '[OK] Lab analytics: Python · Oracle SQL · Plotly', cls: 'ok' },
-                { html: '&gt; ', type: '[OK] Web: SvelteKit · Supabase · PHP/JS', cls: 'ok' }
-            ];
-            body.innerHTML = '';
-
-            let li = 0;
-            function typeLine() {
-                if (li >= lines.length) {
-                    const end = document.createElement('div');
-                    end.innerHTML = '&gt; <span class="cursor"></span>';
-                    body.appendChild(end);
-                    return;
-                }
-                const line = lines[li];
-                const div = document.createElement('div');
-                if (line.cls) div.className = line.cls;
-                div.innerHTML = line.html;
-                const span = document.createElement('span');
-                div.appendChild(span);
-                body.appendChild(div);
-
-                let ci = 0;
-                const iv = setInterval(() => {
-                    span.textContent = line.type.slice(0, ++ci);
-                    if (ci >= line.type.length) {
-                        clearInterval(iv);
-                        li++;
-                        setTimeout(typeLine, 220);
-                    }
-                }, 18);
-            }
-            setTimeout(typeLine, 400);
-        }
-
-        /* ============================================================
-           BACK TO TOP
-        ============================================================ */
-        window.addEventListener('scroll', () => {
-            document.getElementById('back-to-top').classList.toggle('visible', window.scrollY > 300);
-        }, { passive: true });
-
-        /* ============================================================
-           MOBILE MENU
-        ============================================================ */
-        function openMobileMenu() {
-            document.getElementById('mobile-menu').classList.add('open');
-            document.getElementById('hamburger-btn').setAttribute('aria-expanded','true');
-            document.body.style.overflow = 'hidden';
-        }
-        function closeMobileMenu() {
-            document.getElementById('mobile-menu').classList.remove('open');
-            document.getElementById('hamburger-btn').setAttribute('aria-expanded','false');
-            document.body.style.overflow = '';
-        }
-
-        /* ============================================================
-           MODAL
-        ============================================================ */
-        function showModal(item, lang) {
-            document.getElementById('modalTitle').innerText = item.title[lang];
-            document.getElementById('modalBody').innerText  = item.long[lang];
-            document.getElementById('modalIcons').innerHTML = item.icons.map(i => `<i class="${i}"></i>`).join('');
-            const modal = document.getElementById('projectModal');
-            modal.style.display = 'flex';
-            requestAnimationFrame(() => modal.classList.add('show'));
-        }
-        function openDetails(id)        { showModal(years[id],    localStorage.getItem('preferredLang') || 'de'); }
-        function openProjectDetails(id) { showModal(projects[id], localStorage.getItem('preferredLang') || 'de'); }
-        function closeModalFunc() {
-            const modal = document.getElementById('projectModal');
-            modal.classList.remove('show');
-            setTimeout(() => modal.style.display = 'none', 300);
-        }
-        function closeDetails(e) { if (e.target.id === 'projectModal') closeModalFunc(); }
-
-        document.addEventListener('keydown', e => {
-            if (e.key === 'Escape') { closeModalFunc(); closeMobileMenu(); }
-        });
-
-        document.getElementById('scroll-hint').addEventListener('click', () => {
-            document.getElementById('skills').scrollIntoView({ behavior: 'smooth' });
-        });
-
-        /* ============================================================
-           KONTAKT-FORMULAR
-        ============================================================ */
-        document.getElementById('contact-form').addEventListener('submit', async e => {
-            e.preventDefault();
-            const lang     = localStorage.getItem('preferredLang') || 'de';
-            const form     = e.target;
-            const btn      = document.getElementById('submit-btn');
-            const label    = document.getElementById('btn-label');
-            const feedback = document.getElementById('form-feedback');
-
-            if (form._gotcha.value) return; // Honeypot
-
-            btn.disabled = true;
-            label.textContent = '...';
-            feedback.className = 'form-feedback';
-            feedback.textContent = '';
-
-            try {
-                const res = await fetch('https://formspree.io/f/xnjqdepv', {
-                    method: 'POST',
-                    headers: { 'Accept': 'application/json' },
-                    body: new FormData(form)
-                });
-                if (!res.ok) throw new Error('Server error');
-                feedback.className = 'form-feedback success';
-                feedback.textContent = translations[lang].form_success;
-                form.reset();
-            } catch {
-                feedback.className = 'form-feedback error';
-                feedback.textContent = translations[lang].form_error;
-            } finally {
-                btn.disabled = false;
-                label.textContent = translations[lang].contact_btn;
-            }
-        });
-
-        /* ============================================================
-           INIT – kein Loader mehr, Seite ist sofort da
-        ============================================================ */
-        window.addEventListener('DOMContentLoaded', () => {
-            setLanguage(localStorage.getItem('preferredLang') || 'de');
-            initSpotlight();
-            initSectionObserver();
-            initTerminalTyping();
-            document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
-        });
-    </script>
 </body>
 </html>
