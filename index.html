@@ -6,14 +6,8 @@
 <title>Kissen-Buchstaben | trimify</title>
 <meta name="description" content="Dein Name als weiche 3D-Buchstaben. Jeden Buchstaben einzeln in Farbe und Material gestalten.">
 <meta name="theme-color" content="#eceef1">
+<link rel="stylesheet" href="fonts.css">
 <style>
-@font-face{font-family:"Bricolage Grotesque";font-style:normal;font-weight:700;font-display:swap;src:url("fonts/bricolage-grotesque-latin-700-normal.woff2") format("woff2")}
-@font-face{font-family:"Bricolage Grotesque";font-style:normal;font-weight:800;font-display:swap;src:url("fonts/bricolage-grotesque-latin-800-normal.woff2") format("woff2")}
-@font-face{font-family:"Figtree";font-style:normal;font-weight:400;font-display:swap;src:url("fonts/figtree-latin-400-normal.woff2") format("woff2")}
-@font-face{font-family:"Figtree";font-style:normal;font-weight:500;font-display:swap;src:url("fonts/figtree-latin-500-normal.woff2") format("woff2")}
-@font-face{font-family:"Figtree";font-style:normal;font-weight:600;font-display:swap;src:url("fonts/figtree-latin-600-normal.woff2") format("woff2")}
-@font-face{font-family:"Figtree";font-style:normal;font-weight:700;font-display:swap;src:url("fonts/figtree-latin-700-normal.woff2") format("woff2")}
-@font-face{font-family:"Baloo 2";font-style:normal;font-weight:800;font-display:block;src:url("fonts/baloo-2-latin-800-normal.woff2") format("woff2")}
 
 /* Designlinie "Studio": kühles Grau, tiefes Ultramarin als einziger Akzent, dunkle Fotobox für die Buchstaben.
    Layout: links Name + Bühne, rechts ein einziges Gestaltungs-Panel, unten die Preisleiste. */
@@ -83,6 +77,12 @@ label.f span{font-weight:500;text-transform:none;letter-spacing:0}
 .mat .th{height:64px;width:100%;display:flex;align-items:center;justify-content:center}
 .mat canvas{height:100%;width:auto;max-width:100%;display:block}
 .mat[aria-pressed="true"]{border-color:var(--accent);background:var(--accent-soft);color:var(--accent)}
+.fonts{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:8px}
+.fnt{appearance:none;border:2px solid var(--line);background:var(--bg);color:var(--ink);border-radius:14px;padding:10px 8px 8px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:2px;min-width:0}
+.fnt .s{font-size:30px;line-height:1.1;text-transform:uppercase;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.fnt small{font:500 12px var(--f-body);color:var(--muted)}
+.fnt[aria-pressed="true"]{border-color:var(--accent);background:var(--accent-soft)}
+.fnt[aria-pressed="true"] small{color:var(--accent)}
 .seg{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
 .sz{appearance:none;border:2px solid var(--line);background:var(--bg);color:var(--ink);border-radius:12px;padding:10px 6px;cursor:pointer;font:700 16px var(--f-display);display:flex;flex-direction:column;align-items:center;gap:2px}
 .sz small{font:500 12px var(--f-body);color:var(--muted)}
@@ -118,6 +118,7 @@ button:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
         <div class="empty" id="empty" hidden>Schreib oben einen Namen, dann erscheint er hier.</div>
       </div>
       <div class="who" id="who" role="group" aria-label="Welcher Buchstabe wird gestaltet"></div>
+      <p class="note"><a id="wk" href="werkstatt.html" target="_blank" rel="noopener">Testversion: Druckdateien (STL) für diese Auswahl ansehen →</a></p>
       <p class="note">Tippe in der Vorschau auf einen Buchstaben, um ihn einzeln zu gestalten. Bildschirmfarben sind ein Richtwert.</p>
     </section>
 
@@ -126,6 +127,7 @@ button:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
         <h2 id="tgt">Gestalten</h2>
         <div class="sec"><h3>Farbe <b id="colName"></b></h3><div class="swatches" id="swatches"></div></div>
         <div class="sec"><h3>Material <b id="matName"></b></h3><div class="mats" id="mats"></div></div>
+        <div class="sec"><h3>Schrift <b id="fontName"></b></h3><div class="fonts" id="fonts"></div></div>
         <div class="sec"><h3>Grösse <b id="szName"></b></h3><div class="seg" id="sizes"></div></div>
       </div>
     </section>
@@ -137,59 +139,33 @@ button:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
   </div></div>
 </div>
 
+<script src="core.js"></script>
 <script>
-const COLORS=[["Kreide","#efece6"],["Sand","#d8c3a0"],["Senf","#e3c04a"],["Mohn","#d8392b"],["Terrakotta","#b8573a"],["Rosé","#e9a6a0"],
- ["Pflaume","#6b2d4f"],["Flieder","#b9a6e8"],["Fjord","#3d6fb6"],["Tinte","#1c2b52"],["Eis","#a9d6ee"],["Minze","#7fd1b5"],
- ["Salbei","#8da38a"],["Tanne","#1f5a45"],["Graphit","#34383f"],["Stein","#9aa0a8"],["Espresso","#4a2f22"],["Ocker","#c98a1d"]];
-const MATS=[["satin","Satin"],["samt","Samt"],["marmor","Marmor"],["terrazzo","Terrazzo"],["streifen","Streifen"],["perl","Perlmutt"]];
+const COLORS=TL.COLORS,MATS=TL.MATS;
 const SIZES=[{k:"S",cm:8,p:11},{k:"M",cm:12,p:16},{k:"L",cm:16,p:22}];
 const DEFAULTS=[["#3d6fb6","satin"],["#e3c04a","samt"],["#7fd1b5","marmor"],["#e9a6a0","terrazzo"]];
-const st={size:1,sel:-1,cfg:[]};
+const st={size:1,sel:-1,cfg:[],font:"baloo"};
 const $=id=>document.getElementById(id);
-const clamp=(v,a,b)=>Math.min(b,Math.max(a,v));
-const sstep=(a,b,x)=>{const t=clamp((x-a)/(b-a),0,1);return t*t*(3-2*t)};
+const {clamp,sstep,rng,valueNoise,FONTS,getFont}=TL;
 const hex2rgb=h=>[parseInt(h.slice(1,3),16),parseInt(h.slice(3,5),16),parseInt(h.slice(5,7),16)];
 const mixc=(a,b,t)=>[a[0]+(b[0]-a[0])*t,a[1]+(b[1]-a[1])*t,a[2]+(b[2]-a[2])*t];
 const lum=c=>(0.2126*c[0]+0.7152*c[1]+0.0722*c[2])/255;
 const css=c=>`rgb(${c.map(Math.round).join(",")})`;
 const toL=v=>Math.pow(clamp(v,0,255)/255,2.2), toS=v=>255*Math.pow(clamp(v,0,1),1/2.2);
 const chf=n=>"CHF "+n.toFixed(2);
-function rng(a){return()=>{a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
 
-/* ---------- Bildberechnung: aufgeblasene Buchstaben ---------- */
-const BASE_FS=300, FONT=fs=>`800 ${fs}px "Baloo 2", system-ui, sans-serif`;
-const mctx=document.createElement("canvas").getContext("2d");
-function dt1d(f,n,d,v,z){let k=0;v[0]=0;z[0]=-1e20;z[1]=1e20;
-  for(let q=1;q<n;q++){let s=((f[q]+q*q)-(f[v[k]]+v[k]*v[k]))/(2*q-2*v[k]);
-    while(s<=z[k]){k--;s=((f[q]+q*q)-(f[v[k]]+v[k]*v[k]))/(2*q-2*v[k])}
-    k++;v[k]=q;z[k]=s;z[k+1]=1e20}
-  k=0;for(let q=0;q<n;q++){while(z[k+1]<q)k++;d[q]=(q-v[k])*(q-v[k])+f[v[k]]}}
-function edt(inside,w,h){
-  const g=new Float64Array(w*h);for(let i=0;i<w*h;i++)g[i]=inside[i]?1e20:0;
-  const n=Math.max(w,h),f=new Float64Array(n),d=new Float64Array(n),v=new Int32Array(n),z=new Float64Array(n+1);
-  for(let x=0;x<w;x++){for(let y=0;y<h;y++)f[y]=g[y*w+x];dt1d(f,h,d,v,z);for(let y=0;y<h;y++)g[y*w+x]=d[y]}
-  for(let y=0;y<h;y++){for(let x=0;x<w;x++)f[x]=g[y*w+x];dt1d(f,w,d,v,z);for(let x=0;x<w;x++)g[y*w+x]=Math.sqrt(d[x])}
-  return g}
-function blur(a,w,h,r){const t=new Float32Array(w*h);
-  for(let y=0;y<h;y++){let s=0,c=0;const o=y*w;for(let x=0;x<=r&&x<w;x++){s+=a[o+x];c++}
-    for(let x=0;x<w;x++){t[o+x]=s/c;const add=x+r+1,rem=x-r;if(add<w){s+=a[o+add];c++}if(rem>=0){s-=a[o+rem];c--}}}
-  for(let x=0;x<w;x++){let s=0,c=0;for(let y=0;y<=r&&y<h;y++){s+=t[y*w+x];c++}
-    for(let y=0;y<h;y++){a[y*w+x]=s/c;const add=y+r+1,rem=y-r;if(add<h){s+=t[add*w+x];c++}if(rem>=0){s-=t[rem*w+x];c--}}}}
-function valueNoise(w,h,cell,seed){const r=rng(seed),gw=Math.ceil(w/cell)+3,gh=Math.ceil(h/cell)+3,g=new Float32Array(gw*gh);
-  for(let i=0;i<g.length;i++)g[i]=r();
-  const out=new Float32Array(w*h);
-  for(let y=0;y<h;y++){const gy=y/cell,iy=gy|0,fy=gy-iy,sy=fy*fy*(3-2*fy);
-    for(let x=0;x<w;x++){const gx=x/cell,ix=gx|0,fx=gx-ix,sx=fx*fx*(3-2*fx);
-      const a=g[iy*gw+ix],b=g[iy*gw+ix+1],c=g[(iy+1)*gw+ix],d=g[(iy+1)*gw+ix+1];
-      const top=a+(b-a)*sx;out[y*w+x]=top+((c+(d-c)*sx)-top)*sy}}
-  return out}
-function terrazzoTex(w,h,base,seed,FS){
+/* ---------- Bildberechnung: Einfärben der aufgeblasenen Buchstaben ---------- */
+const PARAM={satin:{wrap:.25,sa:.6,ew:1},samt:{wrap:.75,sa:0,ew:1},marmor:{wrap:.25,sa:.55,ew:1.1},
+  terrazzo:{wrap:.3,sa:.42,ew:1.3},streifen:{wrap:.28,sa:.55,ew:1.1},perl:{wrap:.3,sa:.5,ew:1.5}};
+const norm3=(x,y,z)=>{const l=Math.hypot(x,y,z);return[x/l,y/l,z/l]};
+const LK=norm3(-.45,-.7,.62), LF=norm3(.75,.35,.5);
+function terrazzoTex(w,h,base,seed,CAP){
   const cv=document.createElement("canvas");cv.width=w;cv.height=h;const c=cv.getContext("2d"),r=rng(seed);
   const L=lum(base);
   const cols=[css(mixc(base,[255,255,255],.8)),css(mixc(base,[0,0,0],.5)),css(mixc(base,[255,255,255],.45)),L>.5?"#2b2b31":"#f4f1ea"];
-  const n=Math.round(w*h/(FS*FS)*110);
+  const n=Math.round(w*h/(CAP*CAP)*220);
   for(let k=0;k<n;k++){
-    const cx=r()*w,cy=r()*h,s=FS*(0.016+r()*0.034),nv=5+Math.floor(r()*3),rot=r()*6.28;
+    const cx=r()*w,cy=r()*h,s=CAP*(0.022+r()*0.048),nv=5+Math.floor(r()*3),rot=r()*6.28;
     c.fillStyle=cols[Math.floor(r()*4)];c.beginPath();
     for(let j=0;j<nv;j++){const a=rot+j/nv*6.283,rr=s*(0.55+r()*0.6);c.lineTo(cx+Math.cos(a)*rr,cy+Math.sin(a)*rr)}
     c.closePath();c.fill()}
@@ -198,45 +174,24 @@ function env(rx,ry,wd){
   const a=Math.exp(-(Math.pow((rx+.38)/(.30*wd),2)+Math.pow((ry+.62)/(.20*wd),2)));
   const b=.45*Math.exp(-(Math.pow((rx-.72)/(.12*wd),2)+Math.pow((ry-.05)/(.5*wd),2)));
   return a*2.3+b+(0.18+0.35*Math.max(0,-ry))*.6}
-const PARAM={satin:{wrap:.25,sa:.6,ew:1},samt:{wrap:.75,sa:0,ew:1},marmor:{wrap:.25,sa:.55,ew:1.1},
-  terrazzo:{wrap:.3,sa:.42,ew:1.3},streifen:{wrap:.28,sa:.55,ew:1.1},perl:{wrap:.3,sa:.5,ew:1.5}};
-const norm3=(x,y,z)=>{const l=Math.hypot(x,y,z);return[x/l,y/l,z/l]};
-const LK=norm3(-.45,-.7,.62), LF=norm3(.75,.35,.5);
 
 const cache=new Map();let cachePx=0;
-function renderLetter(ch,color,mat,qs){
-  const key=ch+"|"+color+"|"+mat+"|"+qs, hit=cache.get(key);
+function renderLetter(ch,color,mat,qs,font){
+  const key=font.id+"|"+ch+"|"+color+"|"+mat+"|"+qs, hit=cache.get(key);
   if(hit){cache.delete(key);cache.set(key,hit);return hit}
-  const FS=Math.round(BASE_FS*qs),SW=Math.round(FS*.11),PAD=Math.round(FS*.1)+Math.round(SW/2);
-  mctx.font=FONT(FS);
-  const w=Math.ceil(mctx.measureText(ch).width)+PAD*2,h=Math.ceil(FS*1.18),y0=Math.round(FS*.9),N=w*h;
+  const G=TL.glyph(ch,font,qs),{w,h,N,A,dist,hm}=G,GP=G.P,R=GP.R,CAP=GP.CAP;
   const cv=document.createElement("canvas");cv.width=w;cv.height=h;const c=cv.getContext("2d");
-  c.font=FONT(FS);c.textAlign="center";c.textBaseline="alphabetic";c.lineJoin="round";c.lineWidth=SW;
-  c.fillStyle=c.strokeStyle="#000";
-  c.fillText(ch,w/2,y0);
-  const Af=new Uint8ClampedArray(N);{const fd=c.getImageData(0,0,w,h).data;for(let i=0;i<N;i++)Af[i]=fd[i*4+3]}
-  c.strokeText(ch,w/2,y0);
-  const img=c.getImageData(0,0,w,h),D=img.data,A=new Uint8ClampedArray(N),inside=new Uint8Array(N);
-  /* Innenöffnungen (A, B, O, R …) bleiben offen: nur die Aussenkante wird aufgebläht */
-  const outside=new Uint8Array(N),stack=[];
-  for(let x=0;x<w;x++){stack.push(x,(h-1)*w+x)}for(let y=0;y<h;y++){stack.push(y*w,y*w+w-1)}
-  while(stack.length){const i=stack.pop();if(outside[i]||Af[i]>=128)continue;outside[i]=1;const x=i%w;
-    if(x>0)stack.push(i-1);if(x<w-1)stack.push(i+1);if(i>=w)stack.push(i-w);if(i<N-w)stack.push(i+w)}
-  for(let i=0;i<N;i++){A[i]=(Af[i]<128&&!outside[i])?Af[i]:D[i*4+3];inside[i]=A[i]>127}
-  const dist=edt(inside,w,h),R=FS*.115,R2=R*2.3,hm=new Float32Array(N);
-  for(let i=0;i<N;i++){if(!inside[i])continue;const d=Math.min(dist[i],R)/R,e=1-d;
-    hm[i]=R*Math.sqrt(1-e*e)+.5*R*sstep(0,1,Math.min(dist[i],R2)/R2)}
-  const br=Math.max(2,Math.round(FS*.016));blur(hm,w,h,br);blur(hm,w,h,br);
+  const img=c.createImageData(w,h),D=img.data;
   const base=hex2rgb(color),L0=lum(base),P=PARAM[mat],seed=ch.charCodeAt(0)*131+7;
   let tz=null,nA=null,nB=null,gr=null;
-  if(mat==="terrazzo")tz=terrazzoTex(w,h,base,seed,FS);
-  if(mat==="marmor"){nA=valueNoise(w,h,FS*.24,seed);nB=valueNoise(w,h,FS*.07,seed+7)}
-  if(mat==="samt")gr=valueNoise(w,h,Math.max(1,FS*.004),seed);
+  if(mat==="terrazzo")tz=terrazzoTex(w,h,base,seed,CAP);
+  if(mat==="marmor"){nA=valueNoise(w,h,CAP*.34,seed);nB=valueNoise(w,h,CAP*.1,seed+7)}
+  if(mat==="samt")gr=valueNoise(w,h,Math.max(1,CAP*.006),seed);
   const white=[255,255,255],black=[0,0,0];
   const veinCol=L0>.55?mixc(base,black,.5):mixc(base,white,.75);
   const stripeAlt=L0>.62?mixc(base,black,.3):mixc(base,white,.6);
-  const sheenL=[toL(mixc(base,white,.55)[0]),toL(mixc(base,white,.55)[1]),toL(mixc(base,white,.55)[2])];
-  const P0=FS*.15;
+  const sw=mixc(base,white,.55),sheenL=[toL(sw[0]),toL(sw[1]),toL(sw[2])];
+  const P0=CAP*.21;
   for(let y=0;y<h;y++){const yw=y*w,ym=Math.max(0,y-1)*w,yp=Math.min(h-1,y+1)*w;
     for(let x=0;x<w;x++){const i=yw+x;if(!A[i]){D[i*4+3]=0;continue}
       const xm=Math.max(0,x-1),xp=Math.min(w-1,x+1);
@@ -244,7 +199,7 @@ function renderLetter(ch,color,mat,qs){
       const nl=Math.hypot(nx,ny,nz);nx/=nl;ny/=nl;nz/=nl;
       let a=base;
       if(mat==="marmor"){const n1=nA[i],n2=nB[i],warp=n1*3.4+n2*.9;
-        const vein=Math.pow(1-Math.abs(Math.sin((x/FS*2.3+y/FS*1.5+warp)*Math.PI)),16);
+        const vein=Math.pow(1-Math.abs(Math.sin((x/CAP*3.2+y/CAP*2.1+warp)*Math.PI)),16);
         a=mixc(base,veinCol,Math.min(1,vein*.95));
         a=mixc(a,L0>.55?black:white,(n1-.5)*.22)}
       else if(mat==="terrazzo"){const al=tz[i*4+3]/255;if(al>0)a=mixc(base,[tz[i*4],tz[i*4+1],tz[i*4+2]],al)}
@@ -265,13 +220,9 @@ function renderLetter(ch,color,mat,qs){
       D[i*4]=toS(o0/(1+.08*o0)*1.06);D[i*4+1]=toS(o1/(1+.08*o1)*1.06);D[i*4+2]=toS(o2/(1+.08*o2)*1.06);
       D[i*4+3]=A[i]}}
   c.putImageData(img,0,0);
-  const res={cv,w,h,qs,FS};cache.set(key,res);cachePx+=N;
+  const res={cv,w,h,qs};cache.set(key,res);cachePx+=N;
   while(cachePx>16e6&&cache.size>1){const k=cache.keys().next().value,v=cache.get(k);cachePx-=v.w*v.h;cache.delete(k)}
   return res}
-const measureCache=new Map();
-function baseWidth(ch){if(!measureCache.has(ch)){mctx.font=FONT(BASE_FS);
-  const SW=Math.round(BASE_FS*.11),PAD=Math.round(BASE_FS*.1)+Math.round(SW/2);
-  measureCache.set(ch,{w:Math.ceil(mctx.measureText(ch).width)+PAD*2,pad:PAD})}return measureCache.get(ch)}
 
 /* ---------- Zustand ---------- */
 function chars(){return[...$("name").value.toUpperCase()]}
@@ -294,12 +245,12 @@ function drawScene(){
   rects=[];const L=letterIdx();$("empty").hidden=L.length>0;
   $("scene").setAttribute("aria-label",L.length?`Vorschau: ${cs.join("")}`:"Noch kein Name");
   if(!L.length)return;
-  const SPW=95,hB=Math.ceil(BASE_FS*1.18);
+  const font=getFont(st.font),FP=TL.params(font,1),SPW=95,hB=Math.ceil(FP.h);
   let total=0;const items=cs.map((ch,k)=>{if(ch===" "){total+=SPW;return{sp:true}}
-    const m=baseWidth(ch),ov=k>0&&cs[k-1]!==" "?m.pad*.9:0;total+=m.w-ov;return{i:k,ch,m,ov}});
-  const sc=Math.min((cssW-40)/total,(cssH*.58)/250);
+    const m=TL.baseWidth(ch,font),ov=k>0&&cs[k-1]!==" "?m.pad*.9:0;total+=m.w-ov;return{i:k,ch,m,ov}});
+  const sc=Math.min((cssW-40)/total,(cssH*.58)/(FP.CAP+FP.SW+6));
   const need=sc*dpr,qs=[.45,.7,1,1.4].find(q=>q>=need)||1.4;
-  const floorY=cssH*.76,top=floorY-286*sc;
+  const floorY=cssH*.76,top=floorY-(FP.y0+FP.SW/2)*sc;
   let x=(cssW-total*sc)/2;
   const rc=document.createElement("canvas");rc.width=cvs.width;rc.height=cvs.height;
   const r=rc.getContext("2d");r.setTransform(dpr,0,0,dpr,0,0);r.imageSmoothingQuality="high";
@@ -316,7 +267,7 @@ function drawScene(){
     const g=ctx.createRadialGradient(0,0,0,0,0,p.w*.5);g.addColorStop(0,"rgba(0,0,0,.6)");g.addColorStop(1,"rgba(0,0,0,0)");
     ctx.fillStyle=g;ctx.beginPath();ctx.arc(0,0,p.w*.5,0,6.283);ctx.fill();ctx.restore()});
   /* Spiegelung */
-  placed.forEach(p=>{const cfg=st.cfg[p.i],res=renderLetter(p.ch,cfg.color,cfg.mat,qs);
+  placed.forEach(p=>{const cfg=st.cfg[p.i],res=renderLetter(p.ch,cfg.color,cfg.mat,qs,font);
     r.save();r.translate(0,2*floorY);r.scale(1,-1);r.globalAlpha=dim&&st.sel!==p.i?.4:1;
     r.drawImage(res.cv,p.x,top,p.w,hB*sc);r.restore()});
   r.save();r.setTransform(1,0,0,1,0,0);r.globalCompositeOperation="destination-in";
@@ -328,9 +279,9 @@ function drawScene(){
   r.fillStyle=clip;r.fillRect(0,0,rc.width,rc.height);r.restore();
   ctx.drawImage(rc,0,0,cssW,cssH);
   /* Buchstaben */
-  placed.forEach(p=>{const cfg=st.cfg[p.i],res=renderLetter(p.ch,cfg.color,cfg.mat,qs);
+  placed.forEach(p=>{const cfg=st.cfg[p.i],res=renderLetter(p.ch,cfg.color,cfg.mat,qs,font);
     ctx.globalAlpha=dim&&st.sel!==p.i?.42:1;ctx.drawImage(res.cv,p.x,top,p.w,hB*sc);ctx.globalAlpha=1;
-    rects.push({i:p.i,cx:p.x+p.w/2,x0:p.x+p.m?0:0,w:p.w})});
+    rects.push({i:p.i,cx:p.x+p.w/2,w:p.w})});
   /* Auswahlmarke */
   if(st.sel>=0){const p=placed.find(q=>q.i===st.sel);if(p){
     ctx.fillStyle=getComputedStyle(document.documentElement).getPropertyValue("--accent").trim()||"#98a2ff";
@@ -366,29 +317,41 @@ function renderPanel(){
   const ch=T.length?cs[T[0]]:"A",col=T.length?st.cfg[T[0]].color:DEFAULTS[0][0];
   MATS.forEach(([id,n])=>{const b=document.createElement("button");b.type="button";b.className="mat";
     const th=document.createElement("div");th.className="th";
-    if(T.length){const res=renderLetter(ch,col,id,.45);const c=document.createElement("canvas");c.width=res.w;c.height=res.h;
+    if(T.length){const res=renderLetter(ch,col,id,.45,getFont(st.font));const c=document.createElement("canvas");c.width=res.w;c.height=res.h;
       const cx=c.getContext("2d");cx.drawImage(res.cv,0,0);th.appendChild(c)}
     b.appendChild(th);b.append(n);b.setAttribute("aria-pressed",!!sameM&&cfg[0].mat===id);
     b.onclick=()=>{T.forEach(i=>st.cfg[i].mat=id);update()};mt.appendChild(b)})}
+function renderFonts(){
+  const box=$("fonts");box.innerHTML="";
+  const nm=(chars().join("").trim()||"Noa").slice(0,6);
+  FONTS.forEach(f=>{const b=document.createElement("button");b.type="button";b.className="fnt";
+    b.innerHTML=`<span class="s" style="font-family:'${f.family}',system-ui,sans-serif;font-weight:${f.weight}"></span><small>${f.name}</small>`;
+    b.firstChild.textContent=nm;b.setAttribute("aria-pressed",f.id===st.font);b.setAttribute("aria-label",`Schrift ${f.name}, ${f.note}`);
+    b.onclick=()=>{st.font=f.id;TL.loadFont(f).then(()=>{update()})};box.appendChild(b)});
+  $("fontName").textContent=getFont(st.font).note}
 function renderSize(){
   const box=$("sizes");box.innerHTML="";
   SIZES.forEach((s,k)=>{const b=document.createElement("button");b.type="button";b.className="sz";
     b.innerHTML=`${s.k}<small>${s.cm} cm</small>`;b.setAttribute("aria-pressed",k===st.size);
     b.onclick=()=>{st.size=k;update()};box.appendChild(b)});
   $("szName").textContent=`${SIZES[st.size].cm} cm hoch · CHF ${SIZES[st.size].p} pro Buchstabe`}
+function renderLink(){
+  const L=letterIdx();if(!L.length){$("wk").hidden=true;return}
+  const cs=chars(),o={n:cs.join(""),f:st.font,s:SIZES[st.size].cm,l:cs.map((ch,i)=>ch===" "?null:{c:st.cfg[i].color,m:st.cfg[i].mat})};
+  $("wk").hidden=false;$("wk").href="werkstatt.html#o="+btoa(unescape(encodeURIComponent(JSON.stringify(o)))).replace(/\+/g,"-").replace(/\//g,"_").replace(/=+$/,"")}
 function renderBar(){
   const n=letterIdx().length,s=SIZES[st.size];
   $("barA").textContent=`${n} Buchstabe${n===1?"":"n"} · ${s.cm} cm`;
   $("barB").textContent=`${n} × ${chf(s.p)}`;$("amt").textContent=chf(n*s.p);
   $("count").textContent=`${n} Buchstabe${n===1?"":"n"}`}
 let raf=0;
-function update(){syncCfg();renderWho();renderPanel();renderSize();renderBar();cancelAnimationFrame(raf);raf=requestAnimationFrame(drawScene)}
+function update(){syncCfg();renderWho();renderPanel();renderFonts();renderSize();renderBar();renderLink();cancelAnimationFrame(raf);raf=requestAnimationFrame(drawScene)}
 
 $("name").addEventListener("input",e=>{
   const v=e.target.value.replace(/[^A-Za-zÄÖÜäöüß0-9 &!?.\-]/g,"");if(v!==e.target.value)e.target.value=v;update()});
 if("ResizeObserver"in window)new ResizeObserver(()=>{cancelAnimationFrame(raf);raf=requestAnimationFrame(drawScene)}).observe($("stage"));
 const go=()=>{cache.clear();update()};
-(document.fonts?document.fonts.load(FONT(BASE_FS),"ABC"):Promise.resolve()).then(go,go);
+TL.loadFont(getFont(st.font)).then(go,go);
 </script>
 </body>
 </html>
