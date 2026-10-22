@@ -2,6 +2,7 @@
 <html lang="de">
 <head>
 <meta charset="utf-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="robots" content="noindex, nofollow">
 <title>Werkstatt | trimify</title>
@@ -116,7 +117,9 @@ const FILAMENT={satin:"PLA glatt (Basic/Silk)",samt:"PLA matt",marmor:"PLA Marmo
 function readOrder(){
   try{const m=location.hash.match(/o=([A-Za-z0-9_-]+)/);if(!m)return null;
     const b=m[1].replace(/-/g,"+").replace(/_/g,"/");const j=decodeURIComponent(escape(atob(b+"=".repeat((4-b.length%4)%4))));
-    const o=JSON.parse(j);if(!o||typeof o.n!=="string"||!Array.isArray(o.l))return null;return o}catch(e){return null}}
+    const o=JSON.parse(j);if(!o||typeof o.n!=="string"||!Array.isArray(o.l))return null;
+    /* Hash ist Nutzereingabe: Farbe und Material nur als bekannte Werte durchlassen (sonst landet es unescaped in innerHTML) */
+    o.l=o.l.slice(0,12).map(x=>({c:/^#[0-9a-f]{6}$/i.test(x&&x.c)?x.c:"#3d6fb6",m:TL.MATS.some(t=>t[0]===(x&&x.m))?x.m:"satin"}));return o}catch(e){return null}}
 const order=readOrder()||{n:"NOA",f:"baloo",s:12,l:[{c:"#3d6fb6",m:"satin"},{c:"#e3c04a",m:"samt"},{c:"#7fd1b5",m:"marmor"}]};
 const font=TL.getFont(order.f),sizeMm=Math.min(250,Math.max(20,Number(order.s)*10||120));
 const cs=[...order.n.toUpperCase()].slice(0,12);
