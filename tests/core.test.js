@@ -81,3 +81,20 @@ describe('blur', () => {
         expect(a[11]).toBeGreaterThan(0);
     });
 });
+
+describe('deliveryDate', () => {
+    const iso = d => d.toISOString().slice(0, 10);
+    const from = new Date('2026-10-22T10:00:00'); // Donnerstag
+
+    test('kurzer Auftrag: 1 Tag Druck + 1 Nacharbeit + 2 Puffer, dann 2 Werktage Versand', () => {
+        expect(iso(TL.deliveryDate(5.7, from))).toBe('2026-10-28');
+    });
+
+    test('mehr Druckstunden verlängern die Lieferzeit', () => {
+        expect(TL.deliveryDate(40, from).getTime()).toBeGreaterThan(TL.deliveryDate(5, from).getTime());
+    });
+
+    test('Lieferung fällt nie auf ein Wochenende', () => {
+        for (let h = 1; h <= 60; h += 7) expect([0, 6]).not.toContain(TL.deliveryDate(h, from).getDay());
+    });
+});

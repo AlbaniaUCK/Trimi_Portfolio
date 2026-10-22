@@ -135,7 +135,7 @@ button:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
   </main>
 
   <div class="bar"><div class="bar-in">
-    <div class="info"><b id="barA"></b><span id="barB"></span></div>
+    <div class="info"><b id="barA"></b><span id="barB"></span><span id="barC" style="display:block"></span></div>
     <div class="amt" id="amt"></div>
   </div></div>
 </div>
@@ -143,7 +143,8 @@ button:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
 <script src="core.js"></script>
 <script>
 const COLORS=TL.COLORS,MATS=TL.MATS;
-const SIZES=[{k:"S",cm:8,p:11},{k:"M",cm:12,p:16},{k:"L",cm:16,p:22}];
+/* p = Preis pro Buchstabe in CHF, h = Druckstunden pro Buchstabe (Mittel aus der Werkstatt-Schätzung) */
+const SIZES=[{k:"S",cm:8,p:6,h:.75},{k:"M",cm:12,p:12,h:1.9},{k:"L",cm:16,p:24,h:4.2}];
 const DEFAULTS=[["#3d6fb6","satin"],["#e3c04a","samt"],["#7fd1b5","marmor"],["#e9a6a0","terrazzo"]];
 const st={size:1,sel:-1,cfg:[],font:"baloo"};
 const $=id=>document.getElementById(id);
@@ -344,6 +345,7 @@ function renderBar(){
   const n=letterIdx().length,s=SIZES[st.size];
   $("barA").textContent=`${n} Buchstabe${n===1?"":"n"} · ${s.cm} cm`;
   $("barB").textContent=`${n} × ${chf(s.p)}`;$("amt").textContent=chf(n*s.p);
+  $("barC").textContent=n?"Lieferung ca. "+TL.deliveryDate(n*s.h).toLocaleDateString("de-CH",{weekday:"short",day:"numeric",month:"short"}):"";
   $("count").textContent=`${n} Buchstabe${n===1?"":"n"}`}
 let raf=0;
 function update(){syncCfg();renderWho();renderPanel();renderFonts();renderSize();renderBar();renderLink();cancelAnimationFrame(raf);raf=requestAnimationFrame(drawScene)}

@@ -98,5 +98,13 @@ TL.glyph=function(ch,font,qs){
   TL.blur(hm,w,h,P.br);TL.blur(hm,w,h,P.br);
   return{w,h,N,A,inside,dist,hm,P}};
 
+/* Lieferschätzung: Druckstunden / Tag, dann Nacharbeit, Puffer und Versand (Werktage). Gleiche Annahmen wie die Werkstatt. */
+TL.DELIVERY={hpd:16,finish:1,buffer:2,ship:2};
+TL.deliveryDate=function(hours,from){
+  const D=TL.DELIVERY,x=new Date(from||Date.now());
+  x.setDate(x.getDate()+Math.max(1,Math.ceil(hours/D.hpd))+D.finish+D.buffer);
+  for(let n=D.ship;n>0;){x.setDate(x.getDate()+1);if(x.getDay()!==0&&x.getDay()!==6)n--}
+  return x};
+
 g.TL=TL;
 })(window);
