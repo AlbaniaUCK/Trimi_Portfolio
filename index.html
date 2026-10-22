@@ -96,6 +96,20 @@ button:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
 .bar .info{font-size:14px;color:var(--muted);font-variant-numeric:tabular-nums}
 .bar .info b{display:block;color:var(--ink);font-weight:600}
 .bar .amt{font:800 30px/1 var(--f-display);letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+.go{appearance:none;border:0;border-radius:12px;background:var(--accent);color:var(--accent-ink);font:700 15px var(--f-body);padding:12px 18px;cursor:pointer}
+.go:disabled{opacity:.5;cursor:default}
+.bar .right{display:flex;align-items:center;gap:14px}
+dialog.ask{border:1px solid var(--line);border-radius:18px;background:var(--surface);color:var(--ink);padding:22px;width:min(440px,calc(100vw - 32px))}
+dialog.ask::backdrop{background:rgba(10,12,16,.55)}
+dialog.ask h2{margin:0 0 4px;font:800 22px/1.2 var(--f-display)}
+dialog.ask label{display:block;font-size:13px;color:var(--muted);margin-top:12px}
+dialog.ask input{display:block;width:100%;box-sizing:border-box;margin-top:4px;font:400 16px var(--f-body);color:var(--ink);background:var(--bg);border:2px solid var(--line);border-radius:10px;padding:10px 12px}
+dialog.ask input:focus{border-color:var(--accent);outline:none}
+dialog.ask .row{display:flex;gap:10px}dialog.ask .row label:first-child{flex:0 0 90px}dialog.ask .row label:last-child{flex:1}
+dialog.ask .acts{display:flex;gap:10px;justify-content:flex-end;margin-top:18px}
+dialog.ask .sec{appearance:none;border:2px solid var(--line);background:none;color:var(--ink);border-radius:12px;font:600 15px var(--f-body);padding:10px 16px;cursor:pointer}
+dialog.ask .err{color:#c0392b;font-size:13.5px;margin:12px 0 0;min-height:1em}
+.hp{position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden}
 .note{font-size:12.5px;color:var(--muted);margin:0}
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
 </style>
@@ -136,8 +150,24 @@ button:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
 
   <div class="bar"><div class="bar-in">
     <div class="info"><b id="barA"></b><span id="barB"></span><span id="barC" style="display:block"></span></div>
-    <div class="amt" id="amt"></div>
+    <div class="right"><div class="amt" id="amt"></div><button class="go" id="ask" type="button">Anfrage senden</button></div>
   </div></div>
+  <dialog class="ask" id="askDlg" aria-labelledby="askT">
+    <form id="askForm" novalidate>
+      <h2 id="askT">Anfrage senden</h2>
+      <p class="note" id="askSum"></p>
+      <label>E-Mail<input id="aMail" type="email" autocomplete="email" maxlength="120" required></label>
+      <label>Name der Empfängerin / des Empfängers<input id="aName" autocomplete="name" maxlength="80" required></label>
+      <label>Strasse und Nr.<input id="aStreet" autocomplete="street-address" maxlength="80" required></label>
+      <div class="row"><label>PLZ<input id="aZip" autocomplete="postal-code" inputmode="numeric" maxlength="10" required></label>
+      <label>Ort<input id="aCity" autocomplete="address-level2" maxlength="60" required></label></div>
+      <div class="hp" aria-hidden="true"><label>Website<input id="aWeb" tabindex="-1" autocomplete="off"></label></div>
+      <p class="err" id="askErr" role="alert"></p>
+      <p class="note">Das ist eine Anfrage, noch keine Bestellung. Wir bestätigen per E-Mail, bezahlt wird danach.</p>
+      <div class="acts"><button type="button" class="sec" id="askX">Abbrechen</button><button type="submit" class="go" id="askGo">Anfrage senden</button></div>
+    </form>
+  <div id="askDone" hidden><h2>Danke!</h2><p>Deine Anfrage ist angekommen. Wir melden uns per E-Mail, eine Kopie ist unterwegs zu dir.</p><div class="acts"><button type="button" class="go" id="askOk">Schliessen</button></div></div>
+  </dialog>
 </div>
 
 <script src="core.js"></script>
@@ -355,6 +385,22 @@ $("name").addEventListener("input",e=>{
 if("ResizeObserver"in window)new ResizeObserver(()=>{cancelAnimationFrame(raf);raf=requestAnimationFrame(drawScene)}).observe($("stage"));
 const go=()=>{cache.clear();update()};
 TL.loadFont(getFont(st.font)).then(go,go);
+
+/* ---------- Anfrage senden ---------- */
+(()=>{const dlg=$("askDlg"),err=$("askErr"),go=$("askGo");
+  $("ask").onclick=()=>{if(!letterIdx().length)return;const s=SIZES[st.size],n=letterIdx().length;
+    $("askSum").textContent=`${chars().join("").trim()} · ${n} × ${s.k} (${s.cm} cm) · ${chf(n*s.p)}`;err.textContent="";$("askForm").hidden=false;$("askDone").hidden=true;dlg.showModal()};
+  $("askX").onclick=()=>dlg.close();$("askOk").onclick=()=>dlg.close();
+  $("askForm").addEventListener("submit",async e=>{e.preventDefault();
+    const cs=chars(),s=SIZES[st.size];go.disabled=true;err.textContent="";
+    const body={name:cs.join(""),font:st.font,size:s.k,letters:cs.map((ch,i)=>ch===" "?null:{c:st.cfg[i].color,m:st.cfg[i].mat}),
+      email:$("aMail").value,address:{name:$("aName").value,street:$("aStreet").value,zip:$("aZip").value,city:$("aCity").value},website:$("aWeb").value};
+    try{const r=await fetch("/api/anfrage",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(body)});
+      const j=await r.json().catch(()=>({}));
+      if(!r.ok){err.textContent=j.error||"Das hat nicht geklappt. Bitte später noch einmal versuchen.";return}
+      $("askForm").hidden=true;$("askDone").hidden=false}
+    catch(_){err.textContent="Keine Verbindung. Bitte später noch einmal versuchen."}
+    finally{go.disabled=false}})})();
 </script>
 </body>
 </html>
