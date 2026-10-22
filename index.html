@@ -110,6 +110,7 @@ dialog.ask .acts{display:flex;gap:10px;justify-content:flex-end;margin-top:18px}
 dialog.ask .sec{appearance:none;border:2px solid var(--line);background:none;color:var(--ink);border-radius:12px;font:600 15px var(--f-body);padding:10px 16px;cursor:pointer}
 dialog.ask .err{color:#c0392b;font-size:13.5px;margin:12px 0 0;min-height:1em}
 .hp{position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden}
+.share{appearance:none;border:2px solid var(--line);background:var(--surface);color:var(--ink);border-radius:12px;font:600 14px var(--f-body);padding:8px 14px;cursor:pointer}
 .note{font-size:12.5px;color:var(--muted);margin:0}
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
 </style>
@@ -133,6 +134,7 @@ dialog.ask .err{color:#c0392b;font-size:13.5px;margin:12px 0 0;min-height:1em}
         <div class="empty" id="empty" hidden>Schreib oben einen Namen, dann erscheint er hier.</div>
       </div>
       <div class="who" id="who" role="group" aria-label="Welcher Buchstabe wird gestaltet"></div>
+      <p class="note"><button class="share" id="share" type="button">Teilen</button> <span id="shareMsg" role="status"></span></p>
       <p class="note"><a id="wk" href="werkstatt.html" target="_blank" rel="noopener">Testversion: Druckdateien (STL) für diese Auswahl ansehen →</a></p>
       <p class="note">Tippe in der Vorschau auf einen Buchstaben, um ihn einzeln zu gestalten. Bildschirmfarben sind ein Richtwert.</p>
     </section>
@@ -367,10 +369,11 @@ function renderSize(){
     b.innerHTML=`${s.k}<small>${s.cm} cm</small>`;b.setAttribute("aria-pressed",k===st.size);
     b.onclick=()=>{st.size=k;update()};box.appendChild(b)});
   $("szName").textContent=`${SIZES[st.size].cm} cm hoch · CHF ${SIZES[st.size].p} pro Buchstabe`}
+const orderObj=()=>{const cs=chars();return{n:cs.join(""),f:st.font,s:SIZES[st.size].cm,l:cs.map((ch,i)=>ch===" "?null:{c:st.cfg[i].color,m:st.cfg[i].mat})}};
+const b64u=o=>btoa(unescape(encodeURIComponent(JSON.stringify(o)))).replace(/\+/g,"-").replace(/\//g,"_").replace(/=+$/,"");
 function renderLink(){
-  const L=letterIdx();if(!L.length){$("wk").hidden=true;return}
-  const cs=chars(),o={n:cs.join(""),f:st.font,s:SIZES[st.size].cm,l:cs.map((ch,i)=>ch===" "?null:{c:st.cfg[i].color,m:st.cfg[i].mat})};
-  $("wk").hidden=false;$("wk").href="werkstatt.html#o="+btoa(unescape(encodeURIComponent(JSON.stringify(o)))).replace(/\+/g,"-").replace(/\//g,"_").replace(/=+$/,"")}
+  if(!letterIdx().length){$("wk").hidden=true;return}
+  $("wk").hidden=false;$("wk").href="werkstatt.html#o="+b64u(orderObj())}
 function renderBar(){
   const n=letterIdx().length,s=SIZES[st.size];
   $("barA").textContent=`${n} Buchstabe${n===1?"":"n"} · ${s.cm} cm`;
@@ -383,6 +386,44 @@ function update(){syncCfg();renderWho();renderPanel();renderFonts();renderSize()
 $("name").addEventListener("input",e=>{
   const v=e.target.value.replace(/[^A-Za-zÄÖÜäöüß0-9 &!?.\-]/g,"");if(v!==e.target.value)e.target.value=v;update()});
 if("ResizeObserver"in window)new ResizeObserver(()=>{cancelAnimationFrame(raf);raf=requestAnimationFrame(drawScene)}).observe($("stage"));
+/* ---------- Teilen: Link mit der Auswahl und Bild der Vorschau ---------- */
+const MATIDS=["satin","samt","marmor","terrazzo","streifen","perl"];
+/* Der Hash ist Nutzereingabe: jeder Wert wird gegen bekannte Werte geprüft, sonst gilt der Standard. */
+function applyShared(){
+  try{const m=location.hash.match(/d=([A-Za-z0-9_-]+)/);if(!m)return;
+    const b=m[1].replace(/-/g,"+").replace(/_/g,"/"),o=JSON.parse(decodeURIComponent(escape(atob(b+"=".repeat((4-b.length%4)%4)))));
+    if(!o||typeof o.n!=="string"||!Array.isArray(o.l))return;
+    const name=o.n.replace(/[^A-Za-zÄÖÜäöüß0-9 &!?.\-]/g,"").slice(0,12);if(!name.trim())return;
+    $("name").value=name;
+    if(FONTS.some(f=>f.id===o.f))st.font=o.f;
+    const si=SIZES.findIndex(s=>s.cm===o.s);if(si>=0)st.size=si;
+    st.cfg=[...name].map((_,i)=>{const x=o.l[i];
+      return x&&/^#[0-9a-f]{6}$/i.test(x.c)&&MATIDS.includes(x.m)?{color:x.c.toLowerCase(),mat:x.m}:null}).map((c,i)=>c||{color:DEFAULTS[i%DEFAULTS.length][0],mat:DEFAULTS[i%DEFAULTS.length][1]})
+  }catch(e){}}
+function sceneBlob(){return new Promise(res=>{
+  const prev=st.sel;st.sel=-1;drawScene();                       /* ohne Hervorhebung zeichnen */
+  const src=$("scene"),dpr=src.width/$("stage").clientWidth,strip=Math.round(34*dpr);
+  const c=document.createElement("canvas");c.width=src.width;c.height=src.height+strip;const x=c.getContext("2d");
+  const cs=getComputedStyle(document.documentElement),a=cs.getPropertyValue("--stage-a").trim()||"#2a2f3a",bb=cs.getPropertyValue("--stage-b").trim()||"#14161c";
+  const g=x.createRadialGradient(c.width/2,src.height*.18,0,c.width/2,src.height*.18,Math.max(c.width,src.height)*.8);g.addColorStop(0,a);g.addColorStop(.72,bb);
+  x.fillStyle=bb;x.fillRect(0,0,c.width,c.height);x.fillStyle=g;x.fillRect(0,0,c.width,src.height);
+  x.drawImage(src,0,0);
+  x.fillStyle="#12151a";x.fillRect(0,src.height,c.width,strip);
+  x.fillStyle="#fff";x.font=`800 ${Math.round(16*dpr)}px ${getComputedStyle(document.body).fontFamily}`;x.textBaseline="middle";x.textAlign="center";
+  x.fillText("trimify.ch",c.width/2,src.height+strip/2);
+  st.sel=prev;drawScene();c.toBlob(res,"image/png")})}
+$("share").onclick=async()=>{
+  const msg=$("shareMsg"),cs=chars().join("").trim();if(!cs){msg.textContent="Schreib zuerst einen Namen.";return}
+  const url=location.origin+location.pathname+"#d="+b64u(orderObj());
+  await TL.loadFont(getFont(st.font));const blob=await sceneBlob();if(!blob){msg.textContent="Das Bild konnte nicht erstellt werden.";return}
+  const file=new File([blob],`trimify-${cs.replace(/[^A-Za-z0-9ÄÖÜäöüß]/g,"_")}.png`,{type:"image/png"});
+  try{if(navigator.canShare&&navigator.canShare({files:[file]})){await navigator.share({files:[file],url,title:"Mein Name bei trimify"});msg.textContent="";return}}
+  catch(e){if(e&&e.name==="AbortError")return}
+  let copied=false;try{await navigator.clipboard.writeText(url);copied=true}catch(e){}
+  const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download=file.name;document.body.appendChild(a);a.click();
+  setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},4000);
+  msg.textContent=copied?"Link kopiert, Bild gespeichert.":"Bild gespeichert. Link: "+url};
+applyShared();
 const go=()=>{cache.clear();update()};
 TL.loadFont(getFont(st.font)).then(go,go);
 
