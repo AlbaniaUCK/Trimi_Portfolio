@@ -45,8 +45,8 @@ describe('readOrder', () => {
         expect(o.l).toEqual([{ c: '#AABBCC', m: 'satin' }, { c: '#3d6fb6', m: 'satin' }]);
     });
 
-    test('es werden höchstens 12 Buchstaben übernommen', () => {
+    test('es werden höchstens 24 Buchstaben übernommen', () => {
         const l = Array.from({ length: 30 }, () => ({ c: '#000000', m: 'samt' }));
-        expect(readOrder('#o=' + encode({ n: 'A', l })).l).toHaveLength(12);
+        expect(readOrder('#o=' + encode({ n: 'A', l })).l).toHaveLength(24);
     });
 });

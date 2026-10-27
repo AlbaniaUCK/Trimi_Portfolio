@@ -7,7 +7,7 @@ const SIZES = { S: { cm: 8, p: 6, h: .75 }, M: { cm: 12, p: 12, h: 1.9 }, L: { c
 const DELIVERY = { hpd: 16, finish: 1, buffer: 2, ship: 2 };
 const FONTS = ["baloo", "fredoka", "nunito", "sniglet", "titan"];
 const MATS = ["satin", "samt", "marmor", "terrazzo", "streifen", "perl"];
-const MAX_LETTERS = 12;
+const MAX_LETTERS = 24;
 
 const clean = (v, max) => String(v == null ? "" : v).replace(/[\u0000-\u001f\u007f<>]/g, " ").replace(/\s+/g, " ").trim().slice(0, max);
 

@@ -44,9 +44,9 @@ describe('validate', () => {
         expect(validate(b).order.address.name).not.toMatch(/[\r\n<>]/);
     });
 
-    test('Name wird auf 12 Zeichen gekürzt', () => {
-        const b = base(); b.name = 'A'.repeat(40); b.letters = Array(12).fill({ c: '#000000', m: 'satin' });
-        expect(validate(b).order.n).toBe(12);
+    test('Name wird auf 24 Zeichen gekürzt', () => {
+        const b = base(); b.name = 'A'.repeat(40); b.letters = Array(24).fill({ c: '#000000', m: 'satin' });
+        expect(validate(b).order.n).toBe(24);
     });
 });
 

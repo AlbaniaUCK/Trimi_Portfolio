@@ -45,7 +45,7 @@ describe('applyShared', () => {
         expect(r.st.cfg[0]).toEqual({ color: '#3d6fb6', mat: 'satin' });
     });
 
-    test('Name wird auf 12 Zeichen gekürzt', () => {
-        expect(run('#d=' + encode({ n: 'ABCDEFGHIJKLMNOP', l: [] })).name).toHaveLength(12);
+    test('Name wird auf 24 Zeichen gekürzt', () => {
+        expect(run('#d=' + encode({ n: 'ABCDEFGHIJKLMNOPQRSTUVWXYZABCDEF', l: [] })).name).toHaveLength(24);
     });
 });

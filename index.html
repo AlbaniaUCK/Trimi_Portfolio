@@ -145,6 +145,9 @@ dialog.ask .err{color:var(--err);font-size:0.8438rem;margin:12px 0 0;min-height:
 @media (max-width:880px){
   .col.left{display:contents}   /* Bühne wird Kind des Rasters, damit sie über dem Panel kleben bleibt */
   .stage{position:sticky;top:max(8px,env(safe-area-inset-top,0px));z-index:4;height:clamp(150px,26vh,230px)}}
+.viewbar{display:flex;flex-direction:column;gap:8px}
+.seg.two{grid-template-columns:repeat(2,1fr)}
+#room{position:absolute;inset:0;width:100%;height:100%;display:block}
 .chips{display:flex;flex-wrap:wrap;gap:8px;list-style:none;margin:14px 0 0;padding:0}
 .chips li{background:var(--surface);color:var(--ink);font:500 .875rem var(--f-body);padding:8px 14px;border-radius:999px}
 .lp{display:flex;flex-direction:column;gap:64px;padding-block:56px 32px}
@@ -193,15 +196,22 @@ footer.ft{padding:8px 0 24px;text-align:center}
       <div>
         <h1>Kissen-Buchstaben</h1>
         <p class="lead">Weiche 3D-Lettern für Zimmer, Regal oder Tür. Schreib deinen Namen und gestalte jeden Buchstaben nach Wunsch.</p>
-        <ul class="chips"><li>Jeder Buchstabe einzeln gestaltbar</li><li>Preis und Lieferdatum sofort sichtbar</li><li>Anfrage ohne Zahlung</li></ul>
+        <ul class="chips"><li>Jeder Buchstabe einzeln gestaltbar</li><li>Preis und Lieferdatum sofort sichtbar</li><li>Vorschau im Zimmer in echter Grösse</li><li>Anfrage ohne Zahlung</li></ul>
       </div>
       <div>
-        <label class="f" for="name">Dein Name <span id="count"></span></label>
-        <input id="name" type="text" value="Noa" maxlength="12" placeholder="Name eingeben" autocomplete="off" autocapitalize="characters" spellcheck="false">
+        <label class="f" for="name">Name oder Namen <span id="count"></span></label>
+        <input id="name" type="text" value="Noa" maxlength="24" placeholder="Name eingeben" autocomplete="off" autocapitalize="characters" spellcheck="false" aria-describedby="nameHint">
+        <p class="note" id="nameHint">Mehrere Namen, zum Beispiel für Geschwister? Trenne sie mit einem Leerzeichen. <button type="button" class="share" id="addName">+ Weiterer Name</button></p>
       </div>
       <div class="stage" id="stage">
         <canvas id="scene" role="img" aria-label="Vorschau deines Namens"></canvas>
+        <canvas id="room" role="img" aria-label="Dein Name im Zimmer" hidden></canvas>
         <div class="empty" id="empty" hidden>Schreib oben einen Namen, dann erscheint er hier.</div>
+      </div>
+      <div class="viewbar">
+        <div class="seg two" role="group" aria-label="Ansicht"><button type="button" class="sz" data-view="stage" aria-pressed="true">Vorschau</button><button type="button" class="sz" data-view="room" aria-pressed="false" data-tt="Im Zimmer" data-tip="Dein Name in echter Grösse auf Regal, Bett oder Tür, damit du siehst, ob er passt.">Im Zimmer</button></div>
+        <div class="seg" id="scenes" role="group" aria-label="Ort im Zimmer" hidden><button type="button" class="sz" data-scene="regal" aria-pressed="true">Regal</button><button type="button" class="sz" data-scene="bett" aria-pressed="false">Bett</button><button type="button" class="sz" data-scene="tuer" aria-pressed="false">Tür</button></div>
+        <p class="note" id="roomInfo" role="status" hidden></p>
       </div>
       <div class="who" id="who" role="group" aria-label="Welcher Buchstabe wird gestaltet"></div>
       <p class="note"><button class="share" id="share" type="button" data-tt="Teilen" data-tip="Erzeugt einen Link mit deiner Auswahl und ein Bild der Vorschau.">Teilen</button> <span id="shareMsg" role="status"></span></p>
@@ -234,7 +244,7 @@ footer.ft{padding:8px 0 24px;text-align:center}
       </div></section>
     <section id="ideen" class="rv"><h2>Ideen zum Verschenken</h2><p class="sub">Tippe auf eine Idee, dann siehst du sie im Konfigurator und kannst alles ändern.</p>
       <div class="cards">
-        <div class="card"><div class="mini"><i style="background:#3d6fb6"></i><i style="background:#a9d6ee"></i><i style="background:#7fd1b5"></i><i style="background:#e3c04a"></i></div><h3>Fürs Kinderzimmer</h3><p>Der Name über dem Bett oder auf dem Regal, bunt und weich.</p><button type="button" class="share" data-preset="kind">Ansehen</button></div>
+        <div class="card"><div class="mini"><i style="background:#3d6fb6"></i><i style="background:#a9d6ee"></i><i style="background:#e9a6a0"></i><i style="background:#efece6"></i></div><h3>Für Geschwister</h3><p>Zwei Namen, zwei Farbwelten, ein Regal.</p><button type="button" class="share" data-preset="geschwister">Ansehen</button></div>
         <div class="card"><div class="mini"><i style="background:#e9a6a0"></i><i style="background:#efece6"></i><i style="background:#d8c3a0"></i></div><h3>Zur Geburt</h3><p>Sanfte Farben, ein Name, ein Geschenk, das bleibt.</p><button type="button" class="share" data-preset="geburt">Ansehen</button></div>
         <div class="card"><div class="mini"><i style="background:#1f5a45"></i><i style="background:#8da38a"></i><i style="background:#efece6"></i><i style="background:#d8c3a0"></i></div><h3>Fürs Zuhause</h3><p>Ein Wort an der Tür oder im Gang, ruhig und natürlich.</p><button type="button" class="share" data-preset="zuhause">Ansehen</button></div>
       </div></section>
@@ -244,6 +254,7 @@ footer.ft{padding:8px 0 24px;text-align:center}
         <details><summary>Was kostet mein Name?</summary><p>Der Preis gilt pro Buchstabe: <span id="faqPrice"></span>. Die Preisleiste zeigt dir die Summe sofort.</p></details>
         <details><summary>Wann kommt mein Name an?</summary><p>Die Preisleiste zeigt ein ungefähres Lieferdatum. Es hängt von Anzahl und Grösse der Buchstaben ab und ist eine Schätzung.</p></details>
         <details><summary>Sehen die Farben so aus wie am Bildschirm?</summary><p>Bildschirmfarben sind ein Richtwert. Das gedruckte Kissen kann leicht abweichen.</p></details>
+        <details><summary>Kann ich mehrere Namen bestellen?</summary><p>Ja, zum Beispiel für Geschwister: Trenne die Namen mit einem Leerzeichen, insgesamt bis 24 Buchstaben. Jeden Namen und jeden Buchstaben kannst du einzeln gestalten.</p></details>
         <details><summary>Kann ich meine Auswahl teilen?</summary><p>Ja. Mit «Teilen» erzeugst du einen Link und ein Bild deiner Vorschau.</p></details>
       </div></section>
     <footer class="ft"><p class="note">trimify · Kissen-Buchstaben</p></footer>
@@ -356,12 +367,14 @@ function renderLetter(ch,color,mat,qs,font){
 /* ---------- Zustand ---------- */
 function chars(){return[...$("name").value.toUpperCase()]}
 function letterIdx(){return chars().map((c,i)=>c===" "?null:i).filter(i=>i!==null)}
+function words(){const w=[];let cur=null;chars().forEach((c,i)=>{if(c===" ")cur=null;else{if(!cur){cur=[];w.push(cur)}cur.push(i)}});return w}
+const wordSel=()=>typeof st.sel==="string";
 function syncCfg(){const cs=chars();
   while(st.cfg.length<cs.length){const d=DEFAULTS[st.cfg.length],prev=st.cfg[st.cfg.length-1];
     st.cfg.push(d?{color:d[0],mat:d[1]}:prev?{...prev}:{color:DEFAULTS[0][0],mat:DEFAULTS[0][1]})}
   st.cfg.length=cs.length;
-  if(st.sel>=cs.length||(st.sel>=0&&cs[st.sel]===" "))st.sel=-1}
-const targets=()=>st.sel<0?letterIdx():[st.sel];
+  if(wordSel()?!words()[+st.sel.slice(1)]:(st.sel>=cs.length||(st.sel>=0&&cs[st.sel]===" ")))st.sel=-1}
+const targets=()=>st.sel===-1?letterIdx():wordSel()?words()[+st.sel.slice(1)]:[st.sel];
 
 /* ---------- Bühne ---------- */
 let rects=[];
@@ -384,7 +397,7 @@ function drawScene(){
   const rc=document.createElement("canvas");rc.width=cvs.width;rc.height=cvs.height;
   const r=rc.getContext("2d");r.setTransform(dpr,0,0,dpr,0,0);r.imageSmoothingQuality="high";
   ctx.imageSmoothingQuality="high";
-  const dim=st.sel>=0;
+  const tsel=new Set(targets()),dim=st.sel!==-1;
   const placed=[];
   items.forEach(it=>{if(it.sp){x+=SPW*sc;return}
     x-=it.ov*sc;placed.push({...it,x,w:it.m.w*sc});x+=it.m.w*sc-0});
@@ -397,7 +410,7 @@ function drawScene(){
     ctx.fillStyle=g;ctx.beginPath();ctx.arc(0,0,p.w*.5,0,6.283);ctx.fill();ctx.restore()});
   /* Spiegelung */
   placed.forEach(p=>{const cfg=st.cfg[p.i],res=renderLetter(p.ch,cfg.color,cfg.mat,qs,font);
-    r.save();r.translate(0,2*floorY);r.scale(1,-1);r.globalAlpha=dim&&st.sel!==p.i?.4:1;
+    r.save();r.translate(0,2*floorY);r.scale(1,-1);r.globalAlpha=dim&&!tsel.has(p.i)?.4:1;
     r.drawImage(res.cv,p.x,top,p.w,hB*sc);r.restore()});
   r.save();r.setTransform(1,0,0,1,0,0);r.globalCompositeOperation="destination-in";
   const mg=r.createLinearGradient(0,floorY*dpr,0,(floorY+110*sc+20)*dpr);mg.addColorStop(0,"rgba(0,0,0,.26)");mg.addColorStop(1,"rgba(0,0,0,0)");
@@ -409,14 +422,59 @@ function drawScene(){
   ctx.drawImage(rc,0,0,cssW,cssH);
   /* Buchstaben */
   placed.forEach(p=>{const cfg=st.cfg[p.i],res=renderLetter(p.ch,cfg.color,cfg.mat,qs,font);
-    ctx.globalAlpha=dim&&st.sel!==p.i?.42:1;ctx.drawImage(res.cv,p.x,top,p.w,hB*sc);ctx.globalAlpha=1;
+    ctx.globalAlpha=dim&&!tsel.has(p.i)?.42:1;ctx.drawImage(res.cv,p.x,top,p.w,hB*sc);ctx.globalAlpha=1;
     rects.push({i:p.i,cx:p.x+p.w/2,w:p.w})});
   /* Auswahlmarke */
-  if(st.sel>=0){const p=placed.find(q=>q.i===st.sel);if(p){
-    ctx.fillStyle=getComputedStyle(document.documentElement).getPropertyValue("--accent").trim()||"#98a2ff";
-    ctx.fillStyle="#ffffff";const bw=Math.min(44,p.w*.5);ctx.beginPath();
-    ctx.roundRect?ctx.roundRect(p.x+p.w/2-bw/2,floorY+16,bw,5,3):ctx.rect(p.x+p.w/2-bw/2,floorY+16,bw,5);ctx.fill()}}
+  if(st.sel!==-1){const ps=placed.filter(q=>tsel.has(q.i));if(ps.length){const x0=ps[0].x,x1=ps[ps.length-1].x+ps[ps.length-1].w,one=ps.length===1,
+    bw=one?Math.min(44,ps[0].w*.5):x1-x0,bx=one?(x0+x1)/2-bw/2:x0;
+    ctx.fillStyle="#ffffff";ctx.beginPath();ctx.roundRect?ctx.roundRect(bx,floorY+16,bw,5,3):ctx.rect(bx,floorY+16,bw,5);ctx.fill()}}
 }
+/* ---------- Zimmer: Name in echter Grösse (Masse in cm, ein Massstab für Möbel und Buchstaben) ---------- */
+/* shortcut: flache Zeichnung, keine Perspektive; Buchstabenbreite aus den Schriftmassen geschätzt, nachmessen vor dem Versprechen */
+const SCENES={regal:{label:"Regal",W:110,yOff:0,base:11,furn:90,what:"Das Regalbrett"},bett:{label:"Bett",W:170,yOff:30,base:98,furn:90,what:"Das Bett"},tuer:{label:"Tür",W:120,yOff:90,base:128,furn:90,what:"Die Tür"}};
+st.view="stage";st.scene="regal";
+const draw=()=>st.view==="room"?drawRoom():drawScene();
+function drawRoom(){
+  syncCfg();
+  const wrap=$("stage"),cvs=$("room"),cssW=wrap.clientWidth,cssH=wrap.clientHeight,dpr=Math.min(window.devicePixelRatio||1,3);
+  cvs.width=Math.round(cssW*dpr);cvs.height=Math.round(cssH*dpr);
+  const c=cvs.getContext("2d");c.setTransform(dpr,0,0,dpr,0,0);
+  const dark=matchMedia("(prefers-color-scheme: dark)").matches,S=SCENES[st.scene],cm=SIZES[st.size].cm,
+    cs=chars(),font=getFont(st.font),FP=TL.params(font,1),hB=Math.ceil(FP.h),SPW=95,L=letterIdx();
+  let total=0;const items=cs.map((ch,k)=>{if(ch===" "){total+=SPW;return{sp:true}}
+    const m=TL.baseWidth(ch,font),ov=k>0&&cs[k-1]!==" "?m.pad*.9:0;total+=m.w-ov;return{i:k,ch,m,ov}});
+  const cmPerU=cm/(FP.CAP+FP.SW),nameCm=L.length?total*cmPerU:0;
+  const ppc=Math.min(cssW/S.W,nameCm?cssW*.94/nameCm:1e9),sc=ppc*cmPerU;
+  const Y=y=>cssH-(y-S.yOff)*ppc,X=x=>cssW/2+x*ppc,box=(x0,y0,x1,y1,col,r)=>{c.fillStyle=col;c.beginPath();
+    c.roundRect?c.roundRect(X(x0),Y(y1),(x1-x0)*ppc,(y1-y0)*ppc,r*ppc):c.rect(X(x0),Y(y1),(x1-x0)*ppc,(y1-y0)*ppc);c.fill()};
+  const wall=dark?"#2a2927":"#e9e4da",wood=dark?"#6b5640":"#b98f62",woodD=dark?"#54432f":"#9a7448";
+  c.fillStyle=wall;c.fillRect(0,0,cssW,cssH);
+  if(st.scene==="regal"){
+    box(-35,3,-32,8,woodD,.5);box(32,3,35,8,woodD,.5);box(-45,8,45,11,wood,.6);
+    box(-43,11,-40,31,"#5b7fa3",.4);box(-40,11,-36,35,"#c4574a",.4);box(-36,11,-33,29,"#d9b44a",.4);
+    box(33,11,41,20,"#b8573a",1);c.fillStyle="#4f7d5a";[[37,25,6],[33,28,4.5],[41,28,4.5]].forEach(([x,y,r])=>{c.beginPath();c.arc(X(x),Y(y),r*ppc,0,6.283);c.fill()})}
+  else if(st.scene==="bett"){
+    box(-50,-20,50,85,wood,2);box(-45,30,45,48,dark?"#55606e":"#dfe6ee",4);box(-45,30,45,40,dark?"#7a4a50":"#e9a6a0",3);
+    box(-26,48,-3,58,dark?"#6d7785":"#f4f1ea",5);box(3,48,26,58,dark?"#6d7785":"#f4f1ea",5)}
+  else{
+    box(-45,-20,45,215,dark?"#4a4742":"#f4f1ea",1);box(-35,115,35,195,dark?"#413e3a":"#e7e2d8",1);box(-35,15,35,100,dark?"#413e3a":"#e7e2d8",1);
+    box(30,99,41,101.5,dark?"#aaa":"#8b8680",1);c.fillStyle=dark?"#aaa":"#8b8680";c.beginPath();c.arc(X(36),Y(100),3.2*ppc,0,6.283);c.fill()}
+  if(L.length){
+    const need=sc*dpr,qs=[.45,.7,1,1.4].find(q=>q>=need)||1.4,baseY=Y(S.base),top=baseY-(FP.y0+FP.SW/2)*sc;
+    let x=(cssW-total*sc)/2;const placed=[];
+    items.forEach(it=>{if(it.sp){x+=SPW*sc;return}x-=it.ov*sc;placed.push({...it,x,w:it.m.w*sc});x+=it.m.w*sc});
+    placed.forEach(pl=>{const cfg=st.cfg[pl.i],res=renderLetter(pl.ch,cfg.color,cfg.mat,qs,font);
+      if(st.scene==="regal"){c.save();c.translate(pl.x+pl.w/2,baseY);c.scale(1,.12);c.fillStyle="rgba(0,0,0,.3)";c.beginPath();c.arc(0,0,pl.w*.5,0,6.283);c.fill();c.restore()}
+      else{c.shadowColor="rgba(0,0,0,.3)";c.shadowBlur=8;c.shadowOffsetY=3}
+      c.drawImage(res.cv,pl.x,top,pl.w,hB*sc);c.shadowColor="transparent";c.shadowBlur=0;c.shadowOffsetY=0})}
+  const sm=SCENES[st.scene];$("room").setAttribute("aria-label",`Dein Name im Zimmer: ${sm.label}`);
+  $("roomInfo").textContent=L.length?`Dein Name ist etwa ${Math.round(nameCm)} cm breit und ${cm} cm hoch. ${sm.what} ist ${sm.furn} cm breit${nameCm>sm.furn?", dein Name wäre also breiter":""}.`:"Schreib einen Namen, dann siehst du ihn hier in echter Grösse."}
+function setView(){const room=st.view==="room";
+  document.querySelectorAll("[data-view]").forEach(b=>b.setAttribute("aria-pressed",b.dataset.view===st.view));
+  document.querySelectorAll("[data-scene]").forEach(b=>b.setAttribute("aria-pressed",b.dataset.scene===st.scene));
+  $("scene").hidden=room;$("room").hidden=!room;$("empty").hidden=room||letterIdx().length>0;$("scenes").hidden=!room;$("roomInfo").hidden=!room;cancelAnimationFrame(raf);raf=requestAnimationFrame(draw)}
+document.querySelectorAll("[data-view]").forEach(b=>b.onclick=()=>{st.view=b.dataset.view;setView()});
+document.querySelectorAll("[data-scene]").forEach(b=>b.onclick=()=>{st.scene=b.dataset.scene;setView()});
 $("scene").addEventListener("pointerdown",e=>{
   const rect=$("scene").getBoundingClientRect(),x=e.clientX-rect.left;
   let best=null,bd=1e9;rects.forEach(r=>{const d=Math.abs(x-r.cx);if(d<bd){bd=d;best=r}});
@@ -431,11 +489,12 @@ function renderWho(){
     b.textContent=txt;b.setAttribute("aria-label",aria);b.setAttribute("aria-pressed",st.sel===sel);
     b.onclick=()=>{st.sel=sel;update()};box.appendChild(b)};
   mk("Alle",-1,"Alle Buchstaben","all");
+  const W=words();if(W.length>1)W.forEach((w,k)=>{const t=w.map(i=>cs[i]).join("");mk(t,"w"+k,`Ganzer Name ${t}`,"all")});
   L.forEach(i=>mk(cs[i],i,`Buchstabe ${cs[i]}, Position ${i+1}`))}
 function renderPanel(){
   const T=targets(),cs=chars(),cfg=T.map(i=>st.cfg[i]);
   const sameC=cfg.length&&cfg.every(c=>c.color===cfg[0].color),sameM=cfg.length&&cfg.every(c=>c.mat===cfg[0].mat);
-  $("tgt").innerHTML=st.sel<0?`Alle Buchstaben<small>Farbe und Material gelten für den ganzen Namen.</small>`:`Buchstabe ${cs[st.sel]}<small>Nur dieser Buchstabe ändert sich.</small>`;
+  $("tgt").innerHTML=st.sel===-1?`Alle Buchstaben<small>Farbe und Material gelten für ${words().length>1?"alle Namen":"den ganzen Namen"}.</small>`:wordSel()?`Name ${T.map(i=>cs[i]).join("")}<small>Nur dieser Name ändert sich.</small>`:`Buchstabe ${cs[st.sel]}<small>Nur dieser Buchstabe ändert sich.</small>`;
   $("colName").textContent=sameC?(COLORS.find(c=>c[1]===cfg[0].color)||[""])[0]:"gemischt";
   $("matName").textContent=sameM?MATS.find(m=>m[0]===cfg[0].mat)[1]:"gemischt";
   const sw=$("swatches");sw.innerHTML="";
@@ -468,7 +527,7 @@ const orderObj=()=>{const cs=chars();return{n:cs.join(""),f:st.font,s:SIZES[st.s
 const MATD={satin:"Glatt mit sanftem Glanz.",samt:"Matt und tief, mit weichem Schimmer am Rand.",marmor:"Feine Adern wie bei Stein.",terrazzo:"Bunte Steinchen auf der Fläche.",streifen:"Diagonale Streifen in zwei Tönen.",perl:"Schimmert je nach Blickwinkel leicht in Regenbogenfarben."};
 const SZD=["etwa so breit wie eine Kreditkarte","etwas kürzer als ein Smartphone","etwa so lang wie ein Smartphone"];
 const TIPS={
-  farbe:()=>["Farbe","18 Farbtöne. Tippe oben auf einen Buchstaben, um nur ihn umzufärben, oder wähle «Alle». Bildschirmfarben sind ein Richtwert."],
+  farbe:()=>["Farbe","18 Farbtöne. Tippe oben auf einen Buchstaben oder wähle einen ganzen Namen, um nur ihn umzufärben, oder wähle «Alle». Bildschirmfarben sind ein Richtwert."],
   material:()=>["Material","Das Material bestimmt Muster und Glanz der Oberfläche. Satin und Samt bleiben einfarbig, Marmor, Terrazzo, Streifen und Perlmutt bringen ein Muster."],
   font:()=>["Schrift","Die Schrift ändert die Form der Buchstaben, nicht den Preis. Rundere Schriften wirken weicher, kräftige kompakter."],
   size:()=>["Grösse","Höhe der Buchstaben. "+SIZES.map(z=>`${z.k}: CHF ${z.p}`).join(", ")+" pro Buchstabe."]};
@@ -480,18 +539,19 @@ function renderLink(){
   $("wk").href="werkstatt.html#o="+b64u(orderObj())}
 function renderBar(){
   const n=letterIdx().length,s=SIZES[st.size];
-  $("barA").textContent=`${n} Buchstabe${n===1?"":"n"} · ${s.cm} cm`;
+  const nw=words().length;$("barA").textContent=`${n} Buchstabe${n===1?"":"n"} · ${s.cm} cm`+(nw>1?` · ${nw} Namen`:"");
   $("barB").textContent=`${n} × ${chf(s.p)}`;$("amt").textContent=chf(n*s.p);
   $("barC").textContent=n?"Lieferung ca. "+TL.deliveryDate(n*s.h).toLocaleDateString("de-CH",{weekday:"short",day:"numeric",month:"short"}):"";
   $("count").textContent=`${n} Buchstabe${n===1?"":"n"}`}
 let raf=0;
 function tint(){const u=[...new Set(st.cfg.map(c=>c.color))],r=document.documentElement.style;
   [0,1,2].forEach(i=>r.setProperty("--c"+(i+1),u[i%Math.max(u.length,1)]||DEFAULTS[i][0]))}
-function update(){syncCfg();tint();renderWho();renderPanel();renderFonts();renderSize();renderBar();renderLink();cancelAnimationFrame(raf);raf=requestAnimationFrame(drawScene)}
+function update(){syncCfg();tint();renderWho();renderPanel();renderFonts();renderSize();renderBar();renderLink();cancelAnimationFrame(raf);raf=requestAnimationFrame(draw)}
 
+$("addName").onclick=()=>{const n=$("name");if(n.value.trim()&&!n.value.endsWith(" ")&&n.value.length<24)n.value+=" ";n.focus();update()};
 $("name").addEventListener("input",e=>{
-  const v=e.target.value.replace(/[^A-Za-zÄÖÜäöüß0-9 &!?.\-]/g,"");if(v!==e.target.value)e.target.value=v;update()});
-if("ResizeObserver"in window)new ResizeObserver(()=>{cancelAnimationFrame(raf);raf=requestAnimationFrame(drawScene)}).observe($("stage"));
+  const v=e.target.value.replace(/[^A-Za-zÄÖÜäöüß0-9 &!?.\-]/g,"").replace(/^ +/,"").replace(/ {2,}/g," ");if(v!==e.target.value)e.target.value=v;update()});
+if("ResizeObserver"in window)new ResizeObserver(()=>{cancelAnimationFrame(raf);raf=requestAnimationFrame(draw)}).observe($("stage"));
 /* ---------- Teilen: Link mit der Auswahl und Bild der Vorschau ---------- */
 const MATIDS=["satin","samt","marmor","terrazzo","streifen","perl"];
 /* Der Hash ist Nutzereingabe: jeder Wert wird gegen bekannte Werte geprüft, sonst gilt der Standard. */
@@ -499,7 +559,7 @@ function applyShared(){
   try{const m=location.hash.match(/d=([A-Za-z0-9_-]+)/);if(!m)return;
     const b=m[1].replace(/-/g,"+").replace(/_/g,"/"),o=JSON.parse(decodeURIComponent(escape(atob(b+"=".repeat((4-b.length%4)%4)))));
     if(!o||typeof o.n!=="string"||!Array.isArray(o.l))return;
-    const name=o.n.replace(/[^A-Za-zÄÖÜäöüß0-9 &!?.\-]/g,"").slice(0,12);if(!name.trim())return;
+    const name=o.n.replace(/[^A-Za-zÄÖÜäöüß0-9 &!?.\-]/g,"").slice(0,24);if(!name.trim())return;
     $("name").value=name;
     if(FONTS.some(f=>f.id===o.f))st.font=o.f;
     const si=SIZES.findIndex(s=>s.cm===o.s);if(si>=0)st.size=si;
@@ -548,11 +608,12 @@ document.addEventListener("click",e=>{const t=e.target.closest&&e.target.closest
 document.addEventListener("keydown",e=>{if(e.key==="Escape"&&tipEl)hideTip()});
 addEventListener("scroll",hideTip,{passive:true});
 /* ---------- Ideen als Vorlage ---------- */
-const PRESETS={kind:["Emil","fredoka",[["#3d6fb6","satin"],["#a9d6ee","samt"],["#7fd1b5","marmor"],["#e3c04a","terrazzo"]]],
-  geburt:["Lia","nunito",[["#e9a6a0","satin"],["#efece6","samt"],["#d8c3a0","marmor"]]],
-  zuhause:["Zuhause","baloo",[["#1f5a45","samt"],["#8da38a","satin"],["#efece6","samt"],["#d8c3a0","satin"]]]};
-document.querySelectorAll("[data-preset]").forEach(b=>b.onclick=()=>{const [n,f,sp]=PRESETS[b.dataset.preset];
-  $("name").value=n;st.font=f;st.sel=-1;st.cfg=[...n].map((_,i)=>({color:sp[i%sp.length][0],mat:sp[i%sp.length][1]}));
+const PRESETS={geschwister:["Emil Lia","fredoka",[[["#3d6fb6","satin"],["#a9d6ee","samt"],["#7fd1b5","marmor"],["#e3c04a","terrazzo"]],[["#e9a6a0","satin"],["#efece6","samt"],["#d8c3a0","marmor"]]]],
+  geburt:["Lia","nunito",[[["#e9a6a0","satin"],["#efece6","samt"],["#d8c3a0","marmor"]]]],
+  zuhause:["Zuhause","baloo",[[["#1f5a45","samt"],["#8da38a","satin"],["#efece6","samt"],["#d8c3a0","satin"]]]]};
+document.querySelectorAll("[data-preset]").forEach(b=>b.onclick=()=>{const [n,f,ws]=PRESETS[b.dataset.preset];let w=0,k=0;
+  $("name").value=n;st.font=f;st.sel=-1;
+  st.cfg=[...n].map(ch=>{const sp=ws[Math.min(w,ws.length-1)];if(ch===" "){w++;k=0;return{color:sp[0][0],mat:sp[0][1]}}const [c,m]=sp[k++%sp.length];return{color:c,mat:m}});
   TL.loadFont(getFont(f)).then(()=>{cache.clear();update()});$("konfigurator").scrollIntoView({behavior:matchMedia("(prefers-reduced-motion:reduce)").matches?"auto":"smooth"})});
 $("faqPrice").textContent=SIZES.map(z=>`${z.k} (${z.cm} cm) CHF ${z.p}`).join(", ");
 /* Einblenden beim Scrollen: nur wenn der Browser es kann, sonst bleibt alles sichtbar */
@@ -576,7 +637,7 @@ TL.loadFont(getFont(st.font)).then(go,go);
   rules.forEach(r=>{check(r);$(r[0]).removeAttribute("aria-invalid");$(r[0]+"E").textContent="";$(r[0]).addEventListener("blur",()=>check(r));$(r[0]).addEventListener("input",()=>{if($(r[0]).getAttribute("aria-invalid")==="true")check(r)})});
   $("askForm").addEventListener("submit",async e=>{e.preventDefault();
     const bad=rules.filter(r=>!check(r));if(bad.length){$(bad[0][0]).focus();return}
-    const cs=chars(),s=SIZES[st.size];go.disabled=true;err.textContent="";
+    const cs=chars(),s=SIZES[st.size];while(cs.length&&cs[cs.length-1]===" ")cs.pop();go.disabled=true;err.textContent="";
     const body={name:cs.join(""),font:st.font,size:s.k,letters:cs.map((ch,i)=>ch===" "?null:{c:st.cfg[i].color,m:st.cfg[i].mat}),
       email:$("aMail").value,address:{name:$("aName").value,street:$("aStreet").value,zip:$("aZip").value,city:$("aCity").value},website:$("aWeb").value};
     try{const r=await fetch("/api/anfrage",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(body)});
