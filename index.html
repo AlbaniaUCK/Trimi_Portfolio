@@ -13,17 +13,17 @@
 /* Designlinie "Studio": kühles Grau, tiefes Ultramarin als einziger Akzent, dunkle Fotobox für die Buchstaben.
    Layout: links Name + Bühne, rechts ein einziges Gestaltungs-Panel, unten die Preisleiste. */
 :root{
-  --bg:#eceef1; --surface:#ffffff; --ink:#12151a; --muted:#59616e; --line:#d3d8df;
+  --bg:#eceef1; --surface:#ffffff; --ink:#12151a; --muted:#59616e; --line:#d3d8df; --field:#7d8695;
   --err:#c0392b; --accent:#3636e8; --accent-ink:#ffffff; --accent-soft:#e2e3ff;
   --stage-a:#4b5266; --stage-b:#171a22;
   --f-display:"Bricolage Grotesque", system-ui, sans-serif;
   --f-body:"Figtree", system-ui, sans-serif;
 }
 @media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
-  --bg:#101216; --surface:#181b21; --ink:#eceef2; --muted:#a0a8b5; --line:#2b3039;
+  --bg:#101216; --surface:#181b21; --ink:#eceef2; --muted:#a0a8b5; --line:#2b3039; --field:#6f7989;
   --accent:#98a2ff; --accent-ink:#0e1018; --accent-soft:#242850; --err:#ff8a7a; color-scheme:dark}}
 :root[data-theme="dark"]{
-  --bg:#101216; --surface:#181b21; --ink:#eceef2; --muted:#a0a8b5; --line:#2b3039;
+  --bg:#101216; --surface:#181b21; --ink:#eceef2; --muted:#a0a8b5; --line:#2b3039; --field:#6f7989;
   --accent:#98a2ff; --accent-ink:#0e1018; --accent-soft:#242850; --err:#ff8a7a; color-scheme:dark}
 
 *{box-sizing:border-box}
@@ -47,9 +47,9 @@ h1{font:800 clamp(2.125rem,6vw,3.375rem)/.98 var(--f-display);letter-spacing:-.0
 .lead{margin:0;color:var(--muted);max-width:52ch}
 label.f{font:700 0.8125rem var(--f-body);letter-spacing:.04em;text-transform:uppercase;color:var(--muted);display:flex;justify-content:space-between;gap:10px}
 label.f span{font-weight:500;text-transform:none;letter-spacing:0}
-#name{width:100%;font:800 1.75rem/1.1 var(--f-display);letter-spacing:.02em;text-transform:uppercase;color:var(--ink);background:var(--surface);border:2px solid var(--line);border-radius:14px;padding:12px 16px;margin-top:8px}
+#name{width:100%;font:800 1.75rem/1.1 var(--f-display);letter-spacing:.02em;text-transform:uppercase;color:var(--ink);background:var(--surface);border:2px solid var(--field);border-radius:14px;padding:12px 16px;margin-top:8px}
 #name:focus{border-color:var(--accent);outline:none}
-#name::placeholder{color:var(--muted);opacity:.5}
+#name::placeholder{color:var(--muted)}
 
 .stage{position:relative;border-radius:18px;overflow:hidden;height:clamp(210px,34vw,310px);
   background:radial-gradient(120% 95% at 50% 18%,var(--stage-a),var(--stage-b) 72%)}
@@ -58,7 +58,7 @@ label.f span{font-weight:500;text-transform:none;letter-spacing:0}
 
 .who{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
 .who .lbl{font-size:0.8125rem;color:var(--muted);margin-right:2px}
-.pick{appearance:none;min-width:44px;height:44px;padding:0 14px;border-radius:12px;border:2px solid var(--line);background:var(--surface);color:var(--ink);font:800 1.0625rem var(--f-display);cursor:pointer}
+.pick{appearance:none;min-width:44px;height:44px;padding:0 14px;border-radius:12px;border:2px solid var(--field);background:var(--surface);color:var(--ink);font:800 1.0625rem var(--f-display);cursor:pointer}
 .pick.all{font:700 0.875rem var(--f-body)}
 .pick[aria-pressed="true"]{border-color:var(--accent);background:var(--accent-soft);color:var(--accent)}
 
@@ -74,18 +74,18 @@ label.f span{font-weight:500;text-transform:none;letter-spacing:0}
 .sw[aria-pressed="true"]{box-shadow:0 0 0 3px var(--surface),0 0 0 5px var(--ink)}
 .sw[aria-pressed="true"]::after{content:"";position:absolute;left:50%;top:50%;width:30%;height:16%;border-left:3px solid #fff;border-bottom:3px solid #fff;transform:translate(-50%,-65%) rotate(-45deg);filter:drop-shadow(0 0 2px rgba(0,0,0,.6))}
 .mats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
-.mat{appearance:none;border:2px solid var(--line);background:var(--bg);border-radius:14px;padding:8px 6px 8px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:4px;color:var(--ink);font:600 0.8125rem var(--f-body);min-width:0}
+.mat{appearance:none;border:2px solid var(--field);background:var(--bg);border-radius:14px;padding:8px 6px 8px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:4px;color:var(--ink);font:600 0.8125rem var(--f-body);min-width:0}
 .mat .th{height:64px;width:100%;display:flex;align-items:center;justify-content:center}
 .mat canvas{height:100%;width:auto;max-width:100%;display:block}
 .mat[aria-pressed="true"]{border-color:var(--accent);background:var(--accent-soft);color:var(--accent)}
 .fonts{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:8px}
-.fnt{appearance:none;border:2px solid var(--line);background:var(--bg);color:var(--ink);border-radius:14px;padding:10px 8px 8px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:2px;min-width:0}
+.fnt{appearance:none;border:2px solid var(--field);background:var(--bg);color:var(--ink);border-radius:14px;padding:10px 8px 8px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:2px;min-width:0}
 .fnt .s{font-size:1.875rem;line-height:1.1;text-transform:uppercase;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .fnt small{font:500 0.75rem var(--f-body);color:var(--muted)}
 .fnt[aria-pressed="true"]{border-color:var(--accent);background:var(--accent-soft)}
 .fnt[aria-pressed="true"] small{color:var(--accent)}
 .seg{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
-.sz{appearance:none;border:2px solid var(--line);background:var(--bg);color:var(--ink);border-radius:12px;padding:10px 6px;cursor:pointer;font:700 1rem var(--f-display);display:flex;flex-direction:column;align-items:center;gap:2px}
+.sz{appearance:none;border:2px solid var(--field);background:var(--bg);color:var(--ink);border-radius:12px;padding:10px 6px;cursor:pointer;font:700 1rem var(--f-display);display:flex;flex-direction:column;align-items:center;gap:2px}
 .sz small{font:500 0.75rem var(--f-body);color:var(--muted)}
 .sz[aria-pressed="true"]{border-color:var(--accent);background:var(--accent-soft);color:var(--accent)}
 .sz[aria-pressed="true"] small{color:var(--accent)}
@@ -96,21 +96,23 @@ button:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
 .bar .info{font-size:0.875rem;color:var(--muted);font-variant-numeric:tabular-nums}
 .bar .info b{display:block;color:var(--ink);font-weight:600}
 .bar .amt{font:800 1.875rem/1 var(--f-display);letter-spacing:-.02em;font-variant-numeric:tabular-nums}
-.go{appearance:none;border:0;border-radius:12px;background:var(--accent);color:var(--accent-ink);font:700 0.9375rem var(--f-body);padding:12px 18px;cursor:pointer}
+.go{appearance:none;min-height:44px;border:0;border-radius:12px;background:var(--accent);color:var(--accent-ink);font:700 0.9375rem var(--f-body);padding:12px 18px;cursor:pointer}
 .go:disabled{opacity:.5;cursor:default}
 .bar .right{display:flex;align-items:center;gap:14px}
 dialog.ask{border:1px solid var(--line);border-radius:18px;background:var(--surface);color:var(--ink);padding:22px;width:min(440px,calc(100vw - 32px))}
 dialog.ask::backdrop{background:rgba(10,12,16,.55)}
 dialog.ask h2{margin:0 0 4px;font:800 1.375rem/1.2 var(--f-display)}
 dialog.ask label{display:block;font-size:0.8125rem;color:var(--muted);margin-top:12px}
-dialog.ask input{display:block;width:100%;box-sizing:border-box;margin-top:4px;font:400 1rem var(--f-body);color:var(--ink);background:var(--bg);border:2px solid var(--line);border-radius:10px;padding:10px 12px}
+dialog.ask input{display:block;width:100%;box-sizing:border-box;margin-top:4px;font:400 1rem var(--f-body);color:var(--ink);background:var(--bg);border:2px solid var(--field);border-radius:10px;padding:10px 12px}
 dialog.ask input:focus{border-color:var(--accent);outline:none}
+dialog.ask input[aria-invalid="true"]{border-color:var(--err)}
 dialog.ask .row{display:flex;gap:10px}dialog.ask .row label:first-child{flex:0 0 90px}dialog.ask .row label:last-child{flex:1}
 dialog.ask .acts{display:flex;gap:10px;justify-content:flex-end;margin-top:18px}
-dialog.ask .sec{appearance:none;border:2px solid var(--line);background:none;color:var(--ink);border-radius:12px;font:600 0.9375rem var(--f-body);padding:10px 16px;cursor:pointer}
+dialog.ask .sec{appearance:none;border:2px solid var(--field);background:none;color:var(--ink);border-radius:12px;font:600 0.9375rem var(--f-body);padding:10px 16px;min-height:44px;cursor:pointer}
+dialog.ask .fe{color:var(--err);font-size:.8125rem;margin-top:4px;min-height:1.25em}
 dialog.ask .err{color:var(--err);font-size:0.8438rem;margin:12px 0 0;min-height:1em}
 .hp{position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden}
-.share{appearance:none;border:2px solid var(--line);background:var(--surface);color:var(--ink);border-radius:12px;font:600 0.875rem var(--f-body);padding:8px 14px;cursor:pointer}
+.share{appearance:none;border:2px solid var(--field);background:var(--surface);color:var(--ink);border-radius:12px;font:600 0.875rem var(--f-body);padding:8px 14px;min-height:44px;cursor:pointer}
 .note{font-size:0.7812rem;color:var(--muted);margin:0}
 @media (max-width:880px){
   .col.left{display:contents}   /* Bühne wird Kind des Rasters, damit sie über dem Panel kleben bleibt */
@@ -120,7 +122,7 @@ dialog.ask .err{color:var(--err);font-size:0.8438rem;margin:12px 0 0;min-height:
 </head>
 <body>
 <div class="page">
-  <header class="top"><a class="brand" href="#">trimify<i>.</i></a><span class="tag">Testversion</span></header>
+  <header class="top"><a class="brand" href="#">trimify<i>.</i></a><span class="tag">Neu</span></header>
 
   <main class="grid">
     <section class="col left">
@@ -138,7 +140,7 @@ dialog.ask .err{color:var(--err);font-size:0.8438rem;margin:12px 0 0;min-height:
       </div>
       <div class="who" id="who" role="group" aria-label="Welcher Buchstabe wird gestaltet"></div>
       <p class="note"><button class="share" id="share" type="button">Teilen</button> <span id="shareMsg" role="status"></span></p>
-      <p class="note"><a id="wk" href="werkstatt.html" target="_blank" rel="noopener">Testversion: Druckdateien (STL) für diese Auswahl ansehen →</a></p>
+      <p class="note" id="wkp" hidden><a id="wk" href="werkstatt.html" target="_blank" rel="noopener">Werkstatt: Druckdateien (STL) für diese Auswahl →</a></p>
       <p class="note">Tippe in der Vorschau auf einen Buchstaben, um ihn einzeln zu gestalten. Bildschirmfarben sind ein Richtwert.</p>
     </section>
 
@@ -168,7 +170,7 @@ dialog.ask .err{color:var(--err);font-size:0.8438rem;margin:12px 0 0;min-height:
       <label>Ort<input id="aCity" autocomplete="address-level2" maxlength="60" required></label></div>
       <div class="hp" aria-hidden="true"><label>Website<input id="aWeb" tabindex="-1" autocomplete="off"></label></div>
       <p class="err" id="askErr" role="alert"></p>
-      <p class="note">Das ist eine Anfrage, noch keine Bestellung. Wir bestätigen per E-Mail, bezahlt wird danach.</p>
+      <p class="note">Alle Felder sind nötig. Das ist eine Anfrage, noch keine Bestellung. Wir bestätigen per E-Mail, bezahlt wird danach.</p>
       <div class="acts"><button type="button" class="sec" id="askX">Abbrechen</button><button type="submit" class="go" id="askGo">Anfrage senden</button></div>
     </form>
   <div id="askDone" hidden><h2>Danke!</h2><p>Deine Anfrage ist angekommen. Wir melden uns per E-Mail, eine Kopie ist unterwegs zu dir.</p><div class="acts"><button type="button" class="go" id="askOk">Schliessen</button></div></div>
@@ -375,8 +377,10 @@ function renderSize(){
 const orderObj=()=>{const cs=chars();return{n:cs.join(""),f:st.font,s:SIZES[st.size].cm,l:cs.map((ch,i)=>ch===" "?null:{c:st.cfg[i].color,m:st.cfg[i].mat})}};
 const b64u=o=>btoa(unescape(encodeURIComponent(JSON.stringify(o)))).replace(/\+/g,"-").replace(/\//g,"_").replace(/=+$/,"");
 function renderLink(){
-  if(!letterIdx().length){$("wk").hidden=true;return}
-  $("wk").hidden=false;$("wk").href="werkstatt.html#o="+b64u(orderObj())}
+  /* Werkstatt-Link nur mit ?werkstatt in der Adresse, Kunden brauchen ihn nicht */
+  const show=letterIdx().length&&/[?&]werkstatt\b/.test(location.search);$("wkp").hidden=!show;
+  if(!show)return;
+  $("wk").href="werkstatt.html#o="+b64u(orderObj())}
 function renderBar(){
   const n=letterIdx().length,s=SIZES[st.size];
   $("barA").textContent=`${n} Buchstabe${n===1?"":"n"} · ${s.cm} cm`;
@@ -433,9 +437,17 @@ TL.loadFont(getFont(st.font)).then(go,go);
 /* ---------- Anfrage senden ---------- */
 (()=>{const dlg=$("askDlg"),err=$("askErr"),go=$("askGo");
   $("ask").onclick=()=>{if(!letterIdx().length)return;const s=SIZES[st.size],n=letterIdx().length;
-    $("askSum").textContent=`${chars().join("").trim()} · ${n} × ${s.k} (${s.cm} cm) · ${chf(n*s.p)}`;err.textContent="";$("askForm").hidden=false;$("askDone").hidden=true;dlg.showModal()};
+    $("askSum").textContent=`${chars().join("").trim()} · ${n} × ${s.k} (${s.cm} cm) · ${chf(n*s.p)}`;err.textContent="";$("askForm").hidden=false;$("askDone").hidden=true;rules.forEach(r=>{$(r[0]).removeAttribute("aria-invalid");const e=$(r[0]+"E");if(e)e.textContent=""});dlg.showModal()};
   $("askX").onclick=()=>dlg.close();$("askOk").onclick=()=>dlg.close();
+  const rules=[["aMail",v=>/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v),"Bitte eine gültige E-Mail-Adresse eingeben."],
+    ["aName",v=>v.trim(),"Bitte den Namen eingeben."],["aStreet",v=>v.trim(),"Bitte Strasse und Nr. eingeben."],
+    ["aZip",v=>/^[\w -]{4,10}$/.test(v.trim()),"Ungültige PLZ."],["aCity",v=>v.trim(),"Bitte den Ort eingeben."]];
+  const check=([id,ok,msg])=>{const i=$(id),bad=!ok(i.value);let e=$(id+"E");
+    if(!e){e=document.createElement("div");e.id=id+"E";e.className="fe";i.parentNode.appendChild(e);i.setAttribute("aria-describedby",e.id)}
+    i.setAttribute("aria-invalid",bad);e.textContent=bad?msg:"";return !bad};
+  rules.forEach(r=>{check(r);$(r[0]).removeAttribute("aria-invalid");$(r[0]+"E").textContent="";$(r[0]).addEventListener("blur",()=>check(r));$(r[0]).addEventListener("input",()=>{if($(r[0]).getAttribute("aria-invalid")==="true")check(r)})});
   $("askForm").addEventListener("submit",async e=>{e.preventDefault();
+    const bad=rules.filter(r=>!check(r));if(bad.length){$(bad[0][0]).focus();return}
     const cs=chars(),s=SIZES[st.size];go.disabled=true;err.textContent="";
     const body={name:cs.join(""),font:st.font,size:s.k,letters:cs.map((ch,i)=>ch===" "?null:{c:st.cfg[i].color,m:st.cfg[i].mat}),
       email:$("aMail").value,address:{name:$("aName").value,street:$("aStreet").value,zip:$("aZip").value,city:$("aCity").value},website:$("aWeb").value};
