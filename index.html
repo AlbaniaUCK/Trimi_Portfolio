@@ -9,12 +9,15 @@
 <meta name="theme-color" content="#f2f2f7">
 <link rel="stylesheet" href="fonts.css">
 <style>
+@property --c1{syntax:"<color>";inherits:true;initial-value:#3d6fb6}
+@property --c2{syntax:"<color>";inherits:true;initial-value:#e3c04a}
+@property --c3{syntax:"<color>";inherits:true;initial-value:#7fd1b5}
 
 /* Designlinie "Apple HIG": Systemschrift, Grouped-Hintergründe, Systemblau, Glas nur in der Leiste (Funktionsebene).
    Farben sind die semantischen iOS-Rollen als Tokens; Hell/Dunkel folgt dem System. Buchstaben und Bühne bleiben der Inhalt. */
 :root{
   --bg:#f2f2f7; --surface:#ffffff; --fill:#f2f2f7; --seg:rgba(118,118,128,.12); --thumb:#ffffff;
-  --ink:#000000; --muted:#636366; --line:#c6c6c8; --field:#7c7c80;
+  --ink:#000000; --muted:#4a4a4f; --line:#c6c6c8; --field:#7c7c80;
   --accent:#0066cc; --btn:#0066cc; --accent-ink:#ffffff; --accent-soft:#e5f0fc; --err:#d70015;
   --stage-a:#4b5266; --stage-b:#171a22;
   --f-display:-apple-system,BlinkMacSystemFont,"SF Pro Display","SF Pro Text",system-ui,"Segoe UI",Roboto,sans-serif;
@@ -29,13 +32,32 @@
   --ink:#ffffff; --muted:#98989f; --line:#38383a; --field:#6e6e73;
   --accent:#409cff; --btn:#0060df; --accent-ink:#ffffff; --accent-soft:#0a2a4d; --err:#ff6961; color-scheme:dark}
 
+:root{--c1:#3d6fb6;--c2:#e3c04a;--c3:#7fd1b5;--tint:16%;transition:--c1 .8s,--c2 .8s,--c3 .8s}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--tint:16%}}
+:root[data-theme="dark"]{--tint:16%}
+/* Inhaltsebene: ruhiger Farbverlauf aus den gewählten Buchstabenfarben. Das Glas darüber nimmt ihn auf. */
+body::before{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;
+  background:radial-gradient(55vmax 45vmax at 0% 0%,color-mix(in srgb,var(--c1) var(--tint),transparent),transparent 70%),
+  radial-gradient(50vmax 45vmax at 100% 30%,color-mix(in srgb,var(--c2) var(--tint),transparent),transparent 70%),
+  radial-gradient(60vmax 50vmax at 30% 100%,color-mix(in srgb,var(--c3) var(--tint),transparent),transparent 70%)}
+/* Funktionsebene: Glas nur für Navigation, Preisleiste, Popover und Sheet */
+.glass{background:color-mix(in srgb,var(--surface) 64%,transparent);-webkit-backdrop-filter:blur(24px) saturate(1.5);backdrop-filter:blur(24px) saturate(1.5);
+  border:1px solid rgba(255,255,255,.55);box-shadow:0 10px 30px rgba(0,0,0,.12),inset 0 1px 0 rgba(255,255,255,.55)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .glass{border-color:rgba(255,255,255,.14);box-shadow:0 10px 30px rgba(0,0,0,.5),inset 0 1px 0 rgba(255,255,255,.12)}}
+:root[data-theme="dark"] .glass{border-color:rgba(255,255,255,.14);box-shadow:0 10px 30px rgba(0,0,0,.5),inset 0 1px 0 rgba(255,255,255,.12)}
 *{box-sizing:border-box}
 [hidden]{display:none!important}
 html{-webkit-text-size-adjust:100%}
 body{margin:0;background:var(--bg);color:var(--ink);font:400 1.0625rem/1.41 var(--f-body);
   padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
 .page{max-width:1120px;margin:0 auto;display:flex;flex-direction:column;min-height:100vh}
-header.top{display:flex;justify-content:space-between;align-items:center;padding-block:max(16px,env(safe-area-inset-top,0px)) 8px}
+.nav{display:flex;align-items:center;gap:8px;margin-top:max(12px,env(safe-area-inset-top,0px));padding:8px 8px 8px 20px;border-radius:999px;position:sticky;top:12px;z-index:6}
+.nav .links{display:flex;gap:4px;margin-left:auto}
+.nav .links a{color:var(--ink);text-decoration:none;font:500 .9375rem var(--f-body);padding:10px 12px;border-radius:999px}
+.nav .links a:hover{background:var(--accent-soft)}
+.nav .go{display:inline-flex;align-items:center;text-decoration:none;min-height:44px;padding:0 18px;font-size:.9375rem}
+@media (max-width:880px){.nav{position:static}}
+@media (max-width:640px){.nav .links{display:none}.nav .go{margin-left:auto}}
 .brand{font:700 1.375rem/1 var(--f-display);letter-spacing:-.02em;color:var(--ink);text-decoration:none}
 .brand i{color:var(--accent);font-style:normal}
 .tag{font-size:0.75rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
@@ -94,16 +116,19 @@ label.f span{font-weight:500;text-transform:none;letter-spacing:0}
 .sz[aria-pressed="true"] small{color:var(--ink)}
 button:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
 
-.bar{position:sticky;bottom:0;background:color-mix(in srgb,var(--surface) 82%,transparent);-webkit-backdrop-filter:saturate(180%) blur(20px);backdrop-filter:saturate(180%) blur(20px);border-top:.5px solid var(--line);margin-inline:calc(-1*max(16px,env(safe-area-inset-left,0px)));padding:14px max(16px,env(safe-area-inset-left,0px)) max(14px,env(safe-area-inset-bottom,0px));z-index:5}
+.bar{position:sticky;bottom:max(10px,env(safe-area-inset-bottom,0px));margin-top:8px;padding:12px 18px;border-radius:26px;z-index:5}
 .bar-in{max-width:1120px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
 .bar .info{font-size:0.875rem;color:var(--muted);font-variant-numeric:tabular-nums}
 .bar .info b{display:block;color:var(--ink);font-weight:600}
+.bar .amt,.go{white-space:nowrap}
+@media (max-width:480px){.bar{padding:10px 14px}.bar-in{gap:8px}.bar .info{width:100%;display:flex;flex-wrap:wrap;gap:0 10px;font-size:.8125rem}.bar .info b{display:inline}#barB{display:none}.bar .right{width:100%;justify-content:space-between;gap:10px}.bar .amt{font-size:1.5rem}.bar .go{padding:0 16px}}
 .bar .amt{font:700 1.875rem/1 var(--f-display);letter-spacing:-.02em;font-variant-numeric:tabular-nums}
 .go{appearance:none;min-height:50px;border:0;border-radius:14px;background:var(--btn);color:var(--accent-ink);font:600 1.0625rem var(--f-body);padding:0 22px;cursor:pointer}
 .go:disabled{opacity:.5;cursor:default}
 .bar .right{display:flex;align-items:center;gap:14px}
 dialog.ask{border:0;border-radius:22px;max-height:calc(100dvh - 24px);background:var(--surface);color:var(--ink);padding:22px;width:min(440px,calc(100vw - 32px))}
 @media (max-width:600px){dialog.ask{margin:auto 0 0;width:100%;max-width:none;border-radius:22px 22px 0 0;padding-bottom:max(22px,env(safe-area-inset-bottom))}}
+dialog.ask.glass{background:color-mix(in srgb,var(--surface) 86%,transparent)}
 dialog.ask::backdrop{background:rgba(10,12,16,.55)}
 dialog.ask h2{margin:0 0 4px;font:700 1.375rem/1.2 var(--f-display)}
 dialog.ask label{display:block;font-size:0.8125rem;color:var(--muted);margin-top:12px}
@@ -120,19 +145,55 @@ dialog.ask .err{color:var(--err);font-size:0.8438rem;margin:12px 0 0;min-height:
 @media (max-width:880px){
   .col.left{display:contents}   /* Bühne wird Kind des Rasters, damit sie über dem Panel kleben bleibt */
   .stage{position:sticky;top:max(8px,env(safe-area-inset-top,0px));z-index:4;height:clamp(150px,26vh,230px)}}
-@media (prefers-reduced-transparency:reduce){.bar{background:var(--surface);-webkit-backdrop-filter:none;backdrop-filter:none}}
+.chips{display:flex;flex-wrap:wrap;gap:8px;list-style:none;margin:14px 0 0;padding:0}
+.chips li{background:var(--surface);color:var(--ink);font:500 .875rem var(--f-body);padding:8px 14px;border-radius:999px}
+.lp{display:flex;flex-direction:column;gap:64px;padding-block:56px 32px}
+.lp section{scroll-margin-top:84px}
+.lp h2{font:700 clamp(1.625rem,4vw,2.25rem)/1.1 var(--f-display);letter-spacing:-.02em;margin:0 0 8px}
+.lp .sub{color:var(--muted);max-width:56ch;margin:0 0 22px}
+.cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+@media (max-width:760px){.cards{grid-template-columns:1fr}}
+.card{background:var(--surface);border-radius:22px;padding:22px;display:flex;flex-direction:column;gap:8px}
+.card h3{font:700 1.25rem/1.2 var(--f-display);margin:0}
+.card p{margin:0;color:var(--muted)}
+.card .n{display:grid;place-items:center;width:34px;height:34px;border-radius:50%;background:var(--accent-soft);color:var(--accent);font-weight:700;margin-bottom:6px}
+.card .mini{display:flex;gap:6px;margin-bottom:6px}
+.card .mini i{width:26px;height:26px;border-radius:50%;border:1px solid rgba(0,0,0,.18)}
+.card .share{align-self:flex-start;margin-top:8px}
+.faq{display:flex;flex-direction:column;gap:10px;max-width:760px}
+.faq details{background:var(--surface);border-radius:18px;padding:0 20px}
+.faq summary{cursor:pointer;font:600 1.0625rem var(--f-body);padding:16px 0;min-height:44px;list-style:none;display:flex;justify-content:space-between;gap:12px}
+.faq summary::-webkit-details-marker{display:none}
+.faq summary::after{content:"+";color:var(--accent);font-weight:700}
+.faq details[open] summary::after{content:"\2212"}
+.faq details p{margin:0 0 16px;color:var(--muted)}
+footer.ft{padding:8px 0 24px;text-align:center}
+.js .rv{opacity:0;transform:translateY(14px);transition:opacity .6s,transform .6s}
+.js .rv.in{opacity:1;transform:none}
+@media (prefers-reduced-motion:no-preference){html{scroll-behavior:smooth}}
+.sec h3>span{display:inline-flex;align-items:center;gap:8px}
+.i{appearance:none;position:relative;width:22px;height:22px;border-radius:50%;border:1.5px solid currentColor;background:transparent;color:var(--muted);font:700 .75rem/1 var(--f-body);display:inline-grid;place-items:center;padding:0;cursor:help}
+.i::after{content:"";position:absolute;inset:-11px}
+#tip{position:fixed;z-index:50;left:0;top:0;max-width:min(280px,calc(100vw - 24px));padding:12px 14px;border-radius:16px;font:400 .875rem/1.4 var(--f-body);color:var(--ink);pointer-events:none;opacity:0;transform:translateY(4px);transition:opacity .15s,transform .15s}
+#tip.on{opacity:1;transform:none}
+#tip.glass{background:color-mix(in srgb,var(--surface) 84%,transparent)}
+#tip b{display:block;font-weight:700;margin-bottom:2px}
+@media (prefers-reduced-transparency:reduce),(prefers-contrast:more){.glass{background:var(--surface);-webkit-backdrop-filter:none;backdrop-filter:none;border-color:var(--field)}}
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
 </style>
 </head>
 <body>
 <div class="page">
-  <header class="top"><a class="brand" href="#">trimify<i>.</i></a><span class="tag">Neu</span></header>
+  <header class="nav glass"><a class="brand" href="#">trimify<i>.</i></a>
+    <nav class="links" aria-label="Seitenbereiche"><a href="#so">So entsteht's</a><a href="#ideen">Ideen</a><a href="#fragen">Fragen</a></nav>
+    <a class="go" href="#konfigurator" id="navGo">Gestalten</a></header>
 
-  <main class="grid">
+  <main class="grid" id="konfigurator">
     <section class="col left">
       <div>
         <h1>Kissen-Buchstaben</h1>
         <p class="lead">Weiche 3D-Lettern für Zimmer, Regal oder Tür. Schreib deinen Namen und gestalte jeden Buchstaben nach Wunsch.</p>
+        <ul class="chips"><li>Jeder Buchstabe einzeln gestaltbar</li><li>Preis und Lieferdatum sofort sichtbar</li><li>Anfrage ohne Zahlung</li></ul>
       </div>
       <div>
         <label class="f" for="name">Dein Name <span id="count"></span></label>
@@ -143,7 +204,7 @@ dialog.ask .err{color:var(--err);font-size:0.8438rem;margin:12px 0 0;min-height:
         <div class="empty" id="empty" hidden>Schreib oben einen Namen, dann erscheint er hier.</div>
       </div>
       <div class="who" id="who" role="group" aria-label="Welcher Buchstabe wird gestaltet"></div>
-      <p class="note"><button class="share" id="share" type="button">Teilen</button> <span id="shareMsg" role="status"></span></p>
+      <p class="note"><button class="share" id="share" type="button" data-tt="Teilen" data-tip="Erzeugt einen Link mit deiner Auswahl und ein Bild der Vorschau.">Teilen</button> <span id="shareMsg" role="status"></span></p>
       <p class="note" id="wkp" hidden><a id="wk" href="werkstatt.html" target="_blank" rel="noopener">Werkstatt: Druckdateien (STL) für diese Auswahl →</a></p>
       <p class="note">Tippe in der Vorschau auf einen Buchstaben, um ihn einzeln zu gestalten. Bildschirmfarben sind ein Richtwert.</p>
     </section>
@@ -151,19 +212,44 @@ dialog.ask .err{color:var(--err);font-size:0.8438rem;margin:12px 0 0;min-height:
     <section class="col">
       <div class="panel">
         <h2 id="tgt">Gestalten</h2>
-        <div class="sec"><h3>Farbe <b id="colName"></b></h3><div class="swatches" id="swatches"></div></div>
-        <div class="sec"><h3>Material <b id="matName"></b></h3><div class="mats" id="mats"></div></div>
-        <div class="sec"><h3>Schrift <b id="fontName"></b></h3><div class="fonts" id="fonts"></div></div>
-        <div class="sec"><h3>Grösse <b id="szName"></b></h3><div class="seg" id="sizes"></div></div>
+        <div class="sec"><h3><span>Farbe <button type="button" class="i" data-tipk="farbe" aria-label="Hilfe: Farbe">i</button></span><b id="colName"></b></h3><div class="swatches" id="swatches"></div></div>
+        <div class="sec"><h3><span>Material <button type="button" class="i" data-tipk="material" aria-label="Hilfe: Material">i</button></span><b id="matName"></b></h3><div class="mats" id="mats"></div></div>
+        <div class="sec"><h3><span>Schrift <button type="button" class="i" data-tipk="font" aria-label="Hilfe: Schrift">i</button></span><b id="fontName"></b></h3><div class="fonts" id="fonts"></div></div>
+        <div class="sec"><h3><span>Grösse <button type="button" class="i" data-tipk="size" aria-label="Hilfe: Grösse">i</button></span><b id="szName"></b></h3><div class="seg" id="sizes"></div></div>
       </div>
     </section>
   </main>
 
-  <div class="bar"><div class="bar-in">
+  <div class="bar glass"><div class="bar-in">
     <div class="info"><b id="barA"></b><span id="barB"></span><span id="barC" style="display:block"></span></div>
-    <div class="right"><div class="amt" id="amt"></div><button class="go" id="ask" type="button">Anfrage senden</button></div>
+    <div class="right"><div class="amt" id="amt" data-tt="So rechnet sich der Preis" data-tip="Anzahl Buchstaben mal Preis pro Buchstabe. Er hängt von der Grösse ab."></div><button class="go" id="ask" type="button" data-tt="Noch keine Bestellung" data-tip="Wir bestätigen per E-Mail, bezahlt wird danach.">Anfrage senden</button></div>
   </div></div>
-  <dialog class="ask" id="askDlg" aria-labelledby="askT">
+
+  <div class="lp">
+    <section id="so" class="rv"><h2>So entsteht dein Name</h2><p class="sub">Von der Idee bis zum fertigen Kissen in drei Schritten.</p>
+      <div class="cards">
+        <div class="card"><span class="n">1</span><h3>Gestalten</h3><p>Name eintippen, dann Farbe, Material, Schrift und Grösse wählen, für alle Buchstaben oder für jeden einzeln.</p></div>
+        <div class="card"><span class="n">2</span><h3>Anfrage senden</h3><p>Du schickst uns deine Auswahl. Das ist noch keine Bestellung: Wir bestätigen per E-Mail, bezahlt wird danach.</p></div>
+        <div class="card"><span class="n">3</span><h3>Druck und Lieferung</h3><p>Deine Buchstaben werden 3D-gedruckt. Ein ungefähres Lieferdatum siehst du schon in der Preisleiste.</p></div>
+      </div></section>
+    <section id="ideen" class="rv"><h2>Ideen zum Verschenken</h2><p class="sub">Tippe auf eine Idee, dann siehst du sie im Konfigurator und kannst alles ändern.</p>
+      <div class="cards">
+        <div class="card"><div class="mini"><i style="background:#3d6fb6"></i><i style="background:#a9d6ee"></i><i style="background:#7fd1b5"></i><i style="background:#e3c04a"></i></div><h3>Fürs Kinderzimmer</h3><p>Der Name über dem Bett oder auf dem Regal, bunt und weich.</p><button type="button" class="share" data-preset="kind">Ansehen</button></div>
+        <div class="card"><div class="mini"><i style="background:#e9a6a0"></i><i style="background:#efece6"></i><i style="background:#d8c3a0"></i></div><h3>Zur Geburt</h3><p>Sanfte Farben, ein Name, ein Geschenk, das bleibt.</p><button type="button" class="share" data-preset="geburt">Ansehen</button></div>
+        <div class="card"><div class="mini"><i style="background:#1f5a45"></i><i style="background:#8da38a"></i><i style="background:#efece6"></i><i style="background:#d8c3a0"></i></div><h3>Fürs Zuhause</h3><p>Ein Wort an der Tür oder im Gang, ruhig und natürlich.</p><button type="button" class="share" data-preset="zuhause">Ansehen</button></div>
+      </div></section>
+    <section id="fragen" class="rv"><h2>Fragen</h2><p class="sub">Das Wichtigste auf einen Blick.</p>
+      <div class="faq">
+        <details><summary>Ist das schon eine Bestellung?</summary><p>Nein. Mit der Anfrage schickst du uns deine Auswahl. Wir bestätigen per E-Mail, bezahlt wird erst danach.</p></details>
+        <details><summary>Was kostet mein Name?</summary><p>Der Preis gilt pro Buchstabe: <span id="faqPrice"></span>. Die Preisleiste zeigt dir die Summe sofort.</p></details>
+        <details><summary>Wann kommt mein Name an?</summary><p>Die Preisleiste zeigt ein ungefähres Lieferdatum. Es hängt von Anzahl und Grösse der Buchstaben ab und ist eine Schätzung.</p></details>
+        <details><summary>Sehen die Farben so aus wie am Bildschirm?</summary><p>Bildschirmfarben sind ein Richtwert. Das gedruckte Kissen kann leicht abweichen.</p></details>
+        <details><summary>Kann ich meine Auswahl teilen?</summary><p>Ja. Mit «Teilen» erzeugst du einen Link und ein Bild deiner Vorschau.</p></details>
+      </div></section>
+    <footer class="ft"><p class="note">trimify · Kissen-Buchstaben</p></footer>
+  </div>
+  <div id="tip" class="glass" role="tooltip" aria-hidden="true"></div>
+  <dialog class="ask glass" id="askDlg" aria-labelledby="askT">
     <form id="askForm" novalidate>
       <h2 id="askT">Anfrage senden</h2>
       <p class="note" id="askSum"></p>
@@ -354,7 +440,7 @@ function renderPanel(){
   $("matName").textContent=sameM?MATS.find(m=>m[0]===cfg[0].mat)[1]:"gemischt";
   const sw=$("swatches");sw.innerHTML="";
   COLORS.forEach(([n,h])=>{const b=document.createElement("button");b.type="button";b.className="sw";b.style.background=h;
-    b.title=n;b.setAttribute("aria-label",n);b.setAttribute("aria-pressed",!!sameC&&cfg[0].color===h);
+    b.dataset.tip=n;b.setAttribute("aria-label",n);b.setAttribute("aria-pressed",!!sameC&&cfg[0].color===h);
     b.onclick=()=>{T.forEach(i=>st.cfg[i].color=h);update()};sw.appendChild(b)});
   const mt=$("mats");mt.innerHTML="";
   const ch=T.length?cs[T[0]]:"A",col=T.length?st.cfg[T[0]].color:DEFAULTS[0][0];
@@ -362,23 +448,30 @@ function renderPanel(){
     const th=document.createElement("div");th.className="th";
     if(T.length){const res=renderLetter(ch,col,id,.45,getFont(st.font));const c=document.createElement("canvas");c.width=res.w;c.height=res.h;
       const cx=c.getContext("2d");cx.drawImage(res.cv,0,0);th.appendChild(c)}
-    b.appendChild(th);b.append(n);b.setAttribute("aria-pressed",!!sameM&&cfg[0].mat===id);
+    b.appendChild(th);b.append(n);b.dataset.tt=n;b.dataset.tip=MATD[id];b.setAttribute("aria-pressed",!!sameM&&cfg[0].mat===id);
     b.onclick=()=>{T.forEach(i=>st.cfg[i].mat=id);update()};mt.appendChild(b)})}
 function renderFonts(){
   const box=$("fonts");box.innerHTML="";
   const nm=(chars().join("").trim()||"Noa").slice(0,6);
   FONTS.forEach(f=>{const b=document.createElement("button");b.type="button";b.className="fnt";
     b.innerHTML=`<span class="s" style="font-family:'${f.family}',system-ui,sans-serif;font-weight:${f.weight}"></span><small>${f.name}</small>`;
-    b.firstChild.textContent=nm;b.setAttribute("aria-pressed",f.id===st.font);b.setAttribute("aria-label",`Schrift ${f.name}, ${f.note}`);
+    b.firstChild.textContent=nm;b.dataset.tt=f.name;b.dataset.tip=f.note;b.setAttribute("aria-pressed",f.id===st.font);b.setAttribute("aria-label",`Schrift ${f.name}, ${f.note}`);
     b.onclick=()=>{st.font=f.id;TL.loadFont(f).then(()=>{update()})};box.appendChild(b)});
   $("fontName").textContent=getFont(st.font).note}
 function renderSize(){
   const box=$("sizes");box.innerHTML="";
   SIZES.forEach((s,k)=>{const b=document.createElement("button");b.type="button";b.className="sz";
-    b.innerHTML=`${s.k}<small>${s.cm} cm</small>`;b.setAttribute("aria-pressed",k===st.size);
+    b.innerHTML=`${s.k}<small>${s.cm} cm</small>`;b.dataset.tt=`${s.cm} cm hoch`;b.dataset.tip=`CHF ${s.p} pro Buchstabe, ${SZD[k]}.`;b.setAttribute("aria-pressed",k===st.size);
     b.onclick=()=>{st.size=k;update()};box.appendChild(b)});
   $("szName").textContent=`${SIZES[st.size].cm} cm hoch · CHF ${SIZES[st.size].p} pro Buchstabe`}
 const orderObj=()=>{const cs=chars();return{n:cs.join(""),f:st.font,s:SIZES[st.size].cm,l:cs.map((ch,i)=>ch===" "?null:{c:st.cfg[i].color,m:st.cfg[i].mat})}};
+const MATD={satin:"Glatt mit sanftem Glanz.",samt:"Matt und tief, mit weichem Schimmer am Rand.",marmor:"Feine Adern wie bei Stein.",terrazzo:"Bunte Steinchen auf der Fläche.",streifen:"Diagonale Streifen in zwei Tönen.",perl:"Schimmert je nach Blickwinkel leicht in Regenbogenfarben."};
+const SZD=["etwa so breit wie eine Kreditkarte","etwas kürzer als ein Smartphone","etwa so lang wie ein Smartphone"];
+const TIPS={
+  farbe:()=>["Farbe","18 Farbtöne. Tippe oben auf einen Buchstaben, um nur ihn umzufärben, oder wähle «Alle». Bildschirmfarben sind ein Richtwert."],
+  material:()=>["Material","Das Material bestimmt Muster und Glanz der Oberfläche. Satin und Samt bleiben einfarbig, Marmor, Terrazzo, Streifen und Perlmutt bringen ein Muster."],
+  font:()=>["Schrift","Die Schrift ändert die Form der Buchstaben, nicht den Preis. Rundere Schriften wirken weicher, kräftige kompakter."],
+  size:()=>["Grösse","Höhe der Buchstaben. "+SIZES.map(z=>`${z.k}: CHF ${z.p}`).join(", ")+" pro Buchstabe."]};
 const b64u=o=>btoa(unescape(encodeURIComponent(JSON.stringify(o)))).replace(/\+/g,"-").replace(/\//g,"_").replace(/=+$/,"");
 function renderLink(){
   /* Werkstatt-Link nur mit ?werkstatt in der Adresse, Kunden brauchen ihn nicht */
@@ -392,7 +485,9 @@ function renderBar(){
   $("barC").textContent=n?"Lieferung ca. "+TL.deliveryDate(n*s.h).toLocaleDateString("de-CH",{weekday:"short",day:"numeric",month:"short"}):"";
   $("count").textContent=`${n} Buchstabe${n===1?"":"n"}`}
 let raf=0;
-function update(){syncCfg();renderWho();renderPanel();renderFonts();renderSize();renderBar();renderLink();cancelAnimationFrame(raf);raf=requestAnimationFrame(drawScene)}
+function tint(){const u=[...new Set(st.cfg.map(c=>c.color))],r=document.documentElement.style;
+  [0,1,2].forEach(i=>r.setProperty("--c"+(i+1),u[i%Math.max(u.length,1)]||DEFAULTS[i][0]))}
+function update(){syncCfg();tint();renderWho();renderPanel();renderFonts();renderSize();renderBar();renderLink();cancelAnimationFrame(raf);raf=requestAnimationFrame(drawScene)}
 
 $("name").addEventListener("input",e=>{
   const v=e.target.value.replace(/[^A-Za-zÄÖÜäöüß0-9 &!?.\-]/g,"");if(v!==e.target.value)e.target.value=v;update()});
@@ -435,6 +530,35 @@ $("share").onclick=async()=>{
   setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},4000);
   msg.textContent=copied?"Link kopiert, Bild gespeichert.":"Bild gespeichert. Link: "+url};
 applyShared();
+/* ---------- Info-Popover (Glas, Funktionsebene): Hover, Fokus und Tippen ---------- */
+const tip=$("tip");let tipEl=null;
+function showTip(el){const d=el.dataset.tipk?TIPS[el.dataset.tipk]():[el.dataset.tt||"",el.dataset.tip];if(!d[1])return;
+  hideTip();tipEl=el;tip.innerHTML="";if(d[0]){const b=document.createElement("b");b.textContent=d[0];tip.appendChild(b)}
+  tip.append(d[1]);tip.setAttribute("aria-hidden","false");el.setAttribute("aria-describedby","tip");tip.classList.add("on");
+  const r=el.getBoundingClientRect(),w=tip.offsetWidth,h=tip.offsetHeight,vw=document.documentElement.clientWidth;
+  tip.style.left=Math.max(12,Math.min(vw-w-12,r.left+r.width/2-w/2))+"px";
+  tip.style.top=(r.top-h-10>8?r.top-h-10:r.bottom+10)+"px"}
+function hideTip(){if(tipEl)tipEl.removeAttribute("aria-describedby");tipEl=null;tip.classList.remove("on");tip.setAttribute("aria-hidden","true")}
+const tipTarget=e=>e.target.closest&&e.target.closest("[data-tipk],[data-tip]");
+document.addEventListener("pointerover",e=>{if(e.pointerType!=="mouse")return;const t=tipTarget(e);if(t&&t!==tipEl)showTip(t);else if(!t)hideTip()});
+document.addEventListener("focusin",e=>{const t=tipTarget(e);if(t)showTip(t)});
+document.addEventListener("focusout",hideTip);
+document.addEventListener("click",e=>{const t=e.target.closest&&e.target.closest(".i");
+  if(t&&e.pointerType!=="mouse"){tipEl===t?hideTip():showTip(t)}else if(e.target.closest&&e.target.closest("button,a"))hideTip();else if(!t)hideTip()});
+document.addEventListener("keydown",e=>{if(e.key==="Escape"&&tipEl)hideTip()});
+addEventListener("scroll",hideTip,{passive:true});
+/* ---------- Ideen als Vorlage ---------- */
+const PRESETS={kind:["Emil","fredoka",[["#3d6fb6","satin"],["#a9d6ee","samt"],["#7fd1b5","marmor"],["#e3c04a","terrazzo"]]],
+  geburt:["Lia","nunito",[["#e9a6a0","satin"],["#efece6","samt"],["#d8c3a0","marmor"]]],
+  zuhause:["Zuhause","baloo",[["#1f5a45","samt"],["#8da38a","satin"],["#efece6","samt"],["#d8c3a0","satin"]]]};
+document.querySelectorAll("[data-preset]").forEach(b=>b.onclick=()=>{const [n,f,sp]=PRESETS[b.dataset.preset];
+  $("name").value=n;st.font=f;st.sel=-1;st.cfg=[...n].map((_,i)=>({color:sp[i%sp.length][0],mat:sp[i%sp.length][1]}));
+  TL.loadFont(getFont(f)).then(()=>{cache.clear();update()});$("konfigurator").scrollIntoView({behavior:matchMedia("(prefers-reduced-motion:reduce)").matches?"auto":"smooth"})});
+$("faqPrice").textContent=SIZES.map(z=>`${z.k} (${z.cm} cm) CHF ${z.p}`).join(", ");
+/* Einblenden beim Scrollen: nur wenn der Browser es kann, sonst bleibt alles sichtbar */
+if("IntersectionObserver"in window){document.documentElement.classList.add("js");
+  const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add("in");io.unobserve(e.target)}}),{threshold:.12});
+  document.querySelectorAll(".rv").forEach(n=>io.observe(n))}
 const go=()=>{cache.clear();update()};
 TL.loadFont(getFont(st.font)).then(go,go);
 
