@@ -125,7 +125,8 @@ button:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
 .bar .amt,.go{white-space:nowrap}
 @media (max-width:480px){.bar{padding:10px 14px}.bar-in{gap:8px}.bar .info{width:100%;display:flex;flex-wrap:wrap;gap:0 10px;font-size:.8125rem}.bar .info b{display:inline}#barB{display:none}.bar .right{width:100%;justify-content:space-between;gap:10px}.bar .amt{font-size:1.5rem}.bar .go{padding:0 16px}}
 .bar .amt{font:700 1.875rem/1 var(--f-display);letter-spacing:-.02em;font-variant-numeric:tabular-nums}
-.go{appearance:none;min-height:50px;border:0;border-radius:14px;background:var(--btn);color:var(--accent-ink);font:600 1.0625rem var(--f-body);padding:0 22px;cursor:pointer}
+/* Safari/iOS: Systemstil komplett zurücksetzen und Text selbst zentrieren, sonst weichen Schrift, Höhe und Ecken ab */
+.go{-webkit-appearance:none;appearance:none;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;margin:0;min-height:50px;border:0;border-radius:14px;background:var(--btn);color:var(--accent-ink);-webkit-text-fill-color:var(--accent-ink);font:600 1.0625rem/1.2 var(--f-body);letter-spacing:normal;text-align:center;text-decoration:none;padding:0 22px;cursor:pointer;touch-action:manipulation;box-shadow:none}
 .go:disabled{opacity:.5;cursor:default}
 .bar .right{display:flex;align-items:center;gap:14px}
 dialog.ask{border:0;border-radius:22px;max-height:calc(100dvh - 24px);background:var(--surface);color:var(--ink);padding:22px;width:min(440px,calc(100vw - 32px))}
@@ -138,17 +139,13 @@ dialog.ask input{display:block;width:100%;box-sizing:border-box;margin-top:4px;f
 dialog.ask input[aria-invalid="true"]{border-color:var(--err);box-shadow:0 0 0 1px var(--err)}
 dialog.ask .row{display:flex;gap:10px}dialog.ask .row label:first-child{flex:0 0 90px}dialog.ask .row label:last-child{flex:1}
 dialog.ask .acts{display:flex;gap:10px;justify-content:flex-end;margin-top:18px}
-dialog.ask .sec{display:inline-flex;flex-direction:row;align-items:center;justify-content:center;gap:0;appearance:none;border:0;background:var(--accent-soft);color:var(--accent);border-radius:14px;font:600 1.0625rem var(--f-body);padding:0 20px;min-height:50px;cursor:pointer}
+dialog.ask .sec{display:inline-flex;flex-direction:row;align-items:center;justify-content:center;gap:0;-webkit-appearance:none;appearance:none;margin:0;line-height:1.2;-webkit-text-fill-color:var(--accent);touch-action:manipulation;border:0;background:var(--accent-soft);color:var(--accent);border-radius:14px;font:600 1.0625rem var(--f-body);padding:0 20px;min-height:50px;cursor:pointer}
 dialog.ask .fe{color:var(--err);font-size:.8125rem;margin-top:4px;min-height:1.25em}
 dialog.ask .err{color:var(--err);font-size:0.8438rem;margin:12px 0 0;min-height:1em}
 .hp{position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden}
 .share{appearance:none;border:0;background:var(--accent-soft);color:var(--accent);border-radius:12px;font:600 0.9375rem var(--f-body);padding:8px 14px;min-height:44px;cursor:pointer}
 .note{font-size:.8125rem;color:var(--muted);margin:0}
-@media (max-width:880px){
-  .col.left{display:contents}   /* Bühne wird Kind des Rasters, damit sie über dem Panel kleben bleibt */
-  .stage{position:sticky;top:max(8px,env(safe-area-inset-top,0px));z-index:4;height:clamp(150px,22vh,210px);transition:box-shadow .2s}
-  /* Angedockt: Ring in Hintergrundfarbe verdeckt Inhalt, der an den runden Ecken und oberhalb durchscheint */
-  .stage.stuck{box-shadow:0 0 0 max(8px,env(safe-area-inset-top,0px)) var(--bg),0 12px 24px -8px rgba(0,0,0,.35)}}
+@media (max-width:880px){.stage{height:clamp(180px,26vh,240px)}}   /* mobil scrollt die Bühne normal mit dem Inhalt */
 .viewbar{display:flex;flex-direction:column;gap:8px}
 .seg.two{grid-template-columns:repeat(2,1fr)}
 #room{position:absolute;inset:0;width:100%;height:100%;display:block}
@@ -612,10 +609,6 @@ document.addEventListener("click",e=>{const t=e.target.closest&&e.target.closest
   if(t&&e.pointerType!=="mouse"){tipEl===t?hideTip():showTip(t)}else if(e.target.closest&&e.target.closest("button,a"))hideTip();else if(!t)hideTip()});
 document.addEventListener("keydown",e=>{if(e.key==="Escape"&&tipEl)hideTip()});
 addEventListener("scroll",hideTip,{passive:true});
-/* Mobil klebt die Bühne oben: Zustand markieren, damit sie sich vom darunter scrollenden Inhalt abhebt */
-const stickMQ=matchMedia("(max-width:880px)");
-function markStuck(){const el=$("stage");el.classList.toggle("stuck",stickMQ.matches&&el.getBoundingClientRect().top<=parseFloat(getComputedStyle(el).top)+.5&&scrollY>0)}
-addEventListener("scroll",markStuck,{passive:true});addEventListener("resize",markStuck);markStuck();
 /* ---------- Ideen als Vorlage ---------- */
 const PRESETS={geschwister:["Emil Lia","fredoka",[[["#3d6fb6","satin"],["#a9d6ee","samt"],["#7fd1b5","marmor"],["#e3c04a","terrazzo"]],[["#e9a6a0","satin"],["#efece6","samt"],["#d8c3a0","marmor"]]]],
   geburt:["Lia","nunito",[[["#e9a6a0","satin"],["#efece6","samt"],["#d8c3a0","marmor"]]]],
