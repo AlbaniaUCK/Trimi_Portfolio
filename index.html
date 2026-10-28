@@ -94,7 +94,7 @@ label.f span{font-weight:500;text-transform:none;letter-spacing:0}
 .panel h2 small{display:block;font:500 0.8125rem var(--f-body);color:var(--muted);letter-spacing:0;margin-top:4px}
 .sec{display:flex;flex-direction:column;gap:10px}
 .sec h3{margin:0;font:700 0.8125rem var(--f-body);letter-spacing:.04em;text-transform:uppercase;color:var(--muted);display:flex;justify-content:space-between;gap:10px}
-.sec h3 b{color:var(--ink);text-transform:none;letter-spacing:0;font-weight:600}
+.sec h3 b{color:var(--ink);text-transform:none;letter-spacing:0;font-weight:600;text-align:right;text-wrap:balance;min-width:0}
 .swatches{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:8px}
 @media (max-width:420px){.swatches{grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}}
 .sw{appearance:none;aspect-ratio:1;border-radius:50%;border:1px solid rgba(0,0,0,.18);cursor:pointer;padding:0;position:relative;min-width:0}
@@ -177,7 +177,7 @@ footer.ft{padding:8px 0 24px;text-align:center}
 .js .rv{opacity:0;transform:translateY(14px);transition:opacity .6s,transform .6s}
 .js .rv.in{opacity:1;transform:none}
 @media (prefers-reduced-motion:no-preference){html{scroll-behavior:smooth}}
-.sec h3>span{display:inline-flex;align-items:center;gap:8px}
+.sec h3>span{display:inline-flex;align-items:center;gap:8px;flex-shrink:0}
 .i{appearance:none;position:relative;width:22px;height:22px;border-radius:50%;border:1.5px solid currentColor;background:transparent;color:var(--muted);font:700 .75rem/1 var(--f-body);display:inline-grid;place-items:center;padding:0;cursor:help}
 .i::after{content:"";position:absolute;inset:-11px}
 #tip{position:fixed;z-index:50;left:0;top:0;max-width:min(280px,calc(100vw - 24px));padding:12px 14px;border-radius:16px;font:400 .875rem/1.4 var(--f-body);color:var(--ink);pointer-events:none;opacity:0;transform:translateY(4px);transition:opacity .15s,transform .15s}
@@ -525,7 +525,7 @@ function renderSize(){
   SIZES.forEach((s,k)=>{const b=document.createElement("button");b.type="button";b.className="sz";
     b.innerHTML=`${s.k}<small>${s.cm} cm</small>`;b.dataset.tt=`${s.cm} cm hoch`;b.dataset.tip=`CHF ${s.p} pro Buchstabe, ${SZD[k]}.`;b.setAttribute("aria-pressed",k===st.size);
     b.onclick=()=>{st.size=k;update()};box.appendChild(b)});
-  $("szName").textContent=`${SIZES[st.size].cm} cm hoch · CHF ${SIZES[st.size].p} pro Buchstabe`}
+  $("szName").textContent=`${SIZES[st.size].cm}\u00a0cm hoch\u00a0· CHF\u00a0${SIZES[st.size].p} pro Buchstabe`}
 const orderObj=()=>{const cs=chars();return{n:cs.join(""),f:st.font,s:SIZES[st.size].cm,l:cs.map((ch,i)=>ch===" "?null:{c:st.cfg[i].color,m:st.cfg[i].mat})}};
 const MATD={satin:"Glatt mit sanftem Glanz.",samt:"Matt und tief, mit weichem Schimmer am Rand.",marmor:"Feine Adern wie bei Stein.",terrazzo:"Bunte Steinchen auf der Fläche.",streifen:"Diagonale Streifen in zwei Tönen.",perl:"Schimmert je nach Blickwinkel leicht in Regenbogenfarben."};
 const SZD=["etwa so breit wie eine Kreditkarte","etwas kürzer als ein Smartphone","etwa so lang wie ein Smartphone"];
