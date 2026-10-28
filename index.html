@@ -47,10 +47,10 @@ body::before{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;
 :root[data-theme="dark"] .glass{border-color:rgba(255,255,255,.14);box-shadow:0 10px 30px rgba(0,0,0,.5),inset 0 1px 0 rgba(255,255,255,.12)}
 *{box-sizing:border-box}
 [hidden]{display:none!important}
-html{-webkit-text-size-adjust:100%}
+html{-webkit-text-size-adjust:100%;-webkit-tap-highlight-color:transparent}
 body{margin:0;background:var(--bg);color:var(--ink);font:400 1.0625rem/1.41 var(--f-body);
   padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
-.page{max-width:1120px;margin:0 auto;display:flex;flex-direction:column;min-height:100vh}
+.page{max-width:1120px;margin:0 auto;display:flex;flex-direction:column;min-height:100vh;min-height:100svh}
 .nav{display:flex;align-items:center;gap:8px;margin-top:max(12px,env(safe-area-inset-top,0px));padding:8px 8px 8px 20px;border-radius:999px;position:sticky;top:12px;z-index:6}
 .nav .links{display:flex;gap:4px;margin-left:auto}
 .nav .links a{color:var(--ink);text-decoration:none;font:500 .9375rem var(--f-body);padding:10px 12px;border-radius:999px}
@@ -75,6 +75,8 @@ label.f span{font-weight:500;text-transform:none;letter-spacing:0}
 #name{width:100%;font:700 1.75rem/1.1 var(--f-display);letter-spacing:.02em;text-transform:uppercase;color:var(--ink);background:var(--surface);border:1px solid var(--field);border-radius:14px;padding:12px 16px;margin-top:8px}
 #name:focus,dialog.ask input:focus{border-color:var(--accent);box-shadow:0 0 0 1px var(--accent);outline:none}
 #name::placeholder{color:var(--muted)}
+#nameHint{display:flex;flex-wrap:wrap;align-items:center;gap:6px 10px;margin-top:8px}
+#nameHint .share{min-height:36px;padding:6px 12px}
 
 .stage{position:relative;border-radius:22px;overflow:hidden;height:clamp(210px,34vw,310px);
   background:radial-gradient(120% 95% at 50% 18%,var(--stage-a),var(--stage-b) 72%)}
@@ -144,12 +146,15 @@ dialog.ask .err{color:var(--err);font-size:0.8438rem;margin:12px 0 0;min-height:
 .note{font-size:.8125rem;color:var(--muted);margin:0}
 @media (max-width:880px){
   .col.left{display:contents}   /* Bühne wird Kind des Rasters, damit sie über dem Panel kleben bleibt */
-  .stage{position:sticky;top:max(8px,env(safe-area-inset-top,0px));z-index:4;height:clamp(150px,26vh,230px)}}
+  .stage{position:sticky;top:max(8px,env(safe-area-inset-top,0px));z-index:4;height:clamp(150px,22vh,210px);transition:box-shadow .2s}
+  /* Angedockt: Ring in Hintergrundfarbe verdeckt Inhalt, der an den runden Ecken und oberhalb durchscheint */
+  .stage.stuck{box-shadow:0 0 0 max(8px,env(safe-area-inset-top,0px)) var(--bg),0 12px 24px -8px rgba(0,0,0,.35)}}
 .viewbar{display:flex;flex-direction:column;gap:8px}
 .seg.two{grid-template-columns:repeat(2,1fr)}
 #room{position:absolute;inset:0;width:100%;height:100%;display:block}
 .chips{display:flex;flex-wrap:wrap;gap:8px;list-style:none;margin:14px 0 0;padding:0}
 .chips li{background:var(--surface);color:var(--ink);font:500 .875rem var(--f-body);padding:8px 14px;border-radius:999px}
+@media (max-width:480px){.chips{gap:6px}.chips li{font-size:.8125rem;padding:6px 12px}}
 .lp{display:flex;flex-direction:column;gap:64px;padding-block:56px 32px}
 .lp section{scroll-margin-top:84px}
 .lp h2{font:700 clamp(1.625rem,4vw,2.25rem)/1.1 var(--f-display);letter-spacing:-.02em;margin:0 0 8px}
@@ -607,6 +612,10 @@ document.addEventListener("click",e=>{const t=e.target.closest&&e.target.closest
   if(t&&e.pointerType!=="mouse"){tipEl===t?hideTip():showTip(t)}else if(e.target.closest&&e.target.closest("button,a"))hideTip();else if(!t)hideTip()});
 document.addEventListener("keydown",e=>{if(e.key==="Escape"&&tipEl)hideTip()});
 addEventListener("scroll",hideTip,{passive:true});
+/* Mobil klebt die Bühne oben: Zustand markieren, damit sie sich vom darunter scrollenden Inhalt abhebt */
+const stickMQ=matchMedia("(max-width:880px)");
+function markStuck(){const el=$("stage");el.classList.toggle("stuck",stickMQ.matches&&el.getBoundingClientRect().top<=parseFloat(getComputedStyle(el).top)+.5&&scrollY>0)}
+addEventListener("scroll",markStuck,{passive:true});addEventListener("resize",markStuck);markStuck();
 /* ---------- Ideen als Vorlage ---------- */
 const PRESETS={geschwister:["Emil Lia","fredoka",[[["#3d6fb6","satin"],["#a9d6ee","samt"],["#7fd1b5","marmor"],["#e3c04a","terrazzo"]],[["#e9a6a0","satin"],["#efece6","samt"],["#d8c3a0","marmor"]]]],
   geburt:["Lia","nunito",[[["#e9a6a0","satin"],["#efece6","samt"],["#d8c3a0","marmor"]]]],
